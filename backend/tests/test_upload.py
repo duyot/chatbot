@@ -2,7 +2,7 @@ import io
 import pytest
 
 def test_upload_pdf_returns_pending(client, mocker):
-    mocker.patch("app.routers.documents.ingest_document.delay")
+    mocker.patch("app.workers.tasks.ingest_document.delay")
     fake_pdf = io.BytesIO(b"%PDF-1.4 fake content")
     response = client.post(
         "/api/documents/upload",

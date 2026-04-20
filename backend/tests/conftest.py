@@ -26,7 +26,7 @@ def setup_tables():
 def db():
     conn = engine.connect()
     trans = conn.begin()
-    session = TestingSession(bind=conn)
+    session = TestingSession(bind=conn, join_transaction_mode="create_savepoint")
     yield session
     session.close()
     trans.rollback()
