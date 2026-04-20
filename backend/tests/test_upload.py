@@ -30,3 +30,22 @@ def test_upload_rejects_oversized_file(client, mocker):
         files={"file": ("big.pdf", fake_pdf, "application/pdf")},
     )
     assert response.status_code == 400
+
+def test_status_stream_returns_done(client, db):
+    from app.models import Document
+    import uuid
+
+    doc_id = uuid.uuid4()
+    doc = Document(id=doc_id, file_name="test.pdf", file_path="/tmp/test.pdf", status="done")
+    db.add(doc)
+    db.flush()
+
+    response = client.get(f"/api/documents/{doc_id}/status")
+    assert response.status_code == 200
+    assert "text/event-stream" in response.headers["content-type"]
+    assert '"status": "done"' in response.text
+
+def test_status_stream_404_for_unknown_id(client):
+    import uuid
+    response = client.get(f"/api/documents/{uuid.uuid4()}/status")
+    assert response.status_code == 404
