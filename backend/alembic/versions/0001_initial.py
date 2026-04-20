@@ -34,8 +34,9 @@ def upgrade() -> None:
         sa.Column("content", sa.Text(), nullable=False),
         sa.Column("embedding", Vector(1536)),
     )
-    op.execute("CREATE INDEX ON document_chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)")
+    op.execute("CREATE INDEX ON document_chunks USING hnsw (embedding vector_cosine_ops)")
 
 def downgrade() -> None:
     op.drop_table("document_chunks")
     op.drop_table("documents")
+    op.execute("DROP EXTENSION IF EXISTS vector")
