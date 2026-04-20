@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_figma_figma__get_metadata",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "Bash(npm install *)",
+      "Bash(claude plugin *)"
+    ]
+  }
+}

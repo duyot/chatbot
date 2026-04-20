@@ -1,0 +1,74 @@
+.composer-wrapper {
+  padding: 12px 24px 20px;
+  flex-shrink: 0;
+  background: var(--color-chat-bg);
+  border-top: 1px solid var(--color-border);
+}
+
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-composer-bg);
+  border: 1px solid var(--color-composer-border);
+  border-radius: var(--radius-md);
+  padding: 10px 10px 10px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.composer:focus-within {
+  border-color: rgba(0, 113, 227, 0.40);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.08);
+}
+
+.composer-model-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.composer-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  color: var(--color-text-primary);
+  background: transparent;
+  line-height: 1.47;
+  min-height: 22px;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.composer-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.composer-send {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.28);
+  transition: background 0.15s, transform 0.12s;
+}
+
+.composer-send--active {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.composer-send--active:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.06);
+}

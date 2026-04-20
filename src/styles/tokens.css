@@ -1,0 +1,63 @@
+:root {
+  /* Brand - Apple Blue only */
+  --color-primary: #0071e3;
+  --color-primary-hover: #0077ed;
+  --color-primary-dark: #0066cc;
+  --color-primary-bright: #2997ff;
+
+  /* Backgrounds */
+  --color-bg-dark: #000000;
+  --color-bg-light: #f5f5f7;
+  --color-app-bg: #f5f5f7;
+  --color-card-bg: #ffffff;
+  --color-chat-bg: #ffffff;
+
+  /* Sidebar dark surface */
+  --color-sidebar-bg: #1d1d1f;
+  --color-sidebar-active-bg: rgba(255, 255, 255, 0.10);
+  --color-dark-surface-1: #272729;
+  --color-dark-surface-2: #2a2a2d;
+
+  /* Text - light context */
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: rgba(0, 0, 0, 0.80);
+  --color-text-muted: rgba(0, 0, 0, 0.48);
+  --color-text-disabled: rgba(0, 0, 0, 0.28);
+
+  /* Text - dark context */
+  --color-text-on-dark: #ffffff;
+  --color-text-on-dark-secondary: rgba(255, 255, 255, 0.70);
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.48);
+
+  /* UI elements */
+  --color-border: rgba(0, 0, 0, 0.10);
+  --color-border-light: rgba(0, 0, 0, 0.05);
+  --color-composer-bg: #ffffff;
+  --color-composer-border: rgba(0, 0, 0, 0.12);
+  --color-upgrade-bg: #0071e3;
+
+  /* Radius - Apple scale */
+  --radius-micro: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 12px;
+  --radius-pill: 980px;
+
+  /* Shadows */
+  --shadow-card: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+
+  /* Typography */
+  --font-display: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family: var(--font-body);
+
+  /* Font sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 14px;
+  --font-size-base: 17px;
+  --font-size-lg: 21px;
+
+  /* Layout */
+  --sidebar-width: 260px;
+}
