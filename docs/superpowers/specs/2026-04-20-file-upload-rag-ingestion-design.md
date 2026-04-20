@@ -116,7 +116,7 @@ OpenAI API key is read from the `OPENAI_API_KEY` environment variable.
 
 ### Modified: `src/components/Composer.jsx`
 
-- Add a paperclip/upload icon button between the model icon and the textarea (or to the left of the send button — left of send is preferred so it doesn't shift the send button position).
+- Add a paperclip/upload icon button to the left of the send button (right side of the composer row). The model icon and textarea stay in their existing positions.
 - Add a hidden `<input type="file" accept=".pdf,.docx,image/*">` triggered by the upload button click.
 - When a file is selected, display a **file chip** below the composer input showing the filename and an × to deselect.
 - The upload is submitted independently of the chat message — clicking the upload button (or selecting a file) immediately triggers the upload; it does not wait for the user to press Send.
@@ -170,7 +170,7 @@ backend/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DATABASE_URL` | *(required)* | PostgreSQL connection string, e.g. `postgresql+asyncpg://user:pass@db:5432/chatbot` |
+| `DATABASE_URL` | *(required)* | PostgreSQL connection string, e.g. `postgresql+psycopg2://user:pass@db:5432/chatbot` (sync driver used by both FastAPI and Celery for v1 simplicity) |
 | `REDIS_URL` | `redis://redis:6379/0` | Celery broker + backend |
 | `OPENAI_API_KEY` | *(required)* | OpenAI API key for embeddings |
 | `UPLOAD_DIR` | `./uploads` | Directory where uploaded files are saved |
