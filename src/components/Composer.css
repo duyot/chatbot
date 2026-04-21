@@ -72,3 +72,82 @@
   background: var(--color-primary-hover);
   transform: scale(1.06);
 }
+
+.composer-file-input {
+  display: none;
+}
+
+.composer-upload {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f5f5f7;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.55);
+  transition: background 0.15s;
+}
+
+.composer-upload:hover:not(:disabled) {
+  background: #e8e8ed;
+}
+
+.composer-upload--busy {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.composer-upload-spinner,
+.composer-chip-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid rgba(0, 113, 227, 0.25);
+  border-top-color: #0071e3;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.composer-chip-row {
+  padding: 0 14px 6px;
+}
+
+.composer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f7;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #1d1d1f;
+}
+
+.composer-chip-name {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.composer-chip-remove {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  line-height: 1;
+}
+
+.composer-chip-remove:hover {
+  color: rgba(0, 0, 0, 0.6);
+}

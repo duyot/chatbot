@@ -1,8 +1,10 @@
-import { useReducer, useCallback } from 'react'
+import { useReducer, useCallback, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import ChatThread from '../components/ChatThread'
 import Composer from '../components/Composer'
 import UpgradeTab from '../components/UpgradeTab'
+import UploadToast from '../components/UploadToast'
+import { useUpload } from '../hooks/useUpload'
 import './ChatPage.css'
 
 const CANNED_REPLIES = [
@@ -41,26 +43,10 @@ let nextId = 1
 function makeId() { return nextId++ }
 
 const SEED_MESSAGES = [
-  {
-    id: makeId(),
-    role: 'user',
-    content: 'Create a chatbot gpt using python language what will be step for that',
-  },
-  {
-    id: makeId(),
-    role: 'assistant',
-    content: CANNED_REPLIES[0],
-  },
-  {
-    id: makeId(),
-    role: 'user',
-    content: 'What is use of that chatbot ?',
-  },
-  {
-    id: makeId(),
-    role: 'assistant',
-    content: CANNED_REPLIES[1],
-  },
+  { id: makeId(), role: 'user', content: 'Create a chatbot gpt using python language what will be step for that' },
+  { id: makeId(), role: 'assistant', content: CANNED_REPLIES[0] },
+  { id: makeId(), role: 'user', content: 'What is use of that chatbot ?' },
+  { id: makeId(), role: 'assistant', content: CANNED_REPLIES[1] },
 ]
 
 function messagesReducer(state, action) {
@@ -79,12 +65,16 @@ export default function ChatPage() {
     messages: SEED_MESSAGES,
     pending: false,
   })
+  const [showToast, setShowToast] = useState(false)
+
+  const upload = useUpload({
+    onComplete: () => setShowToast(true),
+  })
 
   const handleSend = useCallback((text) => {
     const userMsg = { id: makeId(), role: 'user', content: text }
     dispatch({ type: 'ADD_MESSAGE', payload: userMsg })
     dispatch({ type: 'SET_PENDING' })
-
     const reply = CANNED_REPLIES[Math.floor(Math.random() * CANNED_REPLIES.length)]
     setTimeout(() => {
       dispatch({ type: 'ADD_MESSAGE', payload: { id: makeId(), role: 'assistant', content: reply } })
@@ -97,12 +87,28 @@ export default function ChatPage() {
         <Sidebar activeTitle="Create Chatbot GPT..." />
         <div className="chat-main">
           <ChatThread messages={state.messages} pending={state.pending} />
-          <Composer onSend={handleSend} disabled={state.pending} />
+          <Composer
+            onSend={handleSend}
+            onFileSelect={upload.uploadFile}
+            uploadStatus={upload.status}
+            disabled={state.pending}
+          />
         </div>
         <div className="chat-page-upgrade">
           <UpgradeTab />
         </div>
       </div>
+      {showToast && (
+        <UploadToast
+          status={upload.status}
+          fileName={upload.fileName}
+          error={upload.error}
+          onDismiss={() => {
+            setShowToast(false)
+            upload.reset()
+          }}
+        />
+      )}
     </div>
   )
 }
