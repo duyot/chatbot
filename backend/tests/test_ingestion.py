@@ -32,17 +32,18 @@ def test_parse_image_returns_placeholder():
     result = parse_file("/any/path/photo.png", "photo.png")
     assert result == "[image: photo.png]"
 
-def test_embed_chunks_calls_openai_and_returns_vectors():
+def test_embed_chunks_calls_ollama_and_returns_vectors():
     from app.services.ingestion import embed_chunks
-    fake_embedding = [0.1] * 1536
+    fake_embedding = [0.1] * 768
     mock_response = MagicMock()
-    mock_response.data = [MagicMock(embedding=fake_embedding)]
-    with patch("app.services.ingestion.OpenAI") as MockOpenAI:
-        mock_client = MockOpenAI.return_value
-        mock_client.embeddings.create.return_value = mock_response
+    mock_response.raise_for_status = MagicMock()
+    mock_response.json.return_value = {"embeddings": [fake_embedding]}
+    with patch("app.services.ingestion.httpx.Client") as MockClient:
+        mock_client = MockClient.return_value.__enter__.return_value
+        mock_client.post.return_value = mock_response
         result = embed_chunks(["some text"])
     assert len(result) == 1
-    assert len(result[0]) == 1536
+    assert len(result[0]) == 768
 
 def test_store_chunks_inserts_rows():
     from app.services.ingestion import store_chunks

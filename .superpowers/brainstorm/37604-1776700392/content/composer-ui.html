@@ -1,0 +1,88 @@
+<h2>Section 5: Frontend UI Changes</h2>
+<p class="subtitle">Upload button placement in the Composer + completion notification</p>
+
+<div class="section">
+  <h3>Composer with Upload Button</h3>
+  <div class="mockup">
+    <div class="mockup-header">Composer.jsx — proposed layout</div>
+    <div class="mockup-body" style="padding:16px">
+      <!-- Composer wrapper -->
+      <div style="background:#fff;border-radius:14px;box-shadow:rgba(0,0,0,0.12) 0 2px 16px;padding:12px 14px;display:flex;align-items:flex-end;gap:10px;max-width:640px;margin:0 auto">
+        <!-- Model icon (existing) -->
+        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0071e3,#2997ff);display:flex;align-items:center;justify-content:center">
+          <div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.85)"></div>
+        </div>
+        <!-- Textarea (existing, grows) -->
+        <div style="flex:1;font-size:14px;color:rgba(0,0,0,0.4);padding:4px 0;min-height:24px">What's in your mind?...</div>
+        <!-- NEW: Upload button -->
+        <button style="flex-shrink:0;width:34px;height:34px;border-radius:8px;background:#f5f5f7;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(0,0,0,0.55)" title="Upload file">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 2v8M5 5l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <!-- Send button (existing) -->
+        <button style="flex-shrink:0;width:34px;height:34px;border-radius:8px;background:#0071e3;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 14V4M9 4L5 8M9 4L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <!-- File chip (appears after selection) -->
+      <div style="max-width:640px;margin:8px auto 0">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:#f5f5f7;border-radius:8px;padding:6px 10px;font-size:12px;color:#1d1d1f">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="2" stroke="#0071e3" stroke-width="1.5"/><path d="M5 5h6M5 8h4" stroke="#0071e3" stroke-width="1.5" stroke-linecap="round"/></svg>
+          report-q1-2025.pdf
+          <span style="color:rgba(0,0,0,0.35);cursor:pointer;margin-left:2px">✕</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Completion Notification (Toast)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Notification — appears bottom-right after ingestion</div>
+    <div class="mockup-body" style="padding:24px;position:relative;min-height:100px">
+      <!-- Simulated chat area -->
+      <div style="font-size:12px;color:rgba(0,0,0,0.3);margin-bottom:40px">... chat messages ...</div>
+      <!-- Toast -->
+      <div style="position:absolute;bottom:16px;right:16px;background:#1d1d1f;color:#fff;border-radius:12px;padding:12px 16px;max-width:280px;box-shadow:rgba(0,0,0,0.25) 0 4px 20px;display:flex;align-items:flex-start;gap:10px">
+        <div style="width:20px;height:20px;border-radius:50%;background:#30d158;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:2px">Document ready</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.65)">report-q1-2025.pdf has been ingested and is ready for Q&amp;A.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3 style="margin-bottom:8px">New files summary</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
+    <div style="background:#f5f5f7;border-radius:8px;padding:12px">
+      <div style="font-weight:600;color:#1d1d1f;margin-bottom:4px">Frontend</div>
+      <div style="color:rgba(0,0,0,0.6);line-height:1.7">
+        <code>src/components/Composer.jsx</code> — add upload btn + file chip<br>
+        <code>src/hooks/useUpload.js</code> — upload + SSE logic<br>
+        <code>src/components/UploadToast.jsx</code> — toast notification
+      </div>
+    </div>
+    <div style="background:#f5f5f7;border-radius:8px;padding:12px">
+      <div style="font-weight:600;color:#1d1d1f;margin-bottom:4px">Backend (new service)</div>
+      <div style="color:rgba(0,0,0,0.6);line-height:1.7">
+        <code>backend/app/main.py</code><br>
+        <code>backend/app/routers/documents.py</code><br>
+        <code>backend/app/services/ingestion.py</code><br>
+        <code>backend/app/workers/tasks.py</code><br>
+        <code>backend/Dockerfile</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;text-align:center">
+  <p class="subtitle">Does this UI design look right? Reply in terminal to approve and move to the spec document.</p>
+</div>

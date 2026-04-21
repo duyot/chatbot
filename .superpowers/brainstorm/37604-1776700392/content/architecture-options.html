@@ -1,0 +1,49 @@
+<h2>Architecture Approaches</h2>
+<p class="subtitle">Pick the right backend structure for the RAG upload pipeline</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>FastAPI + asyncio BackgroundTasks + PostgreSQL job tracking <span style="color:#0071e3;font-size:12px;font-weight:600;">★ Recommended</span></h3>
+      <p>One FastAPI service handles uploads, runs ingestion as an async background task, and tracks job status in a <code>documents</code> table (status: pending → processing → done/failed). SSE endpoint watches the DB row and streams the completion event.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>No extra services — only PostgreSQL needed</li><li>Dead simple to deploy (one container)</li><li>SSE fits naturally with asyncio</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Job dies if server restarts mid-ingestion</li><li>Single worker — can't scale horizontally easily</li></ul></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:#f5f5f7;border-radius:8px;font-size:13px">
+        <strong>Services:</strong> React → FastAPI → PostgreSQL + pgvector
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>FastAPI + Celery + Redis + PostgreSQL</h3>
+      <p>Celery handles the background job queue with Redis as the broker. FastAPI enqueues the ingestion task after upload, and Celery workers process it reliably. SSE streams Celery task status back to the frontend.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Production-grade — jobs survive restarts</li><li>Horizontal scaling (add more workers)</li><li>Built-in retry logic</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>3 extra services (Redis, Celery worker, Flower)</li><li>More complex docker-compose setup</li><li>Heavier for a first version</li></ul></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:#f5f5f7;border-radius:8px;font-size:13px">
+        <strong>Services:</strong> React → FastAPI → Redis → Celery Worker → PostgreSQL + pgvector
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>FastAPI + PostgreSQL LISTEN/NOTIFY as job queue</h3>
+      <p>Use PostgreSQL's native pub/sub (<code>LISTEN</code>/<code>NOTIFY</code>) to trigger ingestion on a separate worker process. No Redis needed — PostgreSQL does double duty as both job queue and vector store.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>No Redis — PostgreSQL is the only external dependency</li><li>Jobs persist across restarts</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More custom code (no battle-tested library)</li><li>PostgreSQL as task queue is less common — harder to debug</li></ul></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:#f5f5f7;border-radius:8px;font-size:13px">
+        <strong>Services:</strong> React → FastAPI → PostgreSQL + pgvector ← Worker process
+      </div>
+    </div>
+  </div>
+</div>

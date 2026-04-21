@@ -1,0 +1,114 @@
+<h2>System Architecture</h2>
+<p class="subtitle">Five services — request flow shown left to right</p>
+
+<div style="overflow-x:auto;padding:8px 0">
+<div style="display:flex;align-items:stretch;gap:0;min-width:700px;font-family:SF Pro Text,Helvetica Neue,sans-serif">
+
+  <!-- React Frontend -->
+  <div style="flex:1;background:#f5f5f7;border-radius:12px 0 0 12px;padding:18px 14px;min-width:120px">
+    <div style="font-size:11px;font-weight:600;color:#0071e3;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Frontend</div>
+    <div style="font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:6px">React (Vite)</div>
+    <div style="font-size:12px;color:rgba(0,0,0,0.6);line-height:1.5">
+      • Upload button in Composer<br>
+      • File → multipart POST<br>
+      • SSE listener for status<br>
+      • Toast notification
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;padding:0 6px;background:#e8e8ed">
+    <div style="font-size:20px;color:#0071e3">→</div>
+  </div>
+
+  <!-- FastAPI -->
+  <div style="flex:1;background:#1d1d1f;border-radius:0;padding:18px 14px;min-width:130px">
+    <div style="font-size:11px;font-weight:600;color:#2997ff;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Backend</div>
+    <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px">FastAPI</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5">
+      • POST /api/documents/upload<br>
+      • Saves metadata to DB<br>
+      • Enqueues Celery task<br>
+      • GET /{id}/status (SSE)
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;padding:0 6px;background:#1d1d1f">
+    <div style="font-size:20px;color:#2997ff">→</div>
+  </div>
+
+  <!-- Redis -->
+  <div style="flex:0.8;background:#272729;border-radius:0;padding:18px 14px;min-width:100px">
+    <div style="font-size:11px;font-weight:600;color:#ff6b6b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Queue</div>
+    <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px">Redis</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5">
+      • Celery broker<br>
+      • Celery results backend<br>
+      • Job persistence
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;padding:0 6px;background:#272729">
+    <div style="font-size:20px;color:#ff6b6b">→</div>
+  </div>
+
+  <!-- Celery Worker -->
+  <div style="flex:1.2;background:#1d1d1f;border-radius:0;padding:18px 14px;min-width:140px">
+    <div style="font-size:11px;font-weight:600;color:#30d158;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Worker</div>
+    <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px">Celery Worker</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5">
+      ① Parse file (PDF/DOCX/image)<br>
+      ② Chunk text<br>
+      ③ Embed (OpenAI)<br>
+      ④ Store → pgvector<br>
+      ⑤ Update status → done
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div style="display:flex;align-items:center;padding:0 6px;background:#1d1d1f">
+    <div style="font-size:20px;color:#30d158">→</div>
+  </div>
+
+  <!-- PostgreSQL -->
+  <div style="flex:1;background:#0071e3;border-radius:0 12px 12px 0;padding:18px 14px;min-width:120px">
+    <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Database</div>
+    <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px">PostgreSQL<br>+ pgvector</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.85);line-height:1.5">
+      • documents table<br>
+      • document_chunks table<br>
+      • vector(1536) embeddings
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+  <div style="background:#f5f5f7;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#1d1d1f;margin-bottom:6px">SSE Notification Flow</div>
+    <div style="font-size:12px;color:rgba(0,0,0,0.6);line-height:1.6">
+      1. Upload → FastAPI saves doc, returns <code>{id}</code><br>
+      2. Frontend opens <code>GET /api/documents/{id}/status</code><br>
+      3. FastAPI polls DB every 2s, streams <code>data: {status}</code><br>
+      4. Worker finishes → updates status to <code>done</code><br>
+      5. SSE sends final event → frontend shows toast
+    </div>
+  </div>
+  <div style="background:#f5f5f7;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#1d1d1f;margin-bottom:6px">docker-compose Services</div>
+    <div style="font-size:12px;color:rgba(0,0,0,0.6);line-height:1.6">
+      <code>frontend</code> — nginx serving built React<br>
+      <code>backend</code> — FastAPI (uvicorn)<br>
+      <code>worker</code> — Celery (same image, different cmd)<br>
+      <code>redis</code> — Redis 7<br>
+      <code>db</code> — pgvector/pgvector image
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;text-align:center">
+  <p class="subtitle">Does this architecture look right? Reply in terminal to continue to the database schema.</p>
+</div>

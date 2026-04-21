@@ -1,9 +1,9 @@
 import os
 from typing import List
 import fitz  # PyMuPDF
+import httpx
 from docx import Document as DocxDocument
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from openai import OpenAI
 from sqlalchemy.orm import Session
 
 from ..config import settings
@@ -28,13 +28,17 @@ def chunk_text(text: str) -> List[str]:
 
 
 def embed_chunks(chunks: List[str]) -> List[List[float]]:
-    client = OpenAI(api_key=settings.openai_api_key)
     embeddings: List[List[float]] = []
     batch_size = 100
-    for i in range(0, len(chunks), batch_size):
-        batch = chunks[i:i + batch_size]
-        response = client.embeddings.create(model="text-embedding-3-small", input=batch)
-        embeddings.extend([item.embedding for item in response.data])
+    with httpx.Client() as client:
+        for i in range(0, len(chunks), batch_size):
+            batch = chunks[i:i + batch_size]
+            response = client.post(
+                f"{settings.ollama_base_url}/api/embed",
+                json={"model": settings.ollama_embedding_model, "input": batch},
+            )
+            response.raise_for_status()
+            embeddings.extend(response.json()["embeddings"])
     return embeddings
 
 
