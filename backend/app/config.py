@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     ollama_base_url: str = "http://172.22.6.30:30002"
     ollama_embedding_model: str = "qwen3-embedding:4b"
+    ollama_chat_model: str = "qwen3"
     upload_dir: str = "./uploads"
     max_upload_mb: int = 20
     cors_origins: str = "http://localhost:3000"
