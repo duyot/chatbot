@@ -1,0 +1,40 @@
+.doc-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fafafc;
+}
+
+.doc-selector-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.48);
+  white-space: nowrap;
+}
+
+.doc-selector-select {
+  flex: 1;
+  height: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 0 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  background: #fff;
+  color: #1d1d1f;
+  outline: none;
+  cursor: pointer;
+}
+
+.doc-selector-select:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.18);
+}
+
+.doc-selector-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
