@@ -6,12 +6,16 @@ from sqlalchemy.orm import Session
 import json
 import time
 
-from ..database import get_db
+from ..database import get_db, SessionLocal
 from ..models import Document
-from ..schemas import DocumentResponse
+from ..schemas import DocumentResponse, DocumentListItem
 from ..config import settings
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
+
+@router.get("", response_model=list[DocumentListItem])
+def list_documents(db: Session = Depends(get_db)):
+    return db.query(Document).filter(Document.status == "done").all()
 
 EXTENSION_MAP = {
     "application/pdf": ".pdf",
@@ -56,25 +60,28 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
 
 @router.get("/{document_id}/status")
 def stream_status(document_id: str, db: Session = Depends(get_db)):
-    doc = db.query(Document).filter(Document.id == document_id).first()
-    if not doc:
+    exists = db.query(Document).filter(Document.id == document_id).first()
+    if not exists:
         raise HTTPException(status_code=404, detail="Document not found")
 
     def event_stream():
         while True:
-            db.refresh(doc)
-            status = doc.status
+            inner_db = SessionLocal()
+            try:
+                doc = inner_db.query(Document).filter(Document.id == document_id).first()
+                status = doc.status if doc else "failed"
+                error_msg = doc.error_msg if doc else None
+            finally:
+                inner_db.close()
+
             if status == "done":
-                data = json.dumps({"status": "done", "message": "Document ready for Q&A."})
-                yield f"data: {data}\n\n"
+                yield f"data: {json.dumps({'status': 'done', 'message': 'Document ready for Q&A.'})}\n\n"
                 break
             elif status == "failed":
-                data = json.dumps({"status": "failed", "message": doc.error_msg or "Ingestion failed."})
-                yield f"data: {data}\n\n"
+                yield f"data: {json.dumps({'status': 'failed', 'message': error_msg or 'Ingestion failed.'})}\n\n"
                 break
             else:
-                data = json.dumps({"status": status, "message": "Ingesting document..."})
-                yield f"data: {data}\n\n"
+                yield f"data: {json.dumps({'status': status, 'message': 'Ingesting document...'})}\n\n"
             time.sleep(2)
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")

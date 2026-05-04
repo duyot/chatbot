@@ -49,3 +49,31 @@ def test_status_stream_404_for_unknown_id(client):
     import uuid
     response = client.get(f"/api/documents/{uuid.uuid4()}/status")
     assert response.status_code == 404
+
+def test_list_documents_returns_only_done(client, db):
+    from app.models import Document
+    import uuid
+
+    done = Document(id=uuid.uuid4(), file_name="done.pdf", file_path="/tmp/d.pdf", status="done")
+    pending = Document(id=uuid.uuid4(), file_name="pending.pdf", file_path="/tmp/p.pdf", status="pending")
+    db.add_all([done, pending])
+    db.flush()
+
+    response = client.get("/api/documents")
+    assert response.status_code == 200
+    names = [d["file_name"] for d in response.json()]
+    assert "done.pdf" in names
+    assert "pending.pdf" not in names
+
+
+def test_list_documents_returns_empty_when_none_done(client, db):
+    from app.models import Document
+    import uuid
+
+    doc = Document(id=uuid.uuid4(), file_name="proc.pdf", file_path="/tmp/p.pdf", status="processing")
+    db.add(doc)
+    db.flush()
+
+    response = client.get("/api/documents")
+    assert response.status_code == 200
+    assert response.json() == []
