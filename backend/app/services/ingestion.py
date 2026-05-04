@@ -27,6 +27,16 @@ def chunk_text(text: str) -> List[str]:
     return splitter.split_text(text)
 
 
+def embed_text(text: str) -> List[float]:
+    with httpx.Client() as client:
+        response = client.post(
+            f"{settings.ollama_base_url}/api/embed",
+            json={"model": settings.ollama_embedding_model, "input": [text]},
+        )
+        response.raise_for_status()
+        return response.json()["embeddings"][0]
+
+
 def embed_chunks(chunks: List[str]) -> List[List[float]]:
     embeddings: List[List[float]] = []
     batch_size = 100

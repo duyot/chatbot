@@ -64,3 +64,14 @@ def test_store_chunks_inserts_rows():
     assert saved_objects[0].chunk_index == 0
     assert saved_objects[1].chunk_index == 1
     mock_db.commit.assert_called_once()
+
+def test_embed_text_calls_ollama_and_returns_vector(mocker):
+    mock_response = mocker.MagicMock()
+    mock_response.json.return_value = {"embeddings": [[0.1, 0.2, 0.3]]}
+    mock_response.raise_for_status = mocker.MagicMock()
+    mocker.patch("httpx.Client.post", return_value=mock_response)
+
+    from app.services.ingestion import embed_text
+    result = embed_text("hello world")
+
+    assert result == [0.1, 0.2, 0.3]
