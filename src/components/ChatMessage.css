@@ -184,3 +184,82 @@
   background: rgba(0, 113, 227, 0.08);
   color: var(--color-primary);
 }
+
+/* Streaming cursor */
+.chat-msg-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--color-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Error state */
+.chat-msg-error {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: #c0392b;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(192, 57, 43, 0.08);
+}
+
+/* Citations */
+.chat-msg-citations {
+  margin-top: 6px;
+}
+
+.chat-msg-citations-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  padding: 4px 0;
+  transition: color 0.12s;
+}
+
+.chat-msg-citations-toggle:hover {
+  color: var(--color-primary);
+}
+
+.chat-msg-citations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  border-left: 2px solid var(--color-primary);
+}
+
+.chat-msg-citation-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.chat-msg-citation-index {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.chat-msg-citation-text {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}

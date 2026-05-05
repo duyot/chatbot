@@ -27,3 +27,15 @@
   overflow: hidden;
   background: var(--color-chat-bg);
 }
+
+.chat-page-hint {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  user-select: none;
+}

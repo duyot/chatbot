@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './ChatMessage.css'
 
 function renderContent(content) {
@@ -43,7 +44,8 @@ function renderContent(content) {
   return elements
 }
 
-export default function ChatMessage({ role, content }) {
+export default function ChatMessage({ role, content, streaming = false, citations = [], error = false }) {
+  const [citationsOpen, setCitationsOpen] = useState(false)
   const isUser = role === 'user'
 
   return (
@@ -70,9 +72,37 @@ export default function ChatMessage({ role, content }) {
               </svg>
             </button>
           </div>
-          <div className="chat-msg-body">
-            {renderContent(content)}
-          </div>
+          {error ? (
+            <p className="chat-msg-error">Something went wrong. Please try again.</p>
+          ) : (
+            <div className="chat-msg-body">
+              {renderContent(content)}
+              {streaming && <span className="chat-msg-cursor" aria-hidden="true" />}
+            </div>
+          )}
+          {!streaming && citations.length > 0 && (
+            <div className="chat-msg-citations">
+              <button
+                className="chat-msg-citations-toggle"
+                onClick={() => setCitationsOpen((o) => !o)}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: citationsOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }}>
+                  <path d="M4 2l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {citations.length} source{citations.length !== 1 ? 's' : ''}
+              </button>
+              {citationsOpen && (
+                <div className="chat-msg-citations-list">
+                  {citations.map((c) => (
+                    <div key={c.chunk_index} className="chat-msg-citation-item">
+                      <span className="chat-msg-citation-index">#{c.chunk_index + 1}</span>
+                      <p className="chat-msg-citation-text">{c.content}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           <div className="chat-msg-actions">
             <div className="chat-msg-reactions">
               <button className="chat-msg-action-btn" title="Thumbs up">
