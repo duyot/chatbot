@@ -18,7 +18,8 @@ services:
       - "8000:8000"
     env_file: .env
     volumes:
-      - uploads:/app/uploads
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -41,7 +42,8 @@ services:
     command: celery -A app.workers.celery_app.celery_app worker --loglevel=info
     env_file: .env
     volumes:
-      - uploads:/app/uploads
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -77,5 +79,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  uploads:
   pgdata:

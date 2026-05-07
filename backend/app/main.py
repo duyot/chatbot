@@ -1,4 +1,6 @@
 import logging
+import os
+from logging.handlers import RotatingFileHandler
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +13,10 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(name)s %(message)s",
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
+os.makedirs("/app/logs", exist_ok=True)
+_fh = RotatingFileHandler("/app/logs/backend.log", maxBytes=10_485_760, backupCount=5)
+_fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s %(name)s %(message)s"))
+logging.getLogger().addHandler(_fh)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Chatbot API")
