@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     upload_dir: str = "./uploads"
     max_upload_mb: int = 20
     cors_origins: str = "http://localhost:3000"
+    log_level: str = "INFO"
 
     model_config = SettingsConfigDict(env_file=".env")
 

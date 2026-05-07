@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
@@ -10,6 +11,8 @@ from ..database import get_db, SessionLocal
 from ..models import Document
 from ..schemas import DocumentResponse, DocumentListItem
 from ..config import settings
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
@@ -52,6 +55,7 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
             os.unlink(file_path)
         raise
 
+    logger.info("upload_document: queued document_id=%s file=%s size=%d", doc.id, file.filename, len(content))
     from ..workers.tasks import ingest_document
     ingest_document.delay(str(doc.id))
 
@@ -64,6 +68,8 @@ def stream_status(document_id: str, db: Session = Depends(get_db)):
     if not exists:
         raise HTTPException(status_code=404, detail="Document not found")
 
+    logger.info("stream_status: opened document_id=%s", document_id)
+
     def event_stream():
         while True:
             inner_db = SessionLocal()
@@ -75,9 +81,11 @@ def stream_status(document_id: str, db: Session = Depends(get_db)):
                 inner_db.close()
 
             if status == "done":
+                logger.info("stream_status: done document_id=%s", document_id)
                 yield f"data: {json.dumps({'status': 'done', 'message': 'Document ready for Q&A.'})}\n\n"
                 break
             elif status == "failed":
+                logger.warning("stream_status: failed document_id=%s error=%s", document_id, error_msg)
                 yield f"data: {json.dumps({'status': 'failed', 'message': error_msg or 'Ingestion failed.'})}\n\n"
                 break
             else:
