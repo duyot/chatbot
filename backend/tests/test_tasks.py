@@ -21,7 +21,7 @@ def test_ingest_document_sets_done_on_success():
 
     with patch("app.workers.tasks.SessionLocal", return_value=mock_db), \
          patch("app.workers.tasks.parse_file", return_value="some text"), \
-         patch("app.workers.tasks.chunk_text", return_value=["chunk1"]), \
+         patch("app.workers.tasks.chunk_text", return_value=(["parent1"], [["chunk1"]])), \
          patch("app.workers.tasks.embed_chunks", return_value=[[0.1] * 1536]), \
          patch("app.workers.tasks.store_chunks"):
         ingest_document.apply(args=[doc_id])

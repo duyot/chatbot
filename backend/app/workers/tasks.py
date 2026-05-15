@@ -22,13 +22,17 @@ def ingest_document(self, document_id: str):
         text = parse_file(doc.file_path, doc.file_name)
         logger.info("[task:%s] parse complete file=%s text_len=%d", self.request.id, doc.file_name, len(text))
 
-        chunks = chunk_text(text)
-        logger.info("[task:%s] chunked text chunks=%d", self.request.id, len(chunks))
+        parents, children_per_parent = chunk_text(text)
+        flat_children = [c for sub in children_per_parent for c in sub]
+        logger.info(
+            "[task:%s] chunked text parents=%d children=%d",
+            self.request.id, len(parents), len(flat_children),
+        )
 
-        embeddings = embed_chunks(chunks)
+        embeddings = embed_chunks(flat_children)
         logger.info("[task:%s] embeddings done count=%d", self.request.id, len(embeddings))
 
-        store_chunks(db, document_id, chunks, embeddings)
+        store_chunks(db, document_id, parents, children_per_parent, embeddings)
         logger.info("[task:%s] stored chunks document_id=%s", self.request.id, document_id)
 
         doc = db.query(Document).filter(Document.id == document_id).first()

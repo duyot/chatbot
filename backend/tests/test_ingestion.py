@@ -5,17 +5,20 @@ from unittest.mock import MagicMock, patch
 def test_chunk_text_splits_long_content():
     from app.services.ingestion import chunk_text
     text = "word " * 500  # 2500 chars
-    chunks = chunk_text(text)
-    assert len(chunks) > 1
-    for chunk in chunks:
-        assert len(chunk) <= 1200  # chunk_size=1000 + some overlap buffer
+    parents, children_per_parent = chunk_text(text)
+    assert len(parents) >= 1
+    assert len(children_per_parent) == len(parents)
+    all_children = [c for sub in children_per_parent for c in sub]
+    assert len(all_children) > 1
 
 def test_chunk_text_short_content_stays_one_chunk():
     from app.services.ingestion import chunk_text
     text = "Short paragraph."
-    chunks = chunk_text(text)
-    assert len(chunks) == 1
-    assert chunks[0] == "Short paragraph."
+    parents, children_per_parent = chunk_text(text)
+    assert len(parents) == 1
+    assert parents[0] == "Short paragraph."
+    assert len(children_per_parent) == 1
+    assert children_per_parent[0][0] == "Short paragraph."
 
 def test_parse_docx(tmp_path):
     from docx import Document as DocxDocument
@@ -47,16 +50,25 @@ def test_embed_chunks_calls_ollama_and_returns_vectors():
 
 def test_store_chunks_inserts_rows():
     from app.services.ingestion import store_chunks
-    from app.models import DocumentChunk
+    from app.models import DocumentChunk, DocumentParentChunk
     import uuid
 
     mock_db = MagicMock()
+    # flush must assign .id on parent rows; simulate by making add_all set ids via side_effect
+    def add_all_side_effect(rows):
+        for i, row in enumerate(rows):
+            row.id = uuid.uuid4()
+    mock_db.add_all.side_effect = add_all_side_effect
+
     doc_id = str(uuid.uuid4())
-    chunks = ["chunk one", "chunk two"]
+    parents = ["parent one"]
+    children_per_parent = [["chunk one", "chunk two"]]
     embeddings = [[0.1] * 1536, [0.2] * 1536]
 
-    store_chunks(mock_db, doc_id, chunks, embeddings)
+    store_chunks(mock_db, doc_id, parents, children_per_parent, embeddings)
 
+    mock_db.add_all.assert_called_once()
+    mock_db.flush.assert_called_once()
     mock_db.bulk_save_objects.assert_called_once()
     saved_objects = mock_db.bulk_save_objects.call_args[0][0]
     assert len(saved_objects) == 2
@@ -103,3 +115,22 @@ def test_document_parent_chunk_model_round_trips(db):
 
     fetched = db.query(DocumentChunk).filter_by(id=child.id).one()
     assert fetched.parent_id == parent.id
+
+
+def test_chunk_text_produces_parents_and_children():
+    from app.services.ingestion import chunk_text
+
+    # Produce text large enough to split into multiple parents
+    text = ("This is a sentence. " * 800)  # ~16k characters -> multiple 1500-token parents
+    parents, children_by_parent = chunk_text(text)
+
+    assert len(parents) >= 2, "should split into multiple parents"
+    # children_by_parent is a list aligned with parents — each entry is a list of child strings
+    assert len(children_by_parent) == len(parents)
+    for parent_text, children in zip(parents, children_by_parent):
+        assert children, "every parent must have at least one child"
+        # children should be shorter than the parent
+        joined = " ".join(children)
+        # Tokens are smaller than chars, but length sanity: children re-joined should
+        # roughly cover the parent (allow slack for overlap and whitespace)
+        assert len(joined) >= len(parent_text) * 0.7

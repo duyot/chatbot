@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import List
+from typing import List, Tuple
 import fitz  # PyMuPDF
 import httpx
 from docx import Document as DocxDocument
@@ -8,7 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sqlalchemy.orm import Session
 
 from ..config import settings
-from ..models import DocumentChunk
+from ..models import DocumentChunk, DocumentParentChunk
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +27,34 @@ def parse_file(file_path: str, file_name: str) -> str:
     return text
 
 
-def chunk_text(text: str) -> List[str]:
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    chunks = splitter.split_text(text)
-    logger.info("chunk_text: input_len=%d chunks=%d", len(text), len(chunks))
-    return chunks
+def _parent_splitter() -> RecursiveCharacterTextSplitter:
+    return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        encoding_name="cl100k_base",
+        chunk_size=1500,
+        chunk_overlap=0,
+    )
+
+
+def _child_splitter() -> RecursiveCharacterTextSplitter:
+    return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        encoding_name="cl100k_base",
+        chunk_size=300,
+        chunk_overlap=50,
+    )
+
+
+def chunk_text(text: str) -> Tuple[List[str], List[List[str]]]:
+    """Returns (parents, children_per_parent). children_per_parent[i] are the child
+    chunks derived from parents[i]."""
+    parents = _parent_splitter().split_text(text)
+    child_splitter = _child_splitter()
+    children_per_parent = [child_splitter.split_text(p) for p in parents]
+    n_children = sum(len(c) for c in children_per_parent)
+    logger.info(
+        "chunk_text: input_len=%d parents=%d children=%d",
+        len(text), len(parents), n_children,
+    )
+    return parents, children_per_parent
 
 
 def embed_text(text: str) -> List[float]:
@@ -64,16 +87,41 @@ def embed_chunks(chunks: List[str]) -> List[List[float]]:
     return embeddings
 
 
-def store_chunks(db: Session, document_id: str, chunks: List[str], embeddings: List[List[float]]) -> None:
-    rows = [
-        DocumentChunk(
+def store_chunks(
+    db: Session,
+    document_id: str,
+    parents: List[str],
+    children_per_parent: List[List[str]],
+    child_embeddings: List[List[float]],
+) -> None:
+    """Insert parents then children. Children carry parent_id."""
+    parent_rows = [
+        DocumentParentChunk(
             document_id=document_id,
-            chunk_index=i,
-            content=chunk,
-            embedding=embedding,
+            parent_index=i,
+            content=parent_text,
         )
-        for i, (chunk, embedding) in enumerate(zip(chunks, embeddings))
+        for i, parent_text in enumerate(parents)
     ]
-    db.bulk_save_objects(rows)
+    db.add_all(parent_rows)
+    db.flush()  # populate parent_rows[*].id
+
+    child_rows: List[DocumentChunk] = []
+    embed_iter = iter(child_embeddings)
+    global_idx = 0
+    for parent_row, children in zip(parent_rows, children_per_parent):
+        for child_text in children:
+            child_rows.append(DocumentChunk(
+                document_id=document_id,
+                parent_id=parent_row.id,
+                chunk_index=global_idx,
+                content=child_text,
+                embedding=next(embed_iter),
+            ))
+            global_idx += 1
+    db.bulk_save_objects(child_rows)
     db.commit()
-    logger.info("store_chunks: inserted=%d document_id=%s", len(rows), document_id)
+    logger.info(
+        "store_chunks: parents=%d children=%d document_id=%s",
+        len(parent_rows), len(child_rows), document_id,
+    )
