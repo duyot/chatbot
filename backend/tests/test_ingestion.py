@@ -75,3 +75,31 @@ def test_embed_text_calls_ollama_and_returns_vector(mocker):
     result = embed_text("hello world")
 
     assert result == [0.1, 0.2, 0.3]
+
+
+def test_document_parent_chunk_model_round_trips(db):
+    from app.models import Document, DocumentParentChunk, DocumentChunk
+    import uuid
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="ready")
+    db.add(doc)
+    parent = DocumentParentChunk(
+        document_id=doc.id,
+        parent_index=0,
+        content="Parent body of text...",
+    )
+    db.add(parent)
+    db.flush()
+
+    child = DocumentChunk(
+        document_id=doc.id,
+        parent_id=parent.id,
+        chunk_index=0,
+        content="Child snippet",
+        embedding=[0.0] * 2560,
+    )
+    db.add(child)
+    db.flush()
+
+    fetched = db.query(DocumentChunk).filter_by(id=child.id).one()
+    assert fetched.parent_id == parent.id
