@@ -30,3 +30,7 @@ backend/**/__pycache__/
 backend/.pytest_cache/
 backend/alembic/versions/*.pyc
 backend/.venv/
+
+# Eval results: track baselines only, ignore ad-hoc local runs
+backend/evals/results/*.json
+!backend/evals/results/baseline_*.json
