@@ -74,3 +74,56 @@ def test_grade_chunks_fast_path_no(mocker):
 
     out = asyncio.run(grade_chunks(state))
     assert out["graded_useful"] is False
+
+
+def test_rewrite_and_retry_produces_new_query(mocker):
+    from app.services.rag.nodes import rewrite_and_retry
+    from app.services.rag.state import initial_state
+
+    fake_llm = MagicMock()
+    msg = MagicMock(); msg.content = "alternative phrasing"
+    fake_llm.ainvoke = mocker.AsyncMock(return_value=msg)
+    mocker.patch("app.services.rag.nodes._chat_llm", return_value=fake_llm)
+
+    state = initial_state("d", "q")
+    state["attempted_queries"] = ["first", "second"]
+    state["retry_count"] = 0
+
+    out = asyncio.run(rewrite_and_retry(state))
+    assert out["rewritten_query"] == "alternative phrasing"
+    assert out["retry_count"] == 1
+
+
+def test_faithfulness_check_yes_emits_no_warning(mocker):
+    from app.services.rag.nodes import faithfulness_check
+    from app.services.rag.state import initial_state
+
+    fake_llm = MagicMock()
+    msg = MagicMock(); msg.content = "YES"
+    fake_llm.ainvoke = mocker.AsyncMock(return_value=msg)
+    mocker.patch("app.services.rag.nodes._chat_llm", return_value=fake_llm)
+
+    p = MagicMock(); p.content = "context"
+    state = initial_state("d", "q")
+    state["parents"] = [p]
+    state["answer"] = "answer"
+    out = asyncio.run(faithfulness_check(state))
+    assert out["warnings"] == []
+
+
+def test_faithfulness_check_no_appends_warning(mocker):
+    from app.services.rag.nodes import faithfulness_check
+    from app.services.rag.state import initial_state
+
+    fake_llm = MagicMock()
+    msg = MagicMock(); msg.content = "NO"
+    fake_llm.ainvoke = mocker.AsyncMock(return_value=msg)
+    mocker.patch("app.services.rag.nodes._chat_llm", return_value=fake_llm)
+
+    p = MagicMock(); p.content = "context"
+    state = initial_state("d", "q")
+    state["parents"] = [p]
+    state["answer"] = "answer"
+    out = asyncio.run(faithfulness_check(state))
+    assert len(out["warnings"]) == 1
+    assert "warning" in out["warnings"][0]["type"]

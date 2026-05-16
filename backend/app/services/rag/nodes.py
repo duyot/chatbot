@@ -96,3 +96,61 @@ async def grade_chunks(state: AgentState) -> dict:
     verdict = (response.content or "").strip().upper().startswith("YES")
     return {"graded_useful": verdict,
             "notes": state.get("notes", []) + [f"grade(strict): {verdict}"]}
+
+
+async def rewrite_and_retry(state: AgentState) -> dict:
+    attempted = state.get("attempted_queries", [])
+    llm = _chat_llm(temperature=0.3)  # a little creativity for alt phrasing
+    response = await llm.ainvoke([
+        HumanMessage(prompts.RETRY_QUERY_PROMPT.format(attempted=attempted)),
+    ])
+    new_query = (response.content or "").strip().strip('"').strip("'")
+    return {
+        "rewritten_query": new_query,
+        "retry_count": state.get("retry_count", 0) + 1,
+        "notes": state.get("notes", []) + [f"retry({state.get('retry_count', 0)+1}): {new_query[:60]}"],
+    }
+
+
+async def generate_answer(state: AgentState) -> dict:
+    """NOTE: streaming is handled at the graph level via astream_events.
+    This node still calls the LLM and the streamed tokens are picked up
+    by the graph layer. We accumulate the full answer here for the
+    faithfulness_check node."""
+    system_prompt = (
+        prompts.ANSWER_SYSTEM_GROUNDED
+        if state.get("graded_useful")
+        else prompts.ANSWER_SYSTEM_NOT_FOUND
+    )
+    context = "\n\n---\n\n".join(p.content for p in state.get("parents", []))
+    llm = _chat_llm()
+    response = await llm.ainvoke([
+        SystemMessage(system_prompt),
+        HumanMessage(f"Document context:\n{context}\n\nQuestion: {state['question']}"),
+    ])
+    answer = response.content or ""
+    return {"answer": answer,
+            "notes": state.get("notes", []) + [f"answer: len={len(answer)}"]}
+
+
+async def faithfulness_check(state: AgentState) -> dict:
+    if not state.get("answer"):
+        return {}
+    context = "\n\n---\n\n".join(p.content for p in state.get("parents", []))
+    llm = _chat_llm()
+    response = await llm.ainvoke([
+        HumanMessage(prompts.FAITHFULNESS_PROMPT.format(
+            question=state["question"],
+            context=context,
+            answer=state["answer"],
+        )),
+    ])
+    verdict = (response.content or "").strip().upper().startswith("YES")
+    warnings = list(state.get("warnings", []))
+    if not verdict:
+        warnings.append({
+            "type": "warning",
+            "message": "Some claims may not be fully supported by the document.",
+        })
+    return {"warnings": warnings,
+            "notes": state.get("notes", []) + [f"faithfulness: {verdict}"]}
