@@ -17,9 +17,10 @@ class Settings(BaseSettings):
     fts_top_k: int = 30
     rrf_k: int = 60
     rerank_top_n: int = 6
-    rerank_score_floor: float = 0.05
-    reranker_model: str = "ms-marco-MiniLM-L-12-v2"
-    flashrank_cache_dir: str = "/tmp/flashrank"
+    # bge-reranker emits raw logits: positive = relevant, negative = not.
+    # Tune after first eval if needed; the rerank log line shows top/bottom scores.
+    rerank_score_floor: float = 0.0
+    reranker_model: str = "qllama/bge-reranker-v2-m3:q8_0"
 
     # Agent loop tunables
     max_retrieval_retries: int = 2

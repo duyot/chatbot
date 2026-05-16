@@ -1,24 +1,29 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 
-def test_reranker_singleton_returns_same_instance():
+def test_get_reranker_returns_configured_model_name():
     from app.services.rag.reranker import get_reranker
-    a = get_reranker()
-    b = get_reranker()
-    assert a is b
+    from app.config import settings
+    assert get_reranker() == settings.reranker_model
 
 
-def test_rerank_returns_top_n_sorted(mocker):
+def test_rerank_posts_pairs_to_ollama_and_sorts_by_score(mocker):
     from app.services.rag.reranker import rerank
 
-    fake_ranker = MagicMock()
-    fake_ranker.rerank.return_value = [
-        {"id": "B", "score": 0.9},
-        {"id": "A", "score": 0.5},
-        {"id": "C", "score": 0.1},
-    ]
-    mocker.patch("app.services.rag.reranker.get_reranker", return_value=fake_ranker)
+    fake_response = MagicMock()
+    fake_response.raise_for_status = MagicMock()
+    fake_response.json.return_value = {
+        "embeddings": [
+            [0.5],  # chunk_a (cat) vs query
+            [0.9],  # chunk_b (dog) vs query
+            [0.1],  # chunk_c (fish) vs query
+        ]
+    }
+    fake_client_cm = MagicMock()
+    fake_client_cm.__enter__.return_value.post.return_value = fake_response
+    fake_client_cm.__exit__.return_value = None
+    mocker.patch("app.services.rag.reranker.httpx.Client", return_value=fake_client_cm)
 
     chunk_a = MagicMock(id="A", content="cat")
     chunk_b = MagicMock(id="B", content="dog")
@@ -26,7 +31,7 @@ def test_rerank_returns_top_n_sorted(mocker):
 
     result = rerank("pets", [chunk_a, chunk_b, chunk_c], top_n=2)
 
-    assert [c.id for c, s in result] == ["B", "A"]
+    assert [c.id for c, _ in result] == ["B", "A"]
     assert result[0][1] == 0.9
 
 

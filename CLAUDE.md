@@ -57,7 +57,7 @@ When the chatbot UI is built, follow the common layout that matches the existing
 
 ## Backend — RAG pipeline
 
-The agentic RAG service lives in `backend/app/services/rag/` and is a LangGraph state machine. Entry point: `agentic_rag_stream(document_id, message, db)`. Six nodes: rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check. Retrieval is hybrid (pgvector + Postgres FTS) fused with RRF, reranked with FlashRank, then we return parent chunks (~1500 tokens) to the LLM while children (~300 tokens) are what gets retrieved.
+The agentic RAG service lives in `backend/app/services/rag/` and is a LangGraph state machine. Entry point: `agentic_rag_stream(document_id, message, db)`. Six nodes: rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check. Retrieval is hybrid (pgvector + Postgres FTS) fused with RRF, reranked via Ollama-hosted `qllama/bge-reranker-v2-m3` cross-encoder, then we return parent chunks (~1500 tokens) to the LLM while children (~300 tokens) are what gets retrieved.
 
 See `features/chat_with_doc/rag_enhancement.md` for the flow diagram and `docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md` for the design rationale.
 

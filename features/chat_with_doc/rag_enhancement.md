@@ -29,7 +29,7 @@ rewrite_query  ->  retrieve_and_rerank  ->  grade_chunks
 | `rag/state.py` | `AgentState` TypedDict |
 | `rag/prompts.py` | All prompts |
 | `rag/retrieval.py` | hybrid_search -> rrf_fuse -> rerank -> fetch_parents |
-| `rag/reranker.py` | FlashRank singleton |
+| `rag/reranker.py` | Ollama-hosted cross-encoder (qllama/bge-reranker-v2-m3 by default) |
 
 ## Data model
 
