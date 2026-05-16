@@ -41,7 +41,7 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
 
     inputs = [_format_pair(query, c.content or "") for c in chunks]
 
-    url = f"{settings.ollama_base_url.rstrip('/')}/api/embed"
+    url = f"{settings.reranker_base_url.rstrip('/')}/api/embed"
     with httpx.Client(timeout=60.0) as client:
         response = client.post(
             url,
