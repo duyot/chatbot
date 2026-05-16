@@ -12,6 +12,19 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
 
+    # Retrieval tunables
+    vector_top_k: int = 30
+    fts_top_k: int = 30
+    rrf_k: int = 60
+    rerank_top_n: int = 6
+    rerank_score_floor: float = 0.05
+    reranker_model: str = "ms-marco-MiniLM-L-12-v2"
+    flashrank_cache_dir: str = "/tmp/flashrank"
+
+    # Agent loop tunables
+    max_retrieval_retries: int = 2
+    strict_grader: bool = False
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()
