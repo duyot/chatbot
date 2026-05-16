@@ -54,3 +54,29 @@ When the chatbot UI is built, follow the common layout that matches the existing
 - There is no `.env` handling wired up. Any API keys (OpenAI, Anthropic, etc.) for the chatbot must go through `import.meta.env.VITE_*` with Vite's env loading — do not hardcode.
 - Vite config is intentionally minimal. Before adding plugins (proxy, path aliases, PWA, etc.), discuss the trade-off first.
 - There is no Git repo initialized in this working directory and no CI config. Don't assume either exists when writing commands or hooks.
+
+## Backend — RAG pipeline
+
+The agentic RAG service lives in `backend/app/services/rag/` and is a LangGraph state machine. Entry point: `agentic_rag_stream(document_id, message, db)`. Six nodes: rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check. Retrieval is hybrid (pgvector + Postgres FTS) fused with RRF, reranked with FlashRank, then we return parent chunks (~1500 tokens) to the LLM while children (~300 tokens) are what gets retrieved.
+
+See `features/chat_with_doc/rag_enhancement.md` for the flow diagram and `docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md` for the design rationale.
+
+### Status string
+
+The Document model uses `status="done"` for fully-ingested documents (used by `/api/documents` filter at `backend/app/routers/documents.py`). Do not write `status="ready"` — that's a spec inconsistency, "done" is the production value.
+
+### Evaluation
+
+Before changing retrieval or agent code, run the eval harness:
+
+```bash
+cd backend
+python -m evals.run_eval --name <name>
+python -m evals.run_eval --compare <baseline_name> <name>
+```
+
+Golden set: `backend/evals/golden_set.yaml`. The `@pytest.mark.eval` marker excludes the golden-set test from default `pytest` runs (`addopts = -m "not eval"` in `backend/pytest.ini`).
+
+### Reingestion after schema changes
+
+After a chunk-schema migration (e.g. parent-child), run `python -m scripts.reingest_all` (or `--doc-id <uuid>` for a single document) to rebuild chunks from source documents in `uploads/`.
