@@ -2,9 +2,13 @@
 
 Wiring:
     START -> rewrite_query -> retrieve -> grade
-        grade --useful--> answer -> check -> END
+        grade --useful--> generate -> check -> END
         grade --retry-->  retry  -> retrieve  (back-edge, loops)
-        grade --give_up--> answer -> check -> END (with NOT_FOUND framing)
+        grade --give_up--> generate -> check -> END (with NOT_FOUND framing)
+
+Note: the answer-generating node is named 'generate' (not 'answer') because
+LangGraph 0.2.x forbids node names that collide with AgentState field names —
+'answer' is already a state field.
 
 Streaming: agentic_rag_stream() runs the graph with astream_events and yields
 SSE-shaped dicts compatible with the existing chat router.
@@ -23,9 +27,9 @@ from . import nodes
 logger = logging.getLogger(__name__)
 
 
-def route_after_grade(state: AgentState) -> Literal["answer", "retry", "give_up"]:
+def route_after_grade(state: AgentState) -> Literal["generate", "retry", "give_up"]:
     if state.get("graded_useful"):
-        return "answer"
+        return "generate"
     if state.get("retry_count", 0) < settings.max_retrieval_retries:
         return "retry"
     return "give_up"
@@ -39,19 +43,19 @@ def build_graph(db: Session):
     g.add_node("retrieve", partial(nodes.retrieve_and_rerank, db=db))
     g.add_node("grade", nodes.grade_chunks)
     g.add_node("retry", nodes.rewrite_and_retry)
-    g.add_node("answer", nodes.generate_answer)
+    g.add_node("generate", nodes.generate_answer)
     g.add_node("check", nodes.faithfulness_check)
 
     g.set_entry_point("rewrite_query")
     g.add_edge("rewrite_query", "retrieve")
     g.add_edge("retrieve", "grade")
     g.add_conditional_edges("grade", route_after_grade, {
-        "answer": "answer",
+        "generate": "generate",
         "retry": "retry",
-        "give_up": "answer",
+        "give_up": "generate",
     })
     g.add_edge("retry", "retrieve")
-    g.add_edge("answer", "check")
+    g.add_edge("generate", "check")
     g.add_edge("check", END)
 
     return g.compile()
@@ -81,10 +85,10 @@ async def agentic_rag_stream(
 
     async for event in graph.astream_events(state_in, version="v2"):
         kind = event.get("event")
-        # Token streaming from the 'answer' node only
+        # Token streaming from the 'generate' node only
         if kind == "on_chat_model_stream":
             node = event.get("metadata", {}).get("langgraph_node")
-            if node == "answer":
+            if node == "generate":
                 chunk = event.get("data", {}).get("chunk")
                 content = getattr(chunk, "content", "") if chunk else ""
                 if content:
