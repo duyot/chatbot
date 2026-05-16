@@ -101,4 +101,13 @@ async def agentic_rag_stream(
         yield w
 
     yield {"type": "citations", "chunks": _build_citations(final_state)}
-    yield {"type": "done"}
+
+    done_payload: dict = {"type": "done"}
+    if settings.log_level.upper() == "DEBUG":
+        done_payload["debug"] = {
+            "attempted_queries": final_state.get("attempted_queries", []),
+            "retry_count": final_state.get("retry_count", 0),
+            "intent": final_state.get("intent"),
+            "notes": final_state.get("notes", []),
+        }
+    yield done_payload
