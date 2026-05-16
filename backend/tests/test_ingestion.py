@@ -93,7 +93,7 @@ def test_document_parent_chunk_model_round_trips(db):
     from app.models import Document, DocumentParentChunk, DocumentChunk
     import uuid
 
-    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="ready")
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
     db.add(doc)
     parent = DocumentParentChunk(
         document_id=doc.id,

@@ -1,0 +1,18 @@
+# Golden Q/A set for the agentic RAG pipeline.
+#
+# Schema per entry:
+#   document_file_name: filename matching a Document row with status='done'
+#   question: str — the user query
+#   expected_answer: str — ground truth used by RAGAS
+#   expected_substring: str | null — quick substring check; null for summaries / not-in-doc
+#   category: one of named_field_lookup | fact_lookup | summarization | not_in_doc | pronoun_dependent
+#
+# Aim for ~15-20 entries across 3-4 documents covering all five categories.
+# The single entry below is a stub so `python -m evals.run_eval --help` can load
+# the file. Replace it with real Q/A pairs against documents you have ingested.
+
+- document_file_name: "REPLACE_WITH_REAL_FILENAME.pdf"
+  question: "Stub question — replace before running."
+  expected_answer: "Stub answer."
+  expected_substring: null
+  category: "fact_lookup"

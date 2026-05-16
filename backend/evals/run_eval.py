@@ -50,12 +50,12 @@ def _load_golden() -> list[dict]:
 def _resolve_document_id(db, file_name: str) -> str:
     doc = (
         db.query(Document)
-        .filter(Document.file_name == file_name, Document.status == "ready")
+        .filter(Document.file_name == file_name, Document.status == "done")
         .first()
     )
     if not doc:
         raise RuntimeError(
-            f"golden_set.yaml references {file_name!r} but no ready document with that "
+            f"golden_set.yaml references {file_name!r} but no done document with that "
             f"name exists in the database. Ingest it first."
         )
     return str(doc.id)
