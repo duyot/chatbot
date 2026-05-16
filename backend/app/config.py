@@ -17,9 +17,12 @@ class Settings(BaseSettings):
     fts_top_k: int = 30
     rrf_k: int = 60
     rerank_top_n: int = 6
-    # bge-reranker emits raw logits: positive = relevant, negative = not.
-    # Tune after first eval if needed; the rerank log line shows top/bottom scores.
-    rerank_score_floor: float = 0.0
+    # Optional gate: chunks below this rerank score are treated as not-useful.
+    # Default is effectively disabled (-1e9) because reranker score ranges vary
+    # wildly: FlashRank returns 0..1, bge-reranker returns raw logits -10..+10.
+    # Set to e.g. 0.0 (bge) or 0.05 (FlashRank) only if the grade(fast) log
+    # shows high top_scores for irrelevant matches.
+    rerank_score_floor: float = -1e9
     reranker_model: str = "qllama/bge-reranker-v2-m3:q8_0"
     # Reranker can live on a different Ollama instance than chat/embedding
     # (e.g., bigger GPU box). On Mac/Windows Docker Desktop the container

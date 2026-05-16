@@ -52,25 +52,38 @@ def test_retrieve_and_rerank_writes_children_parents_scores(mocker, db):
     assert "rewritten" in out["attempted_queries"]
 
 
-def test_grade_chunks_fast_path_yes(mocker):
+def test_grade_chunks_fast_path_useful_when_chunks_present(mocker):
     from app.services.rag.nodes import grade_chunks
     from app.services.rag.state import initial_state
 
     state = initial_state("d", "q")
     state["retrieved_children"] = [MagicMock()]
-    state["rerank_scores"] = [0.5]  # above default 0.05
+    state["rerank_scores"] = [-3.5]  # negative score still useful by default
 
     out = asyncio.run(grade_chunks(state))
     assert out["graded_useful"] is True
 
 
-def test_grade_chunks_fast_path_no(mocker):
+def test_grade_chunks_fast_path_not_useful_when_no_chunks(mocker):
     from app.services.rag.nodes import grade_chunks
     from app.services.rag.state import initial_state
 
     state = initial_state("d", "q")
+    state["retrieved_children"] = []
+    state["rerank_scores"] = []
+
+    out = asyncio.run(grade_chunks(state))
+    assert out["graded_useful"] is False
+
+
+def test_grade_chunks_fast_path_honors_explicit_floor(mocker):
+    from app.services.rag.nodes import grade_chunks
+    from app.services.rag.state import initial_state
+
+    mocker.patch("app.services.rag.nodes.settings.rerank_score_floor", 0.5)
+    state = initial_state("d", "q")
     state["retrieved_children"] = [MagicMock()]
-    state["rerank_scores"] = [0.001]  # below floor
+    state["rerank_scores"] = [0.1]  # below the override floor
 
     out = asyncio.run(grade_chunks(state))
     assert out["graded_useful"] is False

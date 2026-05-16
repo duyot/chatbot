@@ -71,18 +71,34 @@ async def retrieve_and_rerank(state: AgentState, db: Session) -> dict:
 
 
 async def grade_chunks(state: AgentState) -> dict:
-    """Fast path by default. Strict LLM path if settings.strict_grader=True."""
+    """Fast path by default. Strict LLM path if settings.strict_grader=True.
+
+    Fast-path policy: if retrieval returned any chunks at all, mark useful=True
+    and let the LLM filter when generating. Reranker score ranges vary wildly
+    by model (FlashRank: 0-1, bge logits: roughly -10..+10), so an absolute
+    score floor produces flaky behavior. The score floor is still honored if
+    set above the model's noise floor — but only as a paranoia gate.
+    """
     children = state.get("retrieved_children") or []
     scores = state.get("rerank_scores") or []
+    top_score = max(scores, default=0.0)
 
     if not children:
         return {"graded_useful": False,
                 "notes": state.get("notes", []) + ["grade: no_chunks"]}
 
     if not settings.strict_grader:
-        useful = max(scores, default=0.0) >= settings.rerank_score_floor
+        useful = True
+        if scores and top_score < settings.rerank_score_floor:
+            useful = False
+        logger.info(
+            "grade(fast): useful=%s n_chunks=%d top_score=%.3f floor=%.3f",
+            useful, len(children), top_score, settings.rerank_score_floor,
+        )
         return {"graded_useful": useful,
-                "notes": state.get("notes", []) + [f"grade(fast): useful={useful}"]}
+                "notes": state.get("notes", []) + [
+                    f"grade(fast): useful={useful} top_score={top_score:.3f}",
+                ]}
 
     # Strict path: LLM judge
     passages = "\n\n---\n\n".join(c.content for c in children[:5])
