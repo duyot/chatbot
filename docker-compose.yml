@@ -27,6 +27,8 @@ services:
         condition: service_healthy
       worker:
         condition: service_started
+      reranker:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 10s
@@ -78,5 +80,24 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  reranker:
+    # HuggingFace Text Embeddings Inference (TEI) — exposes a real /rerank
+    # endpoint for cross-encoder models. CPU image; swap to a GPU tag if
+    # available. First start downloads the model into the tei-data volume.
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.6
+    command: ["--model-id", "BAAI/bge-reranker-v2-m3", "--port", "80"]
+    volumes:
+      - tei-data:/data
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
+
 volumes:
   pgdata:
+  tei-data:

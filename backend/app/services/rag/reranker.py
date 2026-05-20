@@ -1,13 +1,16 @@
-"""Ollama-hosted cross-encoder reranker (qllama/bge-reranker-v2-m3 by default).
+"""Cross-encoder reranker backed by HuggingFace Text Embeddings Inference (TEI).
 
-The qllama BGE reranker is exposed via Ollama's /api/embed endpoint: send the
-concatenated "query\\n\\npassage" as the input and the model returns a 1-element
-"embedding" whose value is the relevance logit (higher = more relevant).
+TEI exposes a first-class /rerank endpoint for cross-encoder models such as
+BAAI/bge-reranker-v2-m3. Given a query and a list of texts it returns a list of
+{index, score} records sorted by score descending; scores are raw logits
+(roughly -10..+10 for bge-reranker-v2-m3), higher = more relevant.
 
-Batch: we send all (query, passage) pairs in a single /api/embed call.
+History: we previously called Ollama's /api/embed for qllama/bge-reranker-v2-m3,
+but that endpoint returns the model's hidden-state embedding rather than the
+classifier-head logit, so the "score" was just embedding[0] — effectively
+random. TEI exposes the actual rerank head.
 
-There is no singleton state to hold; get_reranker() is kept for API
-compatibility with the previous FlashRank version and just returns the model name.
+get_reranker() is kept for API compatibility and just returns the model name.
 """
 from __future__ import annotations
 import logging
@@ -25,44 +28,50 @@ def get_reranker() -> str:
     return settings.reranker_model
 
 
-def _format_pair(query: str, passage: str) -> str:
-    """How qllama/bge-reranker expects (query, passage) input — join with a
-    blank line so the model's tokenizer treats them as separate segments."""
-    return f"{query}\n\n{passage}"
-
-
 def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
-    """Score each chunk via Ollama, return top_n (chunk, score) sorted desc.
+    """Score each chunk via TEI's /rerank, return top_n (chunk, score) sorted desc.
 
     `chunks` is a list with .id and .content attributes (DocumentChunk works directly).
     """
     if not chunks:
         return []
 
-    inputs = [_format_pair(query, c.content or "") for c in chunks]
+    texts = [c.content or "" for c in chunks]
+    url = f"{settings.reranker_base_url.rstrip('/')}/rerank"
+    payload = {
+        "query": query,
+        "texts": texts,
+        "raw_scores": True,
+        "return_text": False,
+        "truncate": True,
+    }
 
-    url = f"{settings.reranker_base_url.rstrip('/')}/api/embed"
+    logger.info(
+        "rerank: request query=%.80s n_texts=%d url=%s",
+        query, len(texts), url,
+    )
+
     with httpx.Client(timeout=60.0) as client:
-        response = client.post(
-            url,
-            json={"model": settings.reranker_model, "input": inputs},
-        )
+        response = client.post(url, json=payload)
         response.raise_for_status()
         body = response.json()
 
-    embeddings = body.get("embeddings") or []
-    if len(embeddings) != len(chunks):
+    # TEI usually returns a bare list of {index, score}; some versions wrap it.
+    results = body if isinstance(body, list) else body.get("results") or []
+
+    if len(results) != len(chunks):
         logger.warning(
-            "rerank: model returned %d embeddings for %d chunks; aligning by index",
-            len(embeddings), len(chunks),
+            "rerank: TEI returned %d results for %d chunks; aligning by index",
+            len(results), len(chunks),
         )
 
     scored: list[tuple[Any, float]] = []
-    for chunk, emb in zip(chunks, embeddings):
-        # bge-reranker via Ollama returns a 1-element vector with the logit.
-        # Be defensive in case a larger vector is returned: take element 0.
-        score = float(emb[0]) if emb else 0.0
-        scored.append((chunk, score))
+    for item in results:
+        idx = item.get("index")
+        if idx is None or idx < 0 or idx >= len(chunks):
+            logger.warning("rerank: skipping result with out-of-range index=%r", idx)
+            continue
+        scored.append((chunks[idx], float(item.get("score", 0.0))))
 
     scored.sort(key=lambda x: -x[1])
     logger.info(

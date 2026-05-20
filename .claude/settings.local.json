@@ -5,7 +5,12 @@
       "mcp__plugin_figma_figma__get_screenshot",
       "Bash(npm install *)",
       "Bash(claude plugin *)",
-      "Bash(bash *)"
+      "Bash(bash *)",
+      "WebFetch(domain:docs.langchain.com)",
+      "Bash(py --version)",
+      "Bash(where python *)",
+      "Bash(python -m venv .venv_deepagents_test)",
+      "Bash(python -m pytest tests/test_retrieval.py -v)"
     ]
   }
 }

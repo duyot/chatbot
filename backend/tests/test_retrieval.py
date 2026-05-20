@@ -8,22 +8,31 @@ def test_get_reranker_returns_configured_model_name():
     assert get_reranker() == settings.reranker_model
 
 
-def test_rerank_posts_pairs_to_ollama_and_sorts_by_score(mocker):
-    from app.services.rag.reranker import rerank
-
+def _mock_tei_client(mocker, body):
     fake_response = MagicMock()
     fake_response.raise_for_status = MagicMock()
-    fake_response.json.return_value = {
-        "embeddings": [
-            [0.5],  # chunk_a (cat) vs query
-            [0.9],  # chunk_b (dog) vs query
-            [0.1],  # chunk_c (fish) vs query
-        ]
-    }
+    fake_response.json.return_value = body
     fake_client_cm = MagicMock()
     fake_client_cm.__enter__.return_value.post.return_value = fake_response
     fake_client_cm.__exit__.return_value = None
-    mocker.patch("app.services.rag.reranker.httpx.Client", return_value=fake_client_cm)
+    return mocker.patch(
+        "app.services.rag.reranker.httpx.Client", return_value=fake_client_cm
+    )
+
+
+def test_rerank_calls_tei_rerank_and_sorts_by_score(mocker):
+    from app.services.rag.reranker import rerank
+
+    # TEI's /rerank returns a bare list of {index, score}; rerank() should
+    # sort defensively regardless of input order.
+    patched = _mock_tei_client(
+        mocker,
+        [
+            {"index": 1, "score": 0.9},  # chunk_b (dog)
+            {"index": 0, "score": 0.5},  # chunk_a (cat)
+            {"index": 2, "score": 0.1},  # chunk_c (fish)
+        ],
+    )
 
     chunk_a = MagicMock(id="A", content="cat")
     chunk_b = MagicMock(id="B", content="dog")
@@ -33,6 +42,63 @@ def test_rerank_posts_pairs_to_ollama_and_sorts_by_score(mocker):
 
     assert [c.id for c, _ in result] == ["B", "A"]
     assert result[0][1] == 0.9
+
+    posted = patched.return_value.__enter__.return_value.post.call_args
+    assert posted.kwargs["json"]["query"] == "pets"
+    assert posted.kwargs["json"]["texts"] == ["cat", "dog", "fish"]
+    assert posted.kwargs["json"]["raw_scores"] is True
+
+
+def test_rerank_handles_wrapped_results_object(mocker):
+    """Some TEI versions wrap the array as {"results": [...]}."""
+    from app.services.rag.reranker import rerank
+
+    _mock_tei_client(
+        mocker,
+        {"results": [{"index": 0, "score": 0.3}, {"index": 1, "score": 0.8}]},
+    )
+
+    chunk_a = MagicMock(id="A", content="x")
+    chunk_b = MagicMock(id="B", content="y")
+
+    result = rerank("q", [chunk_a, chunk_b], top_n=2)
+    assert [c.id for c, _ in result] == ["B", "A"]
+
+
+def test_rerank_skips_out_of_range_index(mocker):
+    from app.services.rag.reranker import rerank
+
+    _mock_tei_client(
+        mocker,
+        [
+            {"index": 0, "score": 0.4},
+            {"index": 99, "score": 0.9},  # bad index, must be skipped
+        ],
+    )
+
+    chunk_a = MagicMock(id="A", content="x")
+    result = rerank("q", [chunk_a], top_n=5)
+
+    assert [c.id for c, _ in result] == ["A"]
+    assert result[0][1] == 0.4
+
+
+def test_rerank_truncates_to_top_n(mocker):
+    from app.services.rag.reranker import rerank
+
+    _mock_tei_client(
+        mocker,
+        [
+            {"index": 0, "score": 0.1},
+            {"index": 1, "score": 0.9},
+            {"index": 2, "score": 0.5},
+        ],
+    )
+
+    chunks = [MagicMock(id=i, content=str(i)) for i in range(3)]
+    result = rerank("q", chunks, top_n=2)
+    assert len(result) == 2
+    assert [c.id for c, _ in result] == [1, 2]
 
 
 def test_rerank_empty_chunks_returns_empty():
