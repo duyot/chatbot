@@ -1,9 +1,16 @@
 # Agentic RAG Enhancement — Design Spec
 
 - **Date:** 2026-05-15
-- **Status:** Approved, ready for implementation planning
+- **Status:** Approved — superseded in part on 2026-06-28 (see Historical note)
 - **Supersedes (partially):** `2026-05-04-agentic-rag-design.md` (v1 feature design — this enhances its retrieval and agent loop)
 - **Target module:** `backend/app/services/rag.py` → `backend/app/services/rag/`
+
+> **Historical note (2026-06-28):** The stack moved off self-hosted Ollama/TEI.
+> Chat LLM is now `anthropic/claude-haiku-4.5` via OpenRouter, embeddings are
+> OpenAI `text-embedding-3-small` (1536d), and the reranker is LLM-as-reranker
+> via OpenRouter (no more bge-reranker-v2-m3 cross-encoder). The retrieval flow
+> (hybrid + RRF + rerank + parent-child) described below is unchanged; only
+> the model substrate moved. Content below is the original 2026-05-15 design.
 
 ## 1. Problem statement
 

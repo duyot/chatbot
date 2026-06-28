@@ -49,4 +49,4 @@ class DocumentChunk(Base):
     )
     chunk_index = Column(Integer, nullable=False)
     content = Column(Text, nullable=False)
-    embedding = Column(Vector(2560))
+    embedding = Column(Vector(1536))

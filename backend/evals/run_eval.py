@@ -119,7 +119,8 @@ async def run_eval(name: str) -> dict:
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "git_sha": _git_sha(),
         "config_snapshot": {
-            "ollama_chat_model": os.environ.get("OLLAMA_CHAT_MODEL", "from-settings"),
+            "openrouter_chat_model": os.environ.get("OPENROUTER_CHAT_MODEL", "from-settings"),
+            "openai_embedding_model": os.environ.get("OPENAI_EMBEDDING_MODEL", "from-settings"),
         },
         "per_question": per_question,
         "summary": summarize(per_question),

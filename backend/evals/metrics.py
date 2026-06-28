@@ -1,7 +1,8 @@
 """RAGAS metric wrappers + cheap custom checks.
 
-Judge model = ollama_chat_model from app.config.settings, wrapped via
-langchain_ollama.ChatOllama so it can be passed to ragas.evaluate(llm=...).
+Judge model = openrouter_chat_model from app.config.settings, wrapped via
+langchain_openai.ChatOpenAI pointed at OpenRouter so it can be passed to
+ragas.evaluate(llm=...). Embeddings = openai_embedding_model.
 """
 from __future__ import annotations
 import logging
@@ -14,25 +15,28 @@ from ragas.metrics import (
     context_precision,
     context_recall,
 )
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 
-def _build_judge() -> ChatOllama:
-    return ChatOllama(
-        model=settings.ollama_chat_model,
-        base_url=settings.ollama_base_url,
+def _build_judge() -> ChatOpenAI:
+    return ChatOpenAI(
+        model=settings.openrouter_chat_model,
+        base_url=settings.openrouter_base_url,
+        api_key=settings.openrouter_api_key,
         temperature=0.0,
     )
 
 
-def _build_embeddings() -> OllamaEmbeddings:
-    return OllamaEmbeddings(
-        model=settings.ollama_embedding_model,
-        base_url=settings.ollama_base_url,
+def _build_embeddings() -> OpenAIEmbeddings:
+    return OpenAIEmbeddings(
+        model=settings.openai_embedding_model,
+        base_url=settings.openrouter_base_url,
+        api_key=settings.openrouter_api_key,
+        dimensions=settings.embedding_dim,
     )
 
 

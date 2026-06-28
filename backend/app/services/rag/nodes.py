@@ -8,7 +8,7 @@ import logging
 from typing import Literal
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 from ...config import settings
 from . import prompts
@@ -17,10 +17,11 @@ from .state import AgentState
 logger = logging.getLogger(__name__)
 
 
-def _chat_llm(temperature: float = 0.0) -> ChatOllama:
-    return ChatOllama(
-        model=settings.ollama_chat_model,
-        base_url=settings.ollama_base_url,
+def _chat_llm(temperature: float = 0.0) -> ChatOpenAI:
+    return ChatOpenAI(
+        model=settings.openrouter_chat_model,
+        base_url=settings.openrouter_base_url,
+        api_key=settings.openrouter_api_key,
         temperature=temperature,
     )
 

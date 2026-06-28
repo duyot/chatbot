@@ -35,18 +35,18 @@ def test_parse_image_returns_placeholder():
     result = parse_file("/any/path/photo.png", "photo.png")
     assert result == "[image: photo.png]"
 
-def test_embed_chunks_calls_ollama_and_returns_vectors():
+def test_embed_chunks_calls_openai_and_returns_vectors():
     from app.services.ingestion import embed_chunks
-    fake_embedding = [0.1] * 768
+    fake_embedding = [0.1] * 1536
+    mock_item = MagicMock()
+    mock_item.embedding = fake_embedding
     mock_response = MagicMock()
-    mock_response.raise_for_status = MagicMock()
-    mock_response.json.return_value = {"embeddings": [fake_embedding]}
-    with patch("app.services.ingestion.httpx.Client") as MockClient:
-        mock_client = MockClient.return_value.__enter__.return_value
-        mock_client.post.return_value = mock_response
+    mock_response.data = [mock_item]
+    with patch("app.services.ingestion.OpenAI") as MockOpenAI:
+        MockOpenAI.return_value.embeddings.create.return_value = mock_response
         result = embed_chunks(["some text"])
     assert len(result) == 1
-    assert len(result[0]) == 768
+    assert len(result[0]) == 1536
 
 def test_store_chunks_inserts_rows():
     from app.services.ingestion import store_chunks
@@ -77,11 +77,14 @@ def test_store_chunks_inserts_rows():
     assert saved_objects[1].chunk_index == 1
     mock_db.commit.assert_called_once()
 
-def test_embed_text_calls_ollama_and_returns_vector(mocker):
+def test_embed_text_calls_openai_and_returns_vector(mocker):
+    mock_item = mocker.MagicMock()
+    mock_item.embedding = [0.1, 0.2, 0.3]
     mock_response = mocker.MagicMock()
-    mock_response.json.return_value = {"embeddings": [[0.1, 0.2, 0.3]]}
-    mock_response.raise_for_status = mocker.MagicMock()
-    mocker.patch("httpx.Client.post", return_value=mock_response)
+    mock_response.data = [mock_item]
+    mock_client = mocker.MagicMock()
+    mock_client.embeddings.create.return_value = mock_response
+    mocker.patch("app.services.ingestion.OpenAI", return_value=mock_client)
 
     from app.services.ingestion import embed_text
     result = embed_text("hello world")
@@ -108,7 +111,7 @@ def test_document_parent_chunk_model_round_trips(db):
         parent_id=parent.id,
         chunk_index=0,
         content="Child snippet",
-        embedding=[0.0] * 2560,
+        embedding=[0.0] * 1536,
     )
     db.add(child)
     db.flush()

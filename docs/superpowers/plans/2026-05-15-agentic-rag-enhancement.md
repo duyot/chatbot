@@ -1,5 +1,11 @@
 # Agentic RAG Enhancement Implementation Plan
 
+> **Historical note (2026-06-28):** The stack moved off self-hosted Ollama/TEI.
+> Chat LLM is now `anthropic/claude-haiku-4.5` via OpenRouter, embeddings are
+> OpenAI `text-embedding-3-small` (1536d), and the reranker is LLM-as-reranker
+> via OpenRouter (no more bge-reranker-v2-m3 / FlashRank). Content below
+> describes the original 2026-05-15 plan and is kept for historical context.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the brittle regex-preprocessor + 3-round `bind_tools` loop in `backend/app/services/rag.py` with a LangGraph CRAG-lite state machine, parent-child chunking, RRF hybrid-fusion + FlashRank reranker, and a RAGAS golden-set evaluation harness — fixing the "answer is in the doc but agent misses it" failure mode.

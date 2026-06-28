@@ -1,7 +1,13 @@
 # Agentic RAG Chat Feature — Design Spec
 
 **Date:** 2026-05-04
-**Status:** Approved
+**Status:** Approved — superseded in part on 2026-06-28 (see Historical note)
+
+> **Historical note (2026-06-28):** The stack moved off self-hosted Ollama. Chat
+> LLM is now `anthropic/claude-haiku-4.5` via OpenRouter, embeddings are OpenAI
+> `text-embedding-3-small` (1536d), and reranking is LLM-as-reranker via
+> OpenRouter (no more TEI cross-encoder). The content below describes the
+> original 2026-05-04 design and is kept for historical context.
 
 ---
 

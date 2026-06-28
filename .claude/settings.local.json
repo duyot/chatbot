@@ -6,6 +6,13 @@
       "Bash(npm install *)",
       "Bash(claude plugin *)",
       "Bash(bash *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(git checkout *)"
+      "Bash(bash *)",
       "WebFetch(domain:docs.langchain.com)",
       "Bash(py --version)",
       "Bash(where python *)",

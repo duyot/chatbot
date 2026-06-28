@@ -1,9 +1,15 @@
-# Agentic RAG — enhanced architecture (post-2026-05-16)
+# Agentic RAG — enhanced architecture (post-2026-05-16, OpenRouter cutover 2026-06-28)
 
 The chat-with-doc pipeline is implemented as a LangGraph state machine in
 `backend/app/services/rag/`. See the design spec at
 `docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md` and the
 implementation plan at `docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md`.
+On 2026-06-28 the stack moved off self-hosted Ollama/TEI: chat LLM is now
+`anthropic/claude-haiku-4.5` via OpenRouter, embeddings are
+`qwen/qwen3-embedding-8b` (truncated to 1536 dims via OpenAI-compatible
+`dimensions=`) also via OpenRouter, and the reranker is LLM-as-reranker
+over OpenRouter (no more TEI cross-encoder). Every model call now exits
+through a single OpenRouter API key.
 
 ## Flow
 
@@ -29,7 +35,7 @@ rewrite_query  ->  retrieve_and_rerank  ->  grade_chunks
 | `rag/state.py` | `AgentState` TypedDict |
 | `rag/prompts.py` | All prompts |
 | `rag/retrieval.py` | hybrid_search -> rrf_fuse -> rerank -> fetch_parents |
-| `rag/reranker.py` | Ollama-hosted cross-encoder (qllama/bge-reranker-v2-m3 by default) |
+| `rag/reranker.py` | LLM-as-reranker via OpenRouter (anthropic/claude-haiku-4.5 by default); scores passages 0..10 with structured output |
 
 ## Data model
 
@@ -51,7 +57,8 @@ shipping any retrieval/agent change.
 
 All in `backend/app/config.py`: `vector_top_k`, `fts_top_k`, `rrf_k`,
 `rerank_top_n`, `rerank_score_floor`, `max_retrieval_retries`, `strict_grader`,
-`reranker_model`, `flashrank_cache_dir`.
+`reranker_model` (override to use a stronger model for ranking only, e.g.
+`anthropic/claude-sonnet-4.6`).
 
 ## Debug payload
 

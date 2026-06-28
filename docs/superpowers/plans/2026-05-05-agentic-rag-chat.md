@@ -1,5 +1,10 @@
 # Agentic RAG Chat Feature Implementation Plan
 
+> **Historical note (2026-06-28):** The stack moved off self-hosted Ollama. Chat
+> LLM is now `anthropic/claude-haiku-4.5` via OpenRouter and embeddings are
+> OpenAI `text-embedding-3-small` (1536d). Content below describes the original
+> 2026-05-05 plan and is kept for historical context.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a "chat with document" feature where a user selects an ingested document, types a question, and receives a real streamed answer from a ReAct agent backed by pgvector and qwen3.
