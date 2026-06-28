@@ -13,6 +13,19 @@ from app.main import app
 from app.database import Base, get_db
 
 TEST_DB_URL = os.environ["DATABASE_URL"]
+
+# Guardrail: the session-scoped fixture below runs Base.metadata.drop_all at
+# teardown, which will wipe whatever DB this URL points at. If you run pytest
+# inside a container whose .env points at the production DB, that's a
+# disaster — refuse to start instead. The DB name must contain "test".
+_db_name = TEST_DB_URL.rsplit("/", 1)[-1].split("?", 1)[0].lower()
+if "test" not in _db_name:
+    raise RuntimeError(
+        f"Refusing to run tests: DATABASE_URL points at {_db_name!r}, which "
+        "does not contain 'test'. Set DATABASE_URL to a dedicated test "
+        "database before running pytest, or your data will be dropped."
+    )
+
 engine = create_engine(TEST_DB_URL)
 TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

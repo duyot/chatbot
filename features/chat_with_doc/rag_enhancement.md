@@ -7,9 +7,11 @@ implementation plan at `docs/superpowers/plans/2026-05-15-agentic-rag-enhancemen
 On 2026-06-28 the stack moved off self-hosted Ollama/TEI: chat LLM is now
 `anthropic/claude-haiku-4.5` via OpenRouter, embeddings are
 `qwen/qwen3-embedding-8b` (truncated to 1536 dims via OpenAI-compatible
-`dimensions=`) also via OpenRouter, and the reranker is LLM-as-reranker
-over OpenRouter (no more TEI cross-encoder). Every model call now exits
-through a single OpenRouter API key.
+`dimensions=`) also via OpenRouter, and reranking calls OpenRouter's
+dedicated `/v1/rerank` endpoint (cross-encoder; default
+`anthropic/claude-haiku-4.5` or set to `nvidia/llama-nemotron-rerank-vl-1b-v2`
+for a real reranker). Every model call exits through a single
+OpenRouter API key.
 
 ## Flow
 
@@ -35,7 +37,7 @@ rewrite_query  ->  retrieve_and_rerank  ->  grade_chunks
 | `rag/state.py` | `AgentState` TypedDict |
 | `rag/prompts.py` | All prompts |
 | `rag/retrieval.py` | hybrid_search -> rrf_fuse -> rerank -> fetch_parents |
-| `rag/reranker.py` | LLM-as-reranker via OpenRouter (anthropic/claude-haiku-4.5 by default); scores passages 0..10 with structured output |
+| `rag/reranker.py` | OpenRouter `/v1/rerank` cross-encoder; httpx POST with `{model, query, documents, top_n}`, returns sorted `(chunk, relevance_score)` |
 
 ## Data model
 

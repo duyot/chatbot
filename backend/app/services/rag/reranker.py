@@ -1,46 +1,29 @@
-"""LLM-as-reranker backed by OpenRouter chat completions.
+"""Cross-encoder reranker backed by OpenRouter's /v1/rerank endpoint.
 
-We send the query + numbered candidate passages to an OpenRouter-hosted chat
-model and ask for a JSON list of {index, score} scored 0..10 by relevance.
+We POST query + candidate documents to OpenRouter, which forwards to the
+configured reranker model (e.g. nvidia/llama-nemotron-rerank-vl-1b-v2:free).
+The response is a sorted list of {index, relevance_score, document}.
 
-History: this used to call HuggingFace TEI's /rerank endpoint with a
-bge-reranker-v2-m3 cross-encoder. Before that, it called Ollama's /api/embed
-and read embedding[0] as a "score" — which was effectively random. The
-OpenRouter LLM path costs tokens and adds ~1-3s latency per call but removes
-the TEI dependency from the stack.
+History: an earlier draft tried to call ChatOpenAI.with_structured_output
+to score passages via /v1/chat/completions, which 404s for dedicated rerank
+models (they expose /rerank only, not chat). Before that, this module
+called HuggingFace TEI's /rerank in-cluster; the request shape is similar.
+Before *that*, it misused Ollama's /api/embed and read embedding[0] as a
+score — effectively random.
 
-Score range is 0..10. Set settings.rerank_score_floor above 0 to filter weak
-hits; default (-1e9) means "pass everything through, top_n decides".
+`rerank_score_floor` (in settings) can be set above the typical noise floor
+of the chosen model to drop weak hits — Nemotron rerank scores are roughly
+in [0, 1]; default of -1e9 lets everything through.
 """
 from __future__ import annotations
 import logging
-from typing import Any, List
+from typing import Any
 
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage, HumanMessage
-from pydantic import BaseModel, Field
+import httpx
 
 from ...config import settings
 
 logger = logging.getLogger(__name__)
-
-
-_SYSTEM_PROMPT = (
-    "You are a relevance grader. Given a user query and a numbered list of "
-    "passages, score each passage from 0.0 (irrelevant) to 10.0 (perfectly "
-    "answers the query). Be strict: most passages should score below 5.0. "
-    "Return a JSON object with key 'scores' containing one entry per passage. "
-    "Every input index must appear exactly once."
-)
-
-
-class _RankedItem(BaseModel):
-    index: int = Field(..., description="0-based index of the passage")
-    score: float = Field(..., description="Relevance score in 0..10")
-
-
-class _RankResult(BaseModel):
-    scores: List[_RankedItem]
 
 
 def get_reranker() -> str:
@@ -48,62 +31,61 @@ def get_reranker() -> str:
     return settings.reranker_model
 
 
-def _build_llm() -> ChatOpenAI:
-    return ChatOpenAI(
-        model=settings.reranker_model,
-        base_url=settings.openrouter_base_url,
-        api_key=settings.openrouter_api_key,
-        temperature=0.0,
-    )
-
-
 def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
-    """Score each chunk via OpenRouter LLM, return top_n (chunk, score) sorted desc.
+    """Score each chunk via OpenRouter /v1/rerank, return top_n (chunk, score)
+    sorted descending.
 
-    `chunks` is a list with .id and .content attributes (DocumentChunk works directly).
+    `chunks` is a list with .id and .content attributes (DocumentChunk works
+    directly). On any error returns [(c, 0.0) for c in chunks[:top_n]] so the
+    retrieval pipeline degrades gracefully to RRF order.
     """
     if not chunks:
         return []
 
-    passages = "\n\n".join(
-        f"[{i}] {(c.content or '').strip()}" for i, c in enumerate(chunks)
-    )
-    user_msg = (
-        f"Query:\n{query}\n\n"
-        f"Passages (n={len(chunks)}):\n{passages}\n\n"
-        f"Score every passage. Return only the JSON."
-    )
+    url = f"{settings.openrouter_base_url.rstrip('/')}/rerank"
+    headers = {
+        "Authorization": f"Bearer {settings.openrouter_api_key}",
+        "Content-Type": "application/json",
+    }
+    documents = [{"text": (c.content or "").strip()} for c in chunks]
+    payload = {
+        "model": settings.reranker_model,
+        "query": query,
+        "documents": documents,
+        "top_n": min(top_n, len(chunks)),
+    }
 
     logger.info(
-        "rerank: request query=%.80s n_passages=%d model=%s",
+        "rerank: request query=%.80s n_docs=%d model=%s",
         query, len(chunks), settings.reranker_model,
     )
 
-    llm = _build_llm().with_structured_output(_RankResult)
     try:
-        result: _RankResult = llm.invoke([
-            SystemMessage(_SYSTEM_PROMPT),
-            HumanMessage(user_msg),
-        ])
+        with httpx.Client(timeout=60.0) as client:
+            response = client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            body = response.json()
     except Exception as exc:
-        logger.error("rerank: LLM call failed (%s); falling back to original order", exc)
+        logger.error(
+            "rerank: API call failed (%s); falling back to input order", exc,
+        )
         return [(c, 0.0) for c in chunks[:top_n]]
 
-    seen: set[int] = set()
+    results = body.get("results") if isinstance(body, dict) else body
+    if not isinstance(results, list):
+        logger.error("rerank: unexpected response shape: %r", body)
+        return [(c, 0.0) for c in chunks[:top_n]]
+
     scored: list[tuple[Any, float]] = []
-    for item in result.scores:
-        if item.index in seen or item.index < 0 or item.index >= len(chunks):
-            logger.warning("rerank: skipping result with invalid index=%r", item.index)
+    for item in results:
+        idx = item.get("index")
+        if idx is None or idx < 0 or idx >= len(chunks):
+            logger.warning("rerank: skipping result with invalid index=%r", idx)
             continue
-        seen.add(item.index)
-        scored.append((chunks[item.index], float(item.score)))
+        score = item.get("relevance_score", item.get("score", 0.0))
+        scored.append((chunks[idx], float(score)))
 
-    missing = [i for i in range(len(chunks)) if i not in seen]
-    if missing:
-        logger.warning("rerank: LLM omitted %d indices; appending with score 0.0", len(missing))
-        for i in missing:
-            scored.append((chunks[i], 0.0))
-
+    # API returns sorted; defensive sort in case a future model variant doesn't.
     scored.sort(key=lambda x: -x[1])
     logger.info(
         "rerank: model=%s n_chunks=%d top_score=%.3f bottom_score=%.3f",

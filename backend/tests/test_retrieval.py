@@ -8,32 +8,41 @@ def test_get_reranker_returns_configured_model_name():
     assert get_reranker() == settings.reranker_model
 
 
-def _mock_llm(mocker, ranked):
-    """Patch reranker._build_llm so .with_structured_output().invoke() returns
-    a _RankResult built from `ranked` (list of {"index", "score"} dicts)."""
-    from app.services.rag.reranker import _RankResult, _RankedItem
+def _mock_rerank_response(mocker, body, raises=None):
+    """Patch httpx.Client used in reranker module.
 
-    fake_structured = MagicMock()
-    fake_structured.invoke.return_value = _RankResult(
-        scores=[_RankedItem(**r) for r in ranked]
-    )
-    fake_llm = MagicMock()
-    fake_llm.with_structured_output.return_value = fake_structured
+    If `raises` is provided, the .post call raises that exception (used to
+    test the graceful fallback). Otherwise returns a response whose .json()
+    yields `body`.
+    """
+    fake_response = MagicMock()
+    fake_response.raise_for_status = MagicMock()
+    fake_response.json.return_value = body
+    fake_client = MagicMock()
+    if raises is not None:
+        fake_client.post.side_effect = raises
+    else:
+        fake_client.post.return_value = fake_response
+    fake_cm = MagicMock()
+    fake_cm.__enter__.return_value = fake_client
+    fake_cm.__exit__.return_value = None
     return mocker.patch(
-        "app.services.rag.reranker._build_llm", return_value=fake_llm
+        "app.services.rag.reranker.httpx.Client", return_value=fake_cm
     )
 
 
 def test_rerank_sorts_by_score(mocker):
     from app.services.rag.reranker import rerank
 
-    _mock_llm(
+    # API returns sorted desc; the defensive sort in rerank() should be a no-op
+    # but still validate it cope when the order is shuffled.
+    patched = _mock_rerank_response(
         mocker,
-        [
-            {"index": 1, "score": 9.0},  # chunk_b (dog)
-            {"index": 0, "score": 5.0},  # chunk_a (cat)
-            {"index": 2, "score": 1.0},  # chunk_c (fish)
-        ],
+        {"results": [
+            {"index": 1, "relevance_score": 0.91},  # B (dog)
+            {"index": 0, "relevance_score": 0.55},  # A (cat)
+            {"index": 2, "relevance_score": 0.10},  # C (fish)
+        ]},
     )
 
     chunk_a = MagicMock(id="A", content="cat")
@@ -43,52 +52,63 @@ def test_rerank_sorts_by_score(mocker):
     result = rerank("pets", [chunk_a, chunk_b, chunk_c], top_n=2)
 
     assert [c.id for c, _ in result] == ["B", "A"]
-    assert result[0][1] == 9.0
+    assert result[0][1] == 0.91
+
+    posted = patched.return_value.__enter__.return_value.post.call_args
+    body = posted.kwargs["json"]
+    assert body["query"] == "pets"
+    assert body["documents"] == [{"text": "cat"}, {"text": "dog"}, {"text": "fish"}]
+    assert body["top_n"] == 2
 
 
-def test_rerank_appends_missing_indices_with_zero(mocker):
-    """If the LLM omits some indices, rerank fills them in with score 0.0."""
+def test_rerank_handles_bare_list_response(mocker):
+    """If a future variant returns a bare list instead of {results: [...]},
+    rerank should still handle it."""
     from app.services.rag.reranker import rerank
 
-    _mock_llm(mocker, [{"index": 0, "score": 8.0}])  # omits index 1
+    _mock_rerank_response(
+        mocker,
+        [
+            {"index": 0, "relevance_score": 0.3},
+            {"index": 1, "relevance_score": 0.8},
+        ],
+    )
 
     chunk_a = MagicMock(id="A", content="x")
     chunk_b = MagicMock(id="B", content="y")
 
     result = rerank("q", [chunk_a, chunk_b], top_n=2)
-    assert [c.id for c, _ in result] == ["A", "B"]
-    assert result[0][1] == 8.0
-    assert result[1][1] == 0.0
+    assert [c.id for c, _ in result] == ["B", "A"]
 
 
 def test_rerank_skips_out_of_range_index(mocker):
     from app.services.rag.reranker import rerank
 
-    _mock_llm(
+    _mock_rerank_response(
         mocker,
-        [
-            {"index": 0, "score": 4.0},
-            {"index": 99, "score": 9.0},  # bad index, must be skipped
-        ],
+        {"results": [
+            {"index": 0, "relevance_score": 0.4},
+            {"index": 99, "relevance_score": 0.9},  # bad index, must be skipped
+        ]},
     )
 
     chunk_a = MagicMock(id="A", content="x")
     result = rerank("q", [chunk_a], top_n=5)
 
     assert [c.id for c, _ in result] == ["A"]
-    assert result[0][1] == 4.0
+    assert result[0][1] == 0.4
 
 
 def test_rerank_truncates_to_top_n(mocker):
     from app.services.rag.reranker import rerank
 
-    _mock_llm(
+    _mock_rerank_response(
         mocker,
-        [
-            {"index": 0, "score": 1.0},
-            {"index": 1, "score": 9.0},
-            {"index": 2, "score": 5.0},
-        ],
+        {"results": [
+            {"index": 1, "relevance_score": 0.9},
+            {"index": 2, "relevance_score": 0.5},
+            {"index": 0, "relevance_score": 0.1},
+        ]},
     )
 
     chunks = [MagicMock(id=i, content=str(i)) for i in range(3)]
@@ -97,15 +117,11 @@ def test_rerank_truncates_to_top_n(mocker):
     assert [c.id for c, _ in result] == [1, 2]
 
 
-def test_rerank_falls_back_to_input_order_on_llm_error(mocker):
-    """If the LLM call raises, rerank returns chunks[:top_n] with score 0."""
+def test_rerank_falls_back_to_input_order_on_api_error(mocker):
+    """If the HTTP call raises, rerank returns chunks[:top_n] with score 0."""
     from app.services.rag.reranker import rerank
 
-    fake_structured = MagicMock()
-    fake_structured.invoke.side_effect = RuntimeError("openrouter down")
-    fake_llm = MagicMock()
-    fake_llm.with_structured_output.return_value = fake_structured
-    mocker.patch("app.services.rag.reranker._build_llm", return_value=fake_llm)
+    _mock_rerank_response(mocker, body=None, raises=RuntimeError("openrouter down"))
 
     chunks = [MagicMock(id=i, content=str(i)) for i in range(3)]
     result = rerank("q", chunks, top_n=2)

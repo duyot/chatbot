@@ -28,10 +28,12 @@ class Settings(BaseSettings):
     rrf_k: int = 60
     rerank_top_n: int = 6
     # Optional gate: chunks below this rerank score are treated as not-useful.
-    # LLM-as-reranker emits scores in 0..10; set above 0.0 to filter weak hits.
+    # Cross-encoder rerankers via OpenRouter /v1/rerank emit relevance scores
+    # roughly in [0, 1] (model-dependent); set e.g. 0.2 to filter weak hits.
     rerank_score_floor: float = -1e9
-    # Reranker model (LLM-as-reranker via OpenRouter). Defaults to the chat
-    # model. Override to use a stronger model for ranking only.
+    # Reranker model (cross-encoder served via OpenRouter /v1/rerank).
+    # Default is a chat model since it works without /v1/rerank availability;
+    # override to a true reranker like nvidia/llama-nemotron-rerank-vl-1b-v2.
     reranker_model: str = "anthropic/claude-haiku-4.5"
 
     # Agent loop tunables
