@@ -11,13 +11,15 @@
       "WebSearch",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:github.com)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
       "Bash(bash *)",
       "WebFetch(domain:docs.langchain.com)",
       "Bash(py --version)",
       "Bash(where python *)",
       "Bash(python -m venv .venv_deepagents_test)",
-      "Bash(python -m pytest tests/test_retrieval.py -v)"
+      "Bash(python -m pytest tests/test_retrieval.py -v)",
+      "Bash(python -m pytest tests/test_ingestion.py::test_chunk_metadata_columns_round_trip -x -q)",
+      "Bash(conda env *)"
     ]
   }
 }

@@ -40,6 +40,24 @@ class Settings(BaseSettings):
     max_retrieval_retries: int = 2
     strict_grader: bool = False
 
+    # OCR (PaddleOCR microservice). The worker stays lean and calls this over HTTP.
+    ocr_enabled: bool = True
+    ocr_service_url: str = "http://ocr:8080"
+    ocr_timeout_s: float = 60.0
+    # A PDF page whose native text layer has fewer than this many non-whitespace
+    # characters is treated as scanned and sent to OCR. Images are always OCR'd.
+    ocr_min_text_chars: int = 20
+    # Render DPI for rasterizing scanned PDF pages before OCR.
+    ocr_dpi: int = 200
+
+    # Metadata-aware rerank boost (Phase 4). Defaults are no-ops so retrieval
+    # behaviour is unchanged until tuned via the eval harness (see CLAUDE.md).
+    # final_score = rerank_score + native_boost (if source==native)
+    #                            - lowconf_penalty (if ocr conf < lowconf_threshold)
+    rerank_native_boost: float = 0.0
+    rerank_lowconf_penalty: float = 0.0
+    rerank_lowconf_threshold: float = 0.5
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

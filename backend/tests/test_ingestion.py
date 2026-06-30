@@ -20,20 +20,65 @@ def test_chunk_text_short_content_stays_one_chunk():
     assert len(children_per_parent) == 1
     assert children_per_parent[0][0] == "Short paragraph."
 
-def test_parse_docx(tmp_path):
+def test_parse_document_docx_returns_native_page(tmp_path):
     from docx import Document as DocxDocument
-    from app.services.ingestion import parse_file
+    from app.services.ingestion import parse_document
     docx_path = tmp_path / "test.docx"
     doc = DocxDocument()
     doc.add_paragraph("Hello from DOCX")
     doc.save(str(docx_path))
-    result = parse_file(str(docx_path), "test.docx")
-    assert "Hello from DOCX" in result
+    parsed = parse_document(str(docx_path), "test.docx")
+    assert len(parsed.pages) == 1
+    assert parsed.pages[0].source == "native"
+    assert "Hello from DOCX" in parsed.pages[0].text
+    assert parsed.metadata["mime_type"].endswith("wordprocessingml.document")
 
-def test_parse_image_returns_placeholder():
-    from app.services.ingestion import parse_file
-    result = parse_file("/any/path/photo.png", "photo.png")
-    assert result == "[image: photo.png]"
+
+def test_parse_document_image_uses_ocr(tmp_path, mocker):
+    from app.services import ingestion
+    from app.services.ingestion import parse_document
+    img_path = tmp_path / "photo.png"
+    img_path.write_bytes(b"\x89PNG fake bytes")
+    mocker.patch.object(ingestion, "ocr_image", return_value=("scanned text", 0.92))
+    parsed = parse_document(str(img_path), "photo.png")
+    assert len(parsed.pages) == 1
+    assert parsed.pages[0].source == "ocr"
+    assert parsed.pages[0].text == "scanned text"
+    assert abs(parsed.pages[0].ocr_confidence - 0.92) < 1e-6
+    assert parsed.metadata["ocr_engine"] == "paddleocr"
+
+
+def test_parse_document_pdf_native_text_skips_ocr(tmp_path, mocker):
+    import fitz
+    from app.services import ingestion
+    from app.services.ingestion import parse_document
+    pdf_path = tmp_path / "doc.pdf"
+    d = fitz.open()
+    page = d.new_page()
+    page.insert_text((72, 72), "This is a native digital PDF with plenty of text content.")
+    d.save(str(pdf_path))
+    d.close()
+    ocr_spy = mocker.patch.object(ingestion, "ocr_image", return_value=("should not run", 0.1))
+    parsed = parse_document(str(pdf_path), "doc.pdf")
+    assert parsed.pages[0].source == "native"
+    assert "native digital PDF" in parsed.pages[0].text
+    ocr_spy.assert_not_called()
+
+
+def test_parse_document_pdf_scanned_triggers_ocr(tmp_path, mocker):
+    import fitz
+    from app.services import ingestion
+    from app.services.ingestion import parse_document
+    pdf_path = tmp_path / "scan.pdf"
+    d = fitz.open()
+    d.new_page()  # blank page: no text layer
+    d.save(str(pdf_path))
+    d.close()
+    mocker.patch.object(ingestion, "ocr_image", return_value=("ocr extracted text", 0.7))
+    parsed = parse_document(str(pdf_path), "scan.pdf")
+    assert parsed.pages[0].source == "ocr"
+    assert parsed.pages[0].text == "ocr extracted text"
+    assert parsed.metadata["ocr_pages"] == 1
 
 def test_embed_chunks_calls_openai_and_returns_vectors():
     from app.services.ingestion import embed_chunks
@@ -49,8 +94,8 @@ def test_embed_chunks_calls_openai_and_returns_vectors():
     assert len(result[0]) == 1536
 
 def test_store_chunks_inserts_rows():
-    from app.services.ingestion import store_chunks
-    from app.models import DocumentChunk, DocumentParentChunk
+    from app.services.ingestion import store_chunks, ParentChunk, ChildChunk
+    from app.models import DocumentChunk
     import uuid
 
     mock_db = MagicMock()
@@ -61,19 +106,27 @@ def test_store_chunks_inserts_rows():
     mock_db.add_all.side_effect = add_all_side_effect
 
     doc_id = str(uuid.uuid4())
-    parents = ["parent one"]
-    children_per_parent = [["chunk one", "chunk two"]]
+    parents = [ParentChunk(content="parent one", page_start=2, page_end=2, source="ocr")]
+    children_per_parent = [[
+        ChildChunk(content="chunk one", page=2, source="ocr", ocr_confidence=0.8),
+        ChildChunk(content="chunk two", page=2, source="ocr", ocr_confidence=0.8),
+    ]]
     embeddings = [[0.1] * 1536, [0.2] * 1536]
 
     store_chunks(mock_db, doc_id, parents, children_per_parent, embeddings)
 
     mock_db.add_all.assert_called_once()
+    parent_objs = mock_db.add_all.call_args[0][0]
+    assert parent_objs[0].page_start == 2
+    assert parent_objs[0].source == "ocr"
     mock_db.flush.assert_called_once()
     mock_db.bulk_save_objects.assert_called_once()
     saved_objects = mock_db.bulk_save_objects.call_args[0][0]
     assert len(saved_objects) == 2
     assert isinstance(saved_objects[0], DocumentChunk)
     assert saved_objects[0].chunk_index == 0
+    assert saved_objects[0].page == 2
+    assert saved_objects[0].source == "ocr"
     assert saved_objects[1].chunk_index == 1
     mock_db.commit.assert_called_once()
 
@@ -118,6 +171,94 @@ def test_document_parent_chunk_model_round_trips(db):
 
     fetched = db.query(DocumentChunk).filter_by(id=child.id).one()
     assert fetched.parent_id == parent.id
+
+
+def test_chunk_document_carries_page_and_source():
+    from app.services.ingestion import chunk_document, ParsedDocument, PageContent
+    parsed = ParsedDocument(
+        pages=[
+            PageContent(page=1, text="Native page text. " * 5, source="native"),
+            PageContent(page=2, text="Scanned page text. " * 5, source="ocr", ocr_confidence=0.75),
+        ],
+        metadata={},
+    )
+    parents, children_per_parent = chunk_document(parsed)
+    assert len(parents) >= 2
+    page2_parents = [p for p in parents if p.page_start == 2]
+    assert page2_parents and page2_parents[0].source == "ocr"
+    for parent, children in zip(parents, children_per_parent):
+        for c in children:
+            assert c.page == parent.page_start
+            assert c.source == parent.source
+            if c.source == "ocr":
+                assert abs(c.ocr_confidence - 0.75) < 1e-6
+
+
+def test_chunk_document_skips_blank_pages():
+    from app.services.ingestion import chunk_document, ParsedDocument, PageContent
+    parsed = ParsedDocument(
+        pages=[
+            PageContent(page=1, text="   ", source="ocr", ocr_confidence=None),
+            PageContent(page=2, text="Real content here.", source="native"),
+        ],
+        metadata={},
+    )
+    parents, children_per_parent = chunk_document(parsed)
+    assert parents and all(p.page_start == 2 for p in parents)
+
+
+def test_chunk_metadata_columns_round_trip(db):
+    """Document/parent/child carry the new OCR + page metadata columns."""
+    from app.models import Document, DocumentParentChunk, DocumentChunk
+    import uuid
+
+    doc = Document(
+        id=uuid.uuid4(),
+        file_name="scan.pdf",
+        file_path="/tmp/scan.pdf",
+        status="done",
+        mime_type="application/pdf",
+        page_count=3,
+        doc_metadata={"ocr_engine": "paddleocr", "ocr_pages": 2, "native_pages": 1},
+    )
+    db.add(doc)
+    parent = DocumentParentChunk(
+        document_id=doc.id,
+        parent_index=0,
+        content="Parent on page 2",
+        page_start=2,
+        page_end=2,
+        source="ocr",
+    )
+    db.add(parent)
+    db.flush()
+
+    child = DocumentChunk(
+        document_id=doc.id,
+        parent_id=parent.id,
+        chunk_index=0,
+        content="Child snippet",
+        embedding=[0.0] * 1536,
+        page=2,
+        source="ocr",
+        ocr_confidence=0.87,
+    )
+    db.add(child)
+    db.flush()
+
+    fetched_doc = db.query(Document).filter_by(id=doc.id).one()
+    fetched_parent = db.query(DocumentParentChunk).filter_by(id=parent.id).one()
+    fetched_child = db.query(DocumentChunk).filter_by(id=child.id).one()
+
+    assert fetched_doc.mime_type == "application/pdf"
+    assert fetched_doc.page_count == 3
+    assert fetched_doc.doc_metadata["ocr_engine"] == "paddleocr"
+    assert fetched_parent.page_start == 2
+    assert fetched_parent.page_end == 2
+    assert fetched_parent.source == "ocr"
+    assert fetched_child.page == 2
+    assert fetched_child.source == "ocr"
+    assert abs(fetched_child.ocr_confidence - 0.87) < 1e-6
 
 
 def test_chunk_text_produces_parents_and_children():

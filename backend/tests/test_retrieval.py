@@ -180,3 +180,55 @@ def test_fetch_parents_dedups_and_preserves_first_appearance(db):
     # Children ordered [c1 (p1), c2 (p2), c3 (p1)] => expect parents [p1, p2]
     parents = fetch_parents(db, [c1, c2, c3])
     assert [p.id for p in parents] == [p1.id, p2.id]
+
+
+def test_apply_metadata_boost_noop_by_default():
+    from app.services.rag.retrieval import apply_metadata_boost
+    a = MagicMock(source="ocr", ocr_confidence=0.1)
+    b = MagicMock(source="native")
+    reranked = [(a, 0.9), (b, 0.8)]
+    out = apply_metadata_boost(reranked)
+    assert [c for c, _ in out] == [a, b]  # unchanged with default 0.0 weights
+
+
+def test_apply_metadata_boost_promotes_native(mocker):
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import apply_metadata_boost
+    mocker.patch.object(retrieval.settings, "rerank_native_boost", 0.5)
+    a = MagicMock(source="ocr", ocr_confidence=0.9)
+    b = MagicMock(source="native")
+    reranked = [(a, 0.9), (b, 0.8)]  # native b starts lower
+    out = apply_metadata_boost(reranked)
+    assert out[0][0] is b  # 0.8 + 0.5 = 1.3 beats 0.9
+
+
+def test_apply_metadata_boost_penalizes_lowconf_ocr(mocker):
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import apply_metadata_boost
+    mocker.patch.object(retrieval.settings, "rerank_lowconf_penalty", 0.5)
+    mocker.patch.object(retrieval.settings, "rerank_lowconf_threshold", 0.5)
+    a = MagicMock(source="ocr", ocr_confidence=0.1)  # below threshold -> penalized
+    b = MagicMock(source="native")
+    reranked = [(a, 0.9), (b, 0.6)]  # a starts higher, drops to 0.4
+    out = apply_metadata_boost(reranked)
+    assert out[0][0] is b
+
+
+def test_hybrid_search_page_filter_restricts_results(db, mocker):
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import hybrid_search
+    from app.models import Document, DocumentChunk
+    mocker.patch.object(retrieval, "embed_text", return_value=[0.0] * 1536)
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.add_all([
+        DocumentChunk(document_id=doc.id, chunk_index=0, content="alpha on page one",
+                      embedding=[0.0] * 1536, page=1, source="native"),
+        DocumentChunk(document_id=doc.id, chunk_index=1, content="alpha on page five",
+                      embedding=[0.0] * 1536, page=5, source="native"),
+    ])
+    db.flush()
+
+    vec_hits, fts_rows = hybrid_search(db, str(doc.id), "alpha", page_range=(1, 1))
+    assert {c.page for c in vec_hits} == {1}

@@ -29,6 +29,8 @@ GRADE_CHUNKS_PROMPT = (
 ANSWER_SYSTEM_GROUNDED = (
     "Answer the user's question using ONLY the document context below. "
     "When a passage directly answers the question, quote it. "
+    "Each passage is prefixed with its source page, e.g. '[page 3]'. When you "
+    "state a fact, cite the page it came from in parentheses, e.g. '(p.3)'. "
     "Do not invent details, do not draw on prior knowledge, do not speculate. "
     "If the context is insufficient, say so plainly."
 )

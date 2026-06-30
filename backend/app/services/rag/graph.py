@@ -68,7 +68,12 @@ def _build_citations(state: AgentState) -> list[dict]:
         if c.chunk_index in seen:
             continue
         seen.add(c.chunk_index)
-        out.append({"chunk_index": c.chunk_index, "content": (c.content or "")[:400]})
+        out.append({
+            "chunk_index": c.chunk_index,
+            "page": getattr(c, "page", None),
+            "source": getattr(c, "source", None),
+            "content": (c.content or "")[:400],
+        })
     return out
 
 

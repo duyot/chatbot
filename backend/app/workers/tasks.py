@@ -5,7 +5,7 @@ from celery.exceptions import MaxRetriesExceededError, Retry
 from .celery_app import celery_app
 from ..database import SessionLocal
 from ..models import Document
-from ..services.ingestion import parse_file, chunk_text, embed_chunks, store_chunks
+from ..services.ingestion import parse_document, chunk_document, embed_chunks, store_chunks
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +19,16 @@ def ingest_document(self, document_id: str):
         doc.status = "processing"
         db.commit()
 
-        text = parse_file(doc.file_path, doc.file_name)
-        logger.info("[task:%s] parse complete file=%s text_len=%d", self.request.id, doc.file_name, len(text))
+        parsed = parse_document(doc.file_path, doc.file_name)
+        logger.info(
+            "[task:%s] parse complete file=%s pages=%d text_len=%d",
+            self.request.id, doc.file_name, len(parsed.pages), len(parsed.text),
+        )
 
-        parents, children_per_parent = chunk_text(text)
-        flat_children = [c for sub in children_per_parent for c in sub]
+        parents, children_per_parent = chunk_document(parsed)
+        if not parents:
+            raise ValueError("No extractable text found in document (empty or OCR failed)")
+        flat_children = [c.content for sub in children_per_parent for c in sub]
         logger.info(
             "[task:%s] chunked text parents=%d children=%d",
             self.request.id, len(parents), len(flat_children),
@@ -37,6 +42,9 @@ def ingest_document(self, document_id: str):
 
         doc = db.query(Document).filter(Document.id == document_id).first()
         doc.status = "done"
+        doc.mime_type = parsed.metadata.get("mime_type")
+        doc.page_count = parsed.metadata.get("page_count")
+        doc.doc_metadata = parsed.metadata
         db.commit()
         logger.info("[task:%s] ingest_document completed document_id=%s", self.request.id, document_id)
     except Retry:

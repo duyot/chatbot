@@ -129,6 +129,17 @@ async def rewrite_and_retry(state: AgentState) -> dict:
     }
 
 
+def _format_context(parents) -> str:
+    """Join parent passages, prefixing each with its source page so the LLM can
+    cite pages (e.g. '[page 3]')."""
+    blocks = []
+    for p in parents:
+        page = getattr(p, "page_start", None)
+        prefix = f"[page {page}] " if page else ""
+        blocks.append(f"{prefix}{p.content}")
+    return "\n\n---\n\n".join(blocks)
+
+
 async def generate_answer(state: AgentState) -> dict:
     """NOTE: streaming is handled at the graph level via astream_events.
     This node still calls the LLM and the streamed tokens are picked up
@@ -139,7 +150,7 @@ async def generate_answer(state: AgentState) -> dict:
         if state.get("graded_useful")
         else prompts.ANSWER_SYSTEM_NOT_FOUND
     )
-    context = "\n\n---\n\n".join(p.content for p in state.get("parents", []))
+    context = _format_context(state.get("parents", []))
     llm = _chat_llm()
     response = await llm.ainvoke([
         SystemMessage(system_prompt),
@@ -153,7 +164,7 @@ async def generate_answer(state: AgentState) -> dict:
 async def faithfulness_check(state: AgentState) -> dict:
     if not state.get("answer"):
         return {}
-    context = "\n\n---\n\n".join(p.content for p in state.get("parents", []))
+    context = _format_context(state.get("parents", []))
     llm = _chat_llm()
     response = await llm.ainvoke([
         HumanMessage(prompts.FAITHFULNESS_PROMPT.format(

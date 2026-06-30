@@ -18,8 +18,8 @@ from sqlalchemy import select, delete
 from app.database import SessionLocal
 from app.models import Document, DocumentChunk, DocumentParentChunk
 from app.services.ingestion import (
-    parse_file,
-    chunk_text,
+    parse_document,
+    chunk_document,
     embed_chunks,
     store_chunks,
 )
@@ -42,14 +42,19 @@ def reingest_one(doc_id: UUID) -> None:
         db.execute(delete(DocumentParentChunk).where(DocumentParentChunk.document_id == doc_id))
         db.commit()
 
-        text = parse_file(doc.file_path, doc.file_name)
-        parents, children_per_parent = chunk_text(text)
-        flat_children = [c for sub in children_per_parent for c in sub]
+        parsed = parse_document(doc.file_path, doc.file_name)
+        parents, children_per_parent = chunk_document(parsed)
+        if not parents:
+            raise ValueError("No extractable text found in document (empty or OCR failed)")
+        flat_children = [c.content for sub in children_per_parent for c in sub]
         embeddings = embed_chunks(flat_children)
         store_chunks(db, str(doc_id), parents, children_per_parent, embeddings)
 
         doc.status = "done"
         doc.error_msg = None
+        doc.mime_type = parsed.metadata.get("mime_type")
+        doc.page_count = parsed.metadata.get("page_count")
+        doc.doc_metadata = parsed.metadata
         db.commit()
         logger.info("reingest done: %s", doc_id)
     except Exception as e:
