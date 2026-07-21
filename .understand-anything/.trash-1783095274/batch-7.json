@@ -1,0 +1,46 @@
+{
+  "nodes": [
+    {
+      "id": "service:backend/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "backend/Dockerfile",
+      "summary": "Single-stage Docker build for the FastAPI backend: installs Python dependencies from requirements.txt, copies the application source, and on container start runs Alembic migrations before launching Uvicorn to serve app.main:app on port 8000.",
+      "tags": ["containerization", "infrastructure", "deployment", "backend", "database-migration"],
+      "complexity": "simple",
+      "languageNotes": "Single-stage build (no multi-stage separation of build/runtime deps) based on python:3.12-slim; the CMD chains `alembic upgrade head` before starting uvicorn so schema migrations run automatically on every container boot."
+    },
+    {
+      "id": "service:backend/.dockerignore",
+      "type": "service",
+      "name": ".dockerignore",
+      "filePath": "backend/.dockerignore",
+      "summary": "Docker build-context exclusion list for the backend image, keeping Python bytecode caches, pytest caches, local .env secrets, and uploaded documents out of the built image.",
+      "tags": ["containerization", "infrastructure", "build-system"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "service:backend/Dockerfile",
+      "target": "file:backend/app/main.py",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:backend/Dockerfile",
+      "target": "file:backend/requirements.txt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:backend/Dockerfile",
+      "target": "service:backend/.dockerignore",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

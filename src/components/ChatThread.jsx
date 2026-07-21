@@ -9,8 +9,6 @@ export default function ChatThread({ messages, pending }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, pending])
 
-  const anyStreaming = messages.some((m) => m.streaming)
-
   return (
     <div className="chat-thread">
       {messages.map((msg) => (
@@ -23,14 +21,6 @@ export default function ChatThread({ messages, pending }) {
           error={msg.error ?? false}
         />
       ))}
-      {pending && !anyStreaming && (
-        <div className="chat-thread-typing">
-          <span className="chat-thread-typing-label">CHAT A.I +</span>
-          <span className="chat-thread-typing-dots">
-            <span /><span /><span />
-          </span>
-        </div>
-      )}
       <div ref={bottomRef} />
     </div>
   )

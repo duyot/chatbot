@@ -1,0 +1,14 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 5,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "Fixed section (18 x tested_by edge direction flips) is a small, plausible fraction of 611 input edges and needs no follow-up. Notably, this run reported zero node-ID normalization corrections (no func: -> function:, no missing-prefix additions, etc.), meaning all 17 batches emitted well-formed IDs directly -- a positive upstream data-quality signal, not a concern.",
+    "No nodes were missing an 'id' field, no unknown node types (all 289 nodes use one of the 7 known types: function, file, document, service, class, config, table), and no unknown complexity values (all values are simple/moderate/complex) -- so the 'no id' / 'unknown type' / 'unknown complexity' remediation steps had nothing to act on.",
+    "All 5 dropped dangling edges were recovered by rewriting their target ID to the node that actually exists under a different type prefix, confirming the hypothesized cause (inconsistent type prefixes across batches for the same file): service:Dockerfile:runner -> config:nginx.conf became -> file:nginx.conf; service:backend/Dockerfile -> file:backend/requirements.txt became -> document:backend/requirements.txt; document:.../2026-04-20-file-upload-rag-ingestion.md -> file:docker-compose.yml became -> service:docker-compose.yml; document:.../2026-05-15-agentic-rag-enhancement.md -> file:backend/requirements.txt became -> document:backend/requirements.txt; document:.../2026-05-04-agentic-rag-design.md -> config:backend/requirements.txt became -> document:backend/requirements.txt. Original weight/direction were preserved by looking up the source edge in batch-6.json, batch-7.json, batch-12.json, and batch-13.json. Edge count restored to 611 (289 nodes, 0 dangling edges, 0 duplicate edge keys verified after the fix).",
+    "'Recovered 0 imports edges from importMap' is expected, not a gap: cross-checked all 111 non-empty import-map relationships (137 files scanned, 111 with at least one import target) against the assembled graph's 'imports' edges by filePath, and all 111 already exist as edges -- they were emitted directly by the per-file batch analyzers (e.g. batch-2's 25, batch-4's 15) rather than needing the supplemental importMap-recovery pass. No cross-batch edges were added because none were missing."
+  ]
+}

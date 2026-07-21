@@ -2,14 +2,15 @@ import logging
 import os
 import uuid
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from sqlalchemy.orm import Session
 import json
 import time
 
 from ..database import get_db, SessionLocal
-from ..models import Document
+from ..models import Document, User
 from ..schemas import DocumentResponse, DocumentListItem
+from ..security import get_current_user
 from ..config import settings
 
 logger = logging.getLogger(__name__)
@@ -17,7 +18,10 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
 @router.get("", response_model=list[DocumentListItem])
-def list_documents(db: Session = Depends(get_db)):
+def list_documents(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     return db.query(Document).filter(Document.status == "done").all()
 
 EXTENSION_MAP = {
@@ -29,7 +33,11 @@ EXTENSION_MAP = {
 }
 
 @router.post("/upload", response_model=DocumentResponse)
-async def upload_document(file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def upload_document(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     if file.content_type not in EXTENSION_MAP:
         raise HTTPException(status_code=400, detail="Unsupported file type")
 
@@ -60,6 +68,24 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
     ingest_document.delay(str(doc.id))
 
     return doc
+
+
+@router.get("/{document_id}/file")
+def get_document_file(
+    document_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    doc = db.query(Document).filter(Document.id == document_id).first()
+    if not doc or not os.path.exists(doc.file_path):
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    return FileResponse(
+        doc.file_path,
+        media_type=doc.mime_type or "application/octet-stream",
+        filename=doc.file_name,
+        content_disposition_type="inline",
+    )
 
 
 @router.get("/{document_id}/status")

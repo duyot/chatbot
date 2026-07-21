@@ -1,0 +1,217 @@
+[
+  {
+    "id": "layer:frontend-ui",
+    "name": "Frontend UI Layer",
+    "description": "React components, pages, and the app shell (App.jsx, main.jsx, index.html) that render the chat, auth, and document-selection screens, plus their co-located CSS.",
+    "nodeIds": [
+      "file:src/App.jsx",
+      "file:src/App.css",
+      "file:src/main.jsx",
+      "file:src/index.css",
+      "file:src/styles/global.css",
+      "file:src/styles/tokens.css",
+      "file:index.html",
+      "file:src/components/ChatMessage.jsx",
+      "file:src/components/ChatMessage.css",
+      "file:src/components/ChatThread.jsx",
+      "file:src/components/ChatThread.css",
+      "file:src/components/Composer.jsx",
+      "file:src/components/Composer.css",
+      "file:src/components/DocumentSelector.jsx",
+      "file:src/components/DocumentSelector.css",
+      "file:src/components/ThinkingIndicator.jsx",
+      "file:src/components/ThinkingIndicator.css",
+      "file:src/components/UpgradeTab.jsx",
+      "file:src/components/UpgradeTab.css",
+      "file:src/components/UploadToast.jsx",
+      "file:src/components/UploadToast.css",
+      "file:src/components/ProtectedRoute.jsx",
+      "file:src/components/Sidebar.jsx",
+      "file:src/components/Sidebar.css",
+      "file:src/pages/ChatPage.jsx",
+      "file:src/pages/ChatPage.css",
+      "file:src/pages/HomePage.jsx",
+      "file:src/pages/HomePage.css",
+      "file:src/pages/LoginPage.jsx",
+      "file:src/pages/LoginPage.css"
+    ]
+  },
+  {
+    "id": "layer:frontend-data",
+    "name": "Frontend Data & State Layer",
+    "description": "Custom hooks, repository-pattern data access modules, the shared API client, and the auth context that mediate between UI components and the backend.",
+    "nodeIds": [
+      "file:src/api/client.js",
+      "file:src/hooks/useChat.js",
+      "file:src/hooks/useConversations.js",
+      "file:src/hooks/useUpload.js",
+      "file:src/repositories/conversationRepository.js",
+      "file:src/repositories/authRepository.js",
+      "file:src/auth/AuthContext.jsx"
+    ]
+  },
+  {
+    "id": "layer:api",
+    "name": "Backend API & Auth Layer",
+    "description": "FastAPI routers exposing auth, chat, conversation, and document endpoints, together with the JWT/password security utilities that gate them.",
+    "nodeIds": [
+      "file:backend/app/routers/__init__.py",
+      "file:backend/app/routers/auth.py",
+      "file:backend/app/routers/chat.py",
+      "file:backend/app/routers/conversations.py",
+      "file:backend/app/routers/documents.py",
+      "file:backend/app/security.py"
+    ]
+  },
+  {
+    "id": "layer:rag-pipeline",
+    "name": "Agentic RAG Pipeline",
+    "description": "The LangGraph state machine (rewrite, hybrid retrieve/rerank, grade, retry, generate, faithfulness-check nodes) that powers document chat.",
+    "nodeIds": [
+      "file:backend/app/services/rag/__init__.py",
+      "file:backend/app/services/rag/graph.py",
+      "file:backend/app/services/rag/nodes.py",
+      "file:backend/app/services/rag/prompts.py",
+      "file:backend/app/services/rag/reranker.py",
+      "file:backend/app/services/rag/retrieval.py",
+      "file:backend/app/services/rag/state.py"
+    ]
+  },
+  {
+    "id": "layer:service",
+    "name": "Backend Service & Jobs Layer",
+    "description": "Ingestion and OCR-client business logic, Celery worker/task definitions for background processing, and administrative CLI scripts.",
+    "nodeIds": [
+      "file:backend/app/services/ingestion.py",
+      "file:backend/app/services/ocr_client.py",
+      "file:backend/app/services/__init__.py",
+      "file:backend/app/workers/celery_app.py",
+      "file:backend/app/workers/tasks.py",
+      "file:backend/app/workers/__init__.py",
+      "file:backend/scripts/create_user.py",
+      "file:backend/scripts/reingest_all.py",
+      "file:backend/scripts/__init__.py"
+    ]
+  },
+  {
+    "id": "layer:data",
+    "name": "Data Layer",
+    "description": "SQLAlchemy ORM models, Pydantic schemas, the DB session/engine setup, Alembic migrations, and the users table definition backing pgvector-based storage.",
+    "nodeIds": [
+      "file:backend/app/models.py",
+      "file:backend/app/schemas.py",
+      "file:backend/app/database.py",
+      "file:backend/alembic/env.py",
+      "file:backend/alembic/script.py.mako",
+      "file:backend/alembic/versions/0001_initial.py",
+      "file:backend/alembic/versions/0002_fix_embedding_dim.py",
+      "file:backend/alembic/versions/0003_add_fts_gin_index.py",
+      "file:backend/alembic/versions/0004_parent_child_chunks.py",
+      "file:backend/alembic/versions/0005_embedding_to_1536.py",
+      "file:backend/alembic/versions/0006_document_metadata.py",
+      "file:backend/alembic/versions/0007_create_users.py",
+      "file:backend/alembic/versions/0008_create_conversations_messages.py",
+      "table:backend/scripts/create_users_table.sql:users"
+    ]
+  },
+  {
+    "id": "layer:test",
+    "name": "Test & Evaluation Layer",
+    "description": "The pytest suite covering auth, chat, ingestion, RAG graph/nodes/retrieval, and uploads, plus the golden-set evaluation harness for the RAG pipeline.",
+    "nodeIds": [
+      "file:backend/tests/__init__.py",
+      "file:backend/tests/conftest.py",
+      "file:backend/tests/test_auth.py",
+      "file:backend/tests/test_chat.py",
+      "file:backend/tests/test_eval_golden.py",
+      "file:backend/tests/test_graph.py",
+      "file:backend/tests/test_ingestion.py",
+      "file:backend/tests/test_ocr_client.py",
+      "file:backend/tests/test_rag.py",
+      "file:backend/tests/test_rag_graph.py",
+      "file:backend/tests/test_rag_nodes.py",
+      "file:backend/tests/test_retrieval.py",
+      "file:backend/tests/test_tasks.py",
+      "file:backend/tests/test_upload.py",
+      "file:backend/evals/__init__.py",
+      "file:backend/evals/metrics.py",
+      "file:backend/evals/run_eval.py",
+      "file:backend/evals/results/.gitkeep",
+      "config:backend/evals/golden_set.yaml",
+      "config:backend/pytest.ini"
+    ]
+  },
+  {
+    "id": "layer:ocr-service",
+    "name": "OCR Microservice",
+    "description": "The standalone PaddleOCR FastAPI microservice deployed as its own container, invoked by the backend's ingestion pipeline.",
+    "nodeIds": [
+      "file:ocr-service/app.py",
+      "document:ocr-service/requirements.txt"
+    ]
+  },
+  {
+    "id": "layer:infrastructure",
+    "name": "Infrastructure & Configuration",
+    "description": "Dockerfiles, docker-compose service definitions, nginx config, build/lint tooling, environment templates, and app-factory/settings code that assemble and deploy the three services.",
+    "nodeIds": [
+      "service:.dockerignore",
+      "service:docker-compose.yml",
+      "service:docker-compose.yml:frontend",
+      "service:docker-compose.yml:backend",
+      "service:docker-compose.yml:worker",
+      "service:docker-compose.yml:ocr",
+      "service:docker-compose.yml:redis",
+      "service:docker-compose.yml:db",
+      "service:Dockerfile",
+      "service:Dockerfile:builder",
+      "service:Dockerfile:runner",
+      "service:backend/Dockerfile",
+      "service:backend/.dockerignore",
+      "service:ocr-service/Dockerfile",
+      "file:nginx.conf",
+      "file:backend/app/main.py",
+      "file:backend/app/config.py",
+      "file:backend/app/__init__.py",
+      "file:vite.config.js",
+      "file:eslint.config.js",
+      "config:.env.example",
+      "config:package.json",
+      "config:backend/alembic.ini",
+      "config:.claude/settings.local.json",
+      "config:.understand-anything/config.json",
+      "file:.understand-anything/.understandignore",
+      "document:backend/requirements.txt",
+      "file:.superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "file:.superpowers/brainstorm/37604-1776700392/state/server.pid"
+    ]
+  },
+  {
+    "id": "layer:documentation",
+    "name": "Documentation & Planning",
+    "description": "Project docs (README, CLAUDE.md, DESIGN.md), architecture/spec write-ups, feature-planning notes, and brainstorming artifacts covering upload, chat, RAG, and login features.",
+    "nodeIds": [
+      "document:CLAUDE.md",
+      "document:DESIGN.md",
+      "document:README.md",
+      "document:prompt.md",
+      "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "document:features_planning/account_login/plan.md",
+      "document:features_planning/chat_history/plan.md",
+      "document:features_planning/chat_with_doc/planning.md",
+      "document:features_planning/chat_with_doc/rag_enhancement.md",
+      "document:features_planning/file_processing/planing.md",
+      "file:.superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "file:.superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "file:.superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "file:.superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "file:.superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "file:.superpowers/brainstorm/37604-1776700392/content/waiting-3.html"
+    ]
+  }
+]

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ThinkingIndicator from './ThinkingIndicator'
 import './ChatMessage.css'
 
 function renderContent(content) {
@@ -74,6 +75,8 @@ export default function ChatMessage({ role, content, streaming = false, citation
           </div>
           {error ? (
             <p className="chat-msg-error">Something went wrong. Please try again.</p>
+          ) : streaming && !content ? (
+            <ThinkingIndicator />
           ) : (
             <div className="chat-msg-body">
               {renderContent(content)}

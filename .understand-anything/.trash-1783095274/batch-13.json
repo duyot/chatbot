@@ -1,0 +1,82 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "type": "document",
+      "name": "2026-04-20-file-upload-rag-ingestion-design.md",
+      "filePath": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "summary": "Approved v1 design spec for file upload and ingestion: a five-service pipeline (React, FastAPI, Redis, Celery worker, PostgreSQL+pgvector) that saves an uploaded PDF/DOCX/image, parses and chunks it, embeds chunks via OpenAI, and notifies the client over SSE when ingestion completes. Documents the original `documents`/`document_chunks` schema, the upload/status API contract, and the specific backend and frontend files the feature touches.",
+      "tags": ["documentation", "design-spec", "file-upload", "ingestion", "rag"],
+      "complexity": "moderate",
+      "languageNotes": "Early v1 spec — predates OCR support and the later agentic RAG / parent-child chunking enhancements described in the 2026-05-15 spec."
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "type": "document",
+      "name": "2026-05-04-agentic-rag-design.md",
+      "filePath": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "summary": "Approved-but-superseded design spec for the original 'chat with document' feature: a ReAct agent (qwen3 via Ollama) that iteratively calls a vector-search tool before streaming a grounded answer with citations, plus the DocumentSelector UI, useChat streaming hook, and SSE token/citations/done protocol. Carries a historical note that the stack later moved off Ollama to OpenRouter-hosted models.",
+      "tags": ["documentation", "design-spec", "agentic-rag", "chat", "historical"],
+      "complexity": "complex",
+      "languageNotes": "Superseded in part by the 2026-05-15 enhancement spec, which replaces this design's single ReAct tool-loop with a multi-node LangGraph state machine."
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "type": "document",
+      "name": "2026-05-15-agentic-rag-enhancement-design.md",
+      "filePath": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "summary": "Design spec for the agentic RAG enhancement that replaces the single `rag.py` with the `backend/app/services/rag/` LangGraph package: parent-child chunking, hybrid (vector + FTS) retrieval fused via RRF and reranked with a cross-encoder, and a six-node CRAG-lite state machine (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), plus a RAGAS-based evaluation harness and a four-phase rollout plan. This is the architecture CLAUDE.md currently describes as production, with a historical note that the model substrate later moved from Ollama/TEI to OpenRouter.",
+      "tags": ["documentation", "design-spec", "agentic-rag", "retrieval", "evaluation"],
+      "complexity": "complex",
+      "languageNotes": "Describes a LangGraph StateGraph with conditional edges (grade -> answer | retry | give_up) implementing a Corrective-RAG-lite pattern; also introduces token-based (tiktoken) parent/child chunk sizing in place of character-based splitting."
+    }
+  ],
+  "edges": [
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/main.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/config.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/models.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/schemas.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/database.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/routers/documents.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/services/ingestion.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/workers/celery_app.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/app/workers/tasks.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/alembic/env.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:backend/alembic/versions/0001_initial.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "service:backend/Dockerfile", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:src/components/Composer.jsx", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:src/hooks/useUpload.js", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md", "target": "file:src/components/UploadToast.jsx", "type": "documents", "direction": "forward", "weight": 0.5},
+
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "config:backend/requirements.txt", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:backend/app/config.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:backend/app/services/ingestion.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:backend/app/routers/documents.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:backend/app/routers/chat.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:backend/app/main.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:src/components/DocumentSelector.jsx", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:src/components/DocumentSelector.css", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:src/hooks/useChat.js", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:src/components/ChatMessage.jsx", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "target": "file:src/pages/ChatPage.jsx", "type": "documents", "direction": "forward", "weight": 0.5},
+
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md", "type": "related", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "document:features_planning/chat_with_doc/rag_enhancement.md", "type": "related", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "document:CLAUDE.md", "type": "related", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/__init__.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/graph.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/nodes.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/retrieval.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/reranker.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/prompts.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/rag/state.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/config.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/app/services/ingestion.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/scripts/reingest_all.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/alembic/versions/0004_parent_child_chunks.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/evals/run_eval.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/evals/metrics.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/tests/test_rag.py", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "target": "file:backend/tests/test_rag_graph.py", "type": "documents", "direction": "forward", "weight": 0.5}
+  ]
+}

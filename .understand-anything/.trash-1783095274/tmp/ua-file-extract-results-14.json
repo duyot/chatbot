@@ -1,0 +1,71 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/components/ChatMessage.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 265,
+      "nonEmptyLines": 230,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/ChatThread.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 15,
+      "nonEmptyLines": 13,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/Composer.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 153,
+      "nonEmptyLines": 134,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/DocumentSelector.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 40,
+      "nonEmptyLines": 36,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/Sidebar.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 274,
+      "nonEmptyLines": 240,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/ThinkingIndicator.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 70,
+      "nonEmptyLines": 63,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/UpgradeTab.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 34,
+      "nonEmptyLines": 31,
+      "metrics": {}
+    },
+    {
+      "path": "src/components/UploadToast.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 65,
+      "nonEmptyLines": 57,
+      "metrics": {}
+    }
+  ]
+}

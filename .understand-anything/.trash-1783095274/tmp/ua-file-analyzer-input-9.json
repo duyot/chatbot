@@ -1,0 +1,21 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": ".env.example", "language": "config", "sizeLines": 51, "fileCategory": "config"},
+    {"path": "CLAUDE.md", "language": "markdown", "sizeLines": 81, "fileCategory": "docs"},
+    {"path": "DESIGN.md", "language": "markdown", "sizeLines": 313, "fileCategory": "docs"},
+    {"path": "README.md", "language": "markdown", "sizeLines": 16, "fileCategory": "docs"},
+    {"path": "index.html", "language": "html", "sizeLines": 13, "fileCategory": "markup"},
+    {"path": "package.json", "language": "json", "sizeLines": 28, "fileCategory": "config"},
+    {"path": "prompt.md", "language": "markdown", "sizeLines": 3, "fileCategory": "docs"}
+  ],
+  "batchImportData": {
+    ".env.example": [],
+    "CLAUDE.md": [],
+    "DESIGN.md": [],
+    "README.md": [],
+    "index.html": [],
+    "package.json": [],
+    "prompt.md": []
+  }
+}

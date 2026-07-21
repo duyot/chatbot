@@ -1,0 +1,1439 @@
+{
+  "scriptCompleted": true,
+  "entryPointCandidates": [
+    {
+      "id": "document:README.md",
+      "score": 5,
+      "name": "README.md",
+      "summary": "Default create-vite README describing the React + Vite scaffold, the available official Vite React plugins, and pointers for enabling the React Compiler or TypeScript/type-aware ESLint."
+    },
+    {
+      "id": "file:backend/app/main.py",
+      "score": 4,
+      "name": "main.py",
+      "summary": "FastAPI application entry point that mounts the auth, chat, conversations, and documents routers, request-logging middleware, and a health endpoint."
+    },
+    {
+      "id": "file:ocr-service/app.py",
+      "score": 4,
+      "name": "app.py",
+      "summary": "Standalone FastAPI OCR microservice exposing a health check and an /ocr endpoint that runs RapidOCR (ONNXRuntime) over an uploaded image and returns line-level text, bounding boxes, and confidence scores."
+    },
+    {
+      "id": "service:.dockerignore",
+      "score": 2,
+      "name": ".dockerignore",
+      "summary": "Excludes node_modules, dist, git metadata, IDE files, and markdown/docs from the Docker build context so root-context image builds stay fast and don't leak source-control or documentation artifacts."
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "score": 2,
+      "name": "docker-compose.yml",
+      "summary": "Orchestrates the full application stack — nginx-served React frontend, FastAPI backend, Celery worker, PaddleOCR microservice, Redis, and a pgvector-enabled Postgres database — wiring build contexts, healthchecks, volumes, and startup ordering via depends_on conditions."
+    }
+  ],
+  "fanInRanking": [
+    {
+      "id": "file:backend/app/config.py",
+      "fanIn": 21,
+      "name": "config.py"
+    },
+    {
+      "id": "file:backend/app/models.py",
+      "fanIn": 19,
+      "name": "models.py"
+    },
+    {
+      "id": "file:backend/app/database.py",
+      "fanIn": 13,
+      "name": "database.py"
+    },
+    {
+      "id": "file:backend/app/main.py",
+      "fanIn": 9,
+      "name": "main.py"
+    },
+    {
+      "id": "file:backend/app/services/ingestion.py",
+      "fanIn": 9,
+      "name": "ingestion.py"
+    },
+    {
+      "id": "file:backend/app/security.py",
+      "fanIn": 8,
+      "name": "security.py"
+    },
+    {
+      "id": "file:backend/app/routers/documents.py",
+      "fanIn": 7,
+      "name": "documents.py"
+    },
+    {
+      "id": "file:backend/app/schemas.py",
+      "fanIn": 7,
+      "name": "schemas.py"
+    },
+    {
+      "id": "file:src/pages/ChatPage.jsx",
+      "fanIn": 6,
+      "name": "ChatPage.jsx"
+    },
+    {
+      "id": "file:backend/app/routers/chat.py",
+      "fanIn": 5,
+      "name": "chat.py"
+    },
+    {
+      "id": "file:src/api/client.js",
+      "fanIn": 5,
+      "name": "client.js"
+    },
+    {
+      "id": "file:src/components/DocumentSelector.jsx",
+      "fanIn": 5,
+      "name": "DocumentSelector.jsx"
+    },
+    {
+      "id": "file:src/hooks/useChat.js",
+      "fanIn": 5,
+      "name": "useChat.js"
+    },
+    {
+      "id": "file:src/hooks/useUpload.js",
+      "fanIn": 5,
+      "name": "useUpload.js"
+    },
+    {
+      "id": "file:backend/app/services/rag/state.py",
+      "fanIn": 5,
+      "name": "state.py"
+    },
+    {
+      "id": "file:src/auth/AuthContext.jsx",
+      "fanIn": 5,
+      "name": "AuthContext.jsx"
+    },
+    {
+      "id": "file:backend/tests/test_auth.py",
+      "fanIn": 4,
+      "name": "test_auth.py"
+    },
+    {
+      "id": "file:src/components/ChatMessage.jsx",
+      "fanIn": 4,
+      "name": "ChatMessage.jsx"
+    },
+    {
+      "id": "file:backend/app/services/rag/graph.py",
+      "fanIn": 4,
+      "name": "graph.py"
+    },
+    {
+      "id": "file:src/main.jsx",
+      "fanIn": 4,
+      "name": "main.jsx"
+    }
+  ],
+  "fanOutRanking": [
+    {
+      "id": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "fanOut": 18,
+      "name": "2026-05-15-agentic-rag-enhancement-design.md"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "fanOut": 15,
+      "name": "2026-04-20-file-upload-rag-ingestion-design.md"
+    },
+    {
+      "id": "file:src/pages/ChatPage.jsx",
+      "fanOut": 14,
+      "name": "ChatPage.jsx"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "fanOut": 11,
+      "name": "2026-04-20-file-upload-rag-ingestion.md"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "fanOut": 11,
+      "name": "2026-05-05-agentic-rag-chat.md"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "fanOut": 11,
+      "name": "2026-05-04-agentic-rag-design.md"
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "fanOut": 9,
+      "name": "docker-compose.yml"
+    },
+    {
+      "id": "document:features_planning/chat_with_doc/rag_enhancement.md",
+      "fanOut": 9,
+      "name": "rag_enhancement.md"
+    },
+    {
+      "id": "file:backend/alembic/script.py.mako",
+      "fanOut": 8,
+      "name": "script.py.mako"
+    },
+    {
+      "id": "document:features_planning/account_login/plan.md",
+      "fanOut": 8,
+      "name": "plan.md"
+    },
+    {
+      "id": "document:features_planning/chat_history/plan.md",
+      "fanOut": 8,
+      "name": "plan.md"
+    },
+    {
+      "id": "file:backend/app/routers/documents.py",
+      "fanOut": 7,
+      "name": "documents.py"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "fanOut": 7,
+      "name": "2026-05-15-agentic-rag-enhancement.md"
+    },
+    {
+      "id": "file:backend/app/main.py",
+      "fanOut": 6,
+      "name": "main.py"
+    },
+    {
+      "id": "file:backend/app/models.py",
+      "fanOut": 6,
+      "name": "models.py"
+    },
+    {
+      "id": "file:backend/app/workers/tasks.py",
+      "fanOut": 6,
+      "name": "tasks.py"
+    },
+    {
+      "id": "file:backend/app/routers/auth.py",
+      "fanOut": 5,
+      "name": "auth.py"
+    },
+    {
+      "id": "file:backend/app/routers/chat.py",
+      "fanOut": 5,
+      "name": "chat.py"
+    },
+    {
+      "id": "file:backend/app/services/ingestion.py",
+      "fanOut": 5,
+      "name": "ingestion.py"
+    },
+    {
+      "id": "file:backend/app/services/rag/graph.py",
+      "fanOut": 5,
+      "name": "graph.py"
+    }
+  ],
+  "bfsTraversal": {
+    "startNode": "file:backend/app/main.py",
+    "order": [
+      "file:backend/app/main.py",
+      "file:backend/app/config.py",
+      "file:backend/app/routers/__init__.py",
+      "file:backend/app/routers/auth.py",
+      "file:backend/app/routers/chat.py",
+      "file:backend/app/routers/conversations.py",
+      "file:backend/app/routers/documents.py",
+      "file:backend/app/database.py",
+      "file:backend/app/models.py",
+      "file:backend/app/schemas.py",
+      "file:backend/app/security.py",
+      "file:backend/app/services/rag/__init__.py",
+      "file:backend/app/services/rag/graph.py",
+      "file:backend/app/services/rag/nodes.py",
+      "file:backend/app/services/rag/state.py",
+      "file:backend/app/services/rag/prompts.py",
+      "file:backend/app/services/rag/retrieval.py",
+      "file:backend/app/services/ingestion.py",
+      "file:backend/app/services/rag/reranker.py",
+      "file:backend/app/services/ocr_client.py"
+    ],
+    "depthMap": {
+      "file:backend/app/main.py": 0,
+      "file:backend/app/config.py": 1,
+      "file:backend/app/routers/__init__.py": 1,
+      "file:backend/app/routers/auth.py": 1,
+      "file:backend/app/routers/chat.py": 1,
+      "file:backend/app/routers/conversations.py": 1,
+      "file:backend/app/routers/documents.py": 1,
+      "file:backend/app/database.py": 2,
+      "file:backend/app/models.py": 2,
+      "file:backend/app/schemas.py": 2,
+      "file:backend/app/security.py": 2,
+      "file:backend/app/services/rag/__init__.py": 2,
+      "file:backend/app/services/rag/graph.py": 3,
+      "file:backend/app/services/rag/nodes.py": 4,
+      "file:backend/app/services/rag/state.py": 4,
+      "file:backend/app/services/rag/prompts.py": 5,
+      "file:backend/app/services/rag/retrieval.py": 5,
+      "file:backend/app/services/ingestion.py": 6,
+      "file:backend/app/services/rag/reranker.py": 6,
+      "file:backend/app/services/ocr_client.py": 7
+    },
+    "byDepth": {
+      "0": [
+        "file:backend/app/main.py"
+      ],
+      "1": [
+        "file:backend/app/config.py",
+        "file:backend/app/routers/__init__.py",
+        "file:backend/app/routers/auth.py",
+        "file:backend/app/routers/chat.py",
+        "file:backend/app/routers/conversations.py",
+        "file:backend/app/routers/documents.py"
+      ],
+      "2": [
+        "file:backend/app/database.py",
+        "file:backend/app/models.py",
+        "file:backend/app/schemas.py",
+        "file:backend/app/security.py",
+        "file:backend/app/services/rag/__init__.py"
+      ],
+      "3": [
+        "file:backend/app/services/rag/graph.py"
+      ],
+      "4": [
+        "file:backend/app/services/rag/nodes.py",
+        "file:backend/app/services/rag/state.py"
+      ],
+      "5": [
+        "file:backend/app/services/rag/prompts.py",
+        "file:backend/app/services/rag/retrieval.py"
+      ],
+      "6": [
+        "file:backend/app/services/ingestion.py",
+        "file:backend/app/services/rag/reranker.py"
+      ],
+      "7": [
+        "file:backend/app/services/ocr_client.py"
+      ]
+    }
+  },
+  "nonCodeFiles": {
+    "documentation": [
+      {
+        "id": "document:CLAUDE.md",
+        "name": "CLAUDE.md",
+        "type": "document",
+        "summary": "Guidance file for Claude Code covering the project's stack, npm/lint commands, ESLint rules, frontend architecture, and the agentic LangGraph RAG backend pipeline (entry point, status-field convention, eval harness, and reingestion workflow)."
+      },
+      {
+        "id": "document:DESIGN.md",
+        "name": "DESIGN.md",
+        "type": "document",
+        "summary": "Apple-inspired visual design system specification covering color palette, typography scale, component styling, spacing, elevation, and responsive rules, including an agent prompt guide for generating UI components consistent with the style."
+      },
+      {
+        "id": "document:README.md",
+        "name": "README.md",
+        "type": "document",
+        "summary": "Default create-vite README describing the React + Vite scaffold, the available official Vite React plugins, and pointers for enabling the React Compiler or TypeScript/type-aware ESLint."
+      },
+      {
+        "id": "document:prompt.md",
+        "name": "prompt.md",
+        "type": "document",
+        "summary": "Short scratch note instructing implementation of a Figma-designed chat UI reachable from the home page."
+      },
+      {
+        "id": "document:backend/requirements.txt",
+        "name": "requirements.txt",
+        "type": "document",
+        "summary": "Pinned Python dependency manifest for the FastAPI backend, covering the web/task-queue stack (fastapi, uvicorn, celery, redis), the database layer (sqlalchemy, psycopg2, alembic, pgvector), the LangChain/LangGraph agentic RAG stack plus OpenAI-compatible client and evaluation tooling (ragas, datasets), and JWT/bcrypt authentication (PyJWT, passlib, bcrypt pinned to 4.0.x to avoid a passlib compatibility warning)."
+      },
+      {
+        "id": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+        "name": "2026-04-20-file-upload-rag-ingestion.md",
+        "type": "document",
+        "summary": "Task-by-task implementation plan for the original file upload and RAG ingestion pipeline: a Celery-backed chunk/embed/store flow behind a document upload endpoint, an SSE status endpoint for progress polling, and the docker-compose service topology (frontend, backend, worker, redis, pgvector db) needed to run it, spanning 12 tasks from infrastructure setup through an end-to-end smoke test."
+      },
+      {
+        "id": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+        "name": "2026-05-05-agentic-rag-chat.md",
+        "type": "document",
+        "summary": "Historical implementation plan (superseded 2026-06-28 when the stack moved off self-hosted Ollama to OpenRouter) for the original 'chat with document' feature: a ReAct-style agent that calls a pgvector search tool with a local qwen3 model and streams tokens/citations over SSE, covering the chat endpoint, DocumentSelector UI, and useChat hook across 11 tasks."
+      },
+      {
+        "id": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+        "name": "2026-05-15-agentic-rag-enhancement.md",
+        "type": "document",
+        "summary": "Historical, phased implementation plan (superseded 2026-06-28) for rebuilding the RAG pipeline as a LangGraph CRAG-lite state machine — baseline RAGAS evaluation, parent-child chunking, RRF hybrid retrieval with FlashRank reranking, and a six-node agent graph (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check) — replacing the original regex-preprocessor and tool-loop agent in `rag.py`."
+      },
+      {
+        "id": "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+        "name": "2026-04-20-file-upload-rag-ingestion-design.md",
+        "type": "document",
+        "summary": "Approved v1 design spec for file upload and ingestion: a five-service pipeline (React, FastAPI, Redis, Celery worker, PostgreSQL+pgvector) that saves an uploaded PDF/DOCX/image, parses and chunks it, embeds chunks via OpenAI, and notifies the client over SSE when ingestion completes. Documents the original `documents`/`document_chunks` schema, the upload/status API contract, and the specific backend and frontend files the feature touches."
+      },
+      {
+        "id": "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+        "name": "2026-05-04-agentic-rag-design.md",
+        "type": "document",
+        "summary": "Approved-but-superseded design spec for the original 'chat with document' feature: a ReAct agent (qwen3 via Ollama) that iteratively calls a vector-search tool before streaming a grounded answer with citations, plus the DocumentSelector UI, useChat streaming hook, and SSE token/citations/done protocol. Carries a historical note that the stack later moved off Ollama to OpenRouter-hosted models."
+      },
+      {
+        "id": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+        "name": "2026-05-15-agentic-rag-enhancement-design.md",
+        "type": "document",
+        "summary": "Design spec for the agentic RAG enhancement that replaces the single `rag.py` with the `backend/app/services/rag/` LangGraph package: parent-child chunking, hybrid (vector + FTS) retrieval fused via RRF and reranked with a cross-encoder, and a six-node CRAG-lite state machine (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), plus a RAGAS-based evaluation harness and a four-phase rollout plan. This is the architecture CLAUDE.md currently describes as production, with a historical note that the model substrate later moved from Ollama/TEI to OpenRouter."
+      },
+      {
+        "id": "document:features_planning/account_login/plan.md",
+        "name": "plan.md",
+        "type": "document",
+        "summary": "Implementation plan for gating chat access behind username/password login, covering the JWT auth backend (User model, migration, security helpers, auth router) and the React login flow (AuthContext, ProtectedRoute, LoginPage)."
+      },
+      {
+        "id": "document:features_planning/chat_history/plan.md",
+        "name": "plan.md",
+        "type": "document",
+        "summary": "Implementation plan for persisting real chat conversations and messages (Conversation and Message models, migration, conversations router, frontend wiring), plus a smaller 'AI response animation' enhancement for the thinking/loading state."
+      },
+      {
+        "id": "document:features_planning/chat_with_doc/planning.md",
+        "name": "planning.md",
+        "type": "document",
+        "summary": "Initial feature request outlining the chat-with-document flow: a document selector, a chat endpoint backed by agentic RAG over the vector store, and streaming the response to the frontend."
+      },
+      {
+        "id": "document:features_planning/chat_with_doc/rag_enhancement.md",
+        "name": "rag_enhancement.md",
+        "type": "document",
+        "summary": "Describes the enhanced agentic RAG architecture as a LangGraph state machine with six nodes (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), documents the OpenRouter model cutover (Claude Haiku 4.5 chat/rerank, Qwen3 embeddings), the parent/child chunk data model, evaluation harness, and tunable config knobs."
+      },
+      {
+        "id": "document:features_planning/file_processing/planing.md",
+        "name": "planing.md",
+        "type": "document",
+        "summary": "Initial feature request for document upload and background ingestion: an upload button in the chat UI, storing document metadata in Postgres, and a background job that chunks, embeds, and stores vectors in pgvector before notifying the user."
+      },
+      {
+        "id": "document:ocr-service/requirements.txt",
+        "name": "requirements.txt",
+        "type": "document",
+        "summary": "Pinned Python dependencies for the OCR microservice: FastAPI, Uvicorn, python-multipart, RapidOCR (ONNXRuntime), Pillow, and NumPy."
+      }
+    ],
+    "infrastructure": [
+      {
+        "id": "service:.dockerignore",
+        "name": ".dockerignore",
+        "type": "service",
+        "summary": "Excludes node_modules, dist, git metadata, IDE files, and markdown/docs from the Docker build context so root-context image builds stay fast and don't leak source-control or documentation artifacts."
+      },
+      {
+        "id": "service:docker-compose.yml",
+        "name": "docker-compose.yml",
+        "type": "service",
+        "summary": "Orchestrates the full application stack — nginx-served React frontend, FastAPI backend, Celery worker, PaddleOCR microservice, Redis, and a pgvector-enabled Postgres database — wiring build contexts, healthchecks, volumes, and startup ordering via depends_on conditions."
+      },
+      {
+        "id": "service:docker-compose.yml:frontend",
+        "name": "frontend",
+        "type": "service",
+        "summary": "Builds and runs the React/Vite frontend from the root Dockerfile, mapping host port 3000 to nginx's port 80, and waits for the backend to report healthy before starting."
+      },
+      {
+        "id": "service:docker-compose.yml:backend",
+        "name": "backend",
+        "type": "service",
+        "summary": "Builds and runs the FastAPI backend from backend/Dockerfile on port 8000, mounts uploads/logs volumes, loads secrets from .env, and gates startup on the database, Redis, and worker being healthy or started."
+      },
+      {
+        "id": "service:docker-compose.yml:worker",
+        "name": "worker",
+        "type": "service",
+        "summary": "Runs the Celery worker (celery -A app.workers.celery_app.celery_app worker) built from the backend image, sharing the uploads/logs volumes and waiting on the database, Redis, and OCR service to be healthy."
+      },
+      {
+        "id": "service:docker-compose.yml:ocr",
+        "name": "ocr",
+        "type": "service",
+        "summary": "Builds and runs the PaddleOCR microservice from ocr-service/Dockerfile, exposing port 8080 internally with a health check that the worker's startup gate depends on."
+      },
+      {
+        "id": "service:docker-compose.yml:redis",
+        "name": "redis",
+        "type": "service",
+        "summary": "Runs the official redis:7-alpine image used as the Celery broker/result backend, with a redis-cli ping healthcheck gating dependent services."
+      },
+      {
+        "id": "service:docker-compose.yml:db",
+        "name": "db",
+        "type": "service",
+        "summary": "Runs the pgvector/pgvector:pg16 Postgres image as the primary datastore for the chatbot database, with a persistent named volume, seeded credentials, a pg_isready healthcheck, and host port 5434 exposed for local access."
+      },
+      {
+        "id": "service:Dockerfile",
+        "name": "Dockerfile",
+        "type": "service",
+        "summary": "Multi-stage Docker build that compiles the Vite/React frontend (npm ci + npm run build) in a node:22-alpine stage, then serves the resulting static bundle from an nginx:alpine runtime image with a wget-based health check on port 80."
+      },
+      {
+        "id": "service:Dockerfile:builder",
+        "name": "builder",
+        "type": "service",
+        "summary": "First build stage (node:22-alpine) that installs npm dependencies via npm ci and runs the production Vite build, producing the /app/dist output consumed by the runner stage."
+      },
+      {
+        "id": "service:Dockerfile:runner",
+        "name": "runner",
+        "type": "service",
+        "summary": "Final runtime stage (nginx:alpine) that copies the built frontend assets and nginx.conf into place, exposes port 80, and defines a container healthcheck against the served site."
+      },
+      {
+        "id": "service:backend/Dockerfile",
+        "name": "Dockerfile",
+        "type": "service",
+        "summary": "Single-stage Docker build for the FastAPI backend: installs Python dependencies from requirements.txt, copies the application source, and on container start runs Alembic migrations before launching Uvicorn to serve app.main:app on port 8000."
+      },
+      {
+        "id": "service:backend/.dockerignore",
+        "name": ".dockerignore",
+        "type": "service",
+        "summary": "Docker build-context exclusion list for the backend image, keeping Python bytecode caches, pytest caches, local .env secrets, and uploaded documents out of the built image."
+      },
+      {
+        "id": "service:ocr-service/Dockerfile",
+        "name": "Dockerfile",
+        "type": "service",
+        "summary": "Single-stage Docker build for the PaddleOCR/RapidOCR microservice: installs OpenCV/ONNXRuntime system libraries and Python dependencies, pre-warms the bundled PP-OCR ONNX models at build time, then serves the FastAPI app via uvicorn on port 8080."
+      }
+    ],
+    "data": [
+      {
+        "id": "table:backend/scripts/create_users_table.sql:users",
+        "name": "users",
+        "type": "table",
+        "summary": "Raw SQL DDL script defining the `users` table (id, username, password_hash, is_active, created_at) with a unique index on username, usable as a manual bootstrap alternative to the Alembic migration."
+      }
+    ],
+    "config": [
+      {
+        "id": "config:.env.example",
+        "name": ".env.example",
+        "type": "config",
+        "summary": "Template environment file enumerating backend configuration variables: Postgres/Redis connection strings, OpenRouter API key and model slugs for chat/embedding/reranking, JWT signing secret, PaddleOCR microservice settings, and rerank scoring knobs."
+      },
+      {
+        "id": "config:package.json",
+        "name": "package.json",
+        "type": "config",
+        "summary": "npm manifest for the frontend defining Vite dev/build/lint/preview scripts and pinning React 19.2, react-router-dom 7, and the ESLint 9 flat-config toolchain as dependencies."
+      },
+      {
+        "id": "config:backend/alembic.ini",
+        "name": "alembic.ini",
+        "type": "config",
+        "summary": "Alembic configuration file pointing migrations to the backend/alembic script directory, leaving the SQLAlchemy connection URL blank for runtime injection, and configuring root/sqlalchemy/alembic loggers."
+      },
+      {
+        "id": "config:backend/pytest.ini",
+        "name": "pytest.ini",
+        "type": "config",
+        "summary": "Pytest configuration that registers the custom 'eval' marker for slow golden-set evaluation tests and excludes them from default test runs via addopts."
+      },
+      {
+        "id": "config:.claude/settings.local.json",
+        "name": "settings.local.json",
+        "type": "config",
+        "summary": "Local Claude Code settings file defining project-specific tool-permission rules that govern which commands and actions the coding agent may run automatically in this repository."
+      },
+      {
+        "id": "config:.understand-anything/config.json",
+        "name": "config.json",
+        "type": "config",
+        "summary": "Minimal configuration for the Understand-Anything plugin, setting the output language used when generating knowledge-graph summaries and documentation."
+      },
+      {
+        "id": "config:backend/evals/golden_set.yaml",
+        "name": "golden_set.yaml",
+        "type": "config",
+        "summary": "Golden evaluation dataset (question/expected-answer pairs) consumed by the `evals.run_eval` harness to score and compare RAG retrieval and generation quality across runs."
+      }
+    ]
+  },
+  "clusters": [
+    {
+      "nodes": [
+        "file:backend/app/security.py",
+        "file:backend/tests/test_auth.py",
+        "file:backend/app/routers/auth.py",
+        "file:backend/app/models.py",
+        "document:features_planning/account_login/plan.md"
+      ],
+      "edgeCount": 11
+    },
+    {
+      "nodes": [
+        "file:backend/app/services/rag/state.py",
+        "file:backend/tests/test_rag_graph.py",
+        "file:backend/app/services/rag/graph.py",
+        "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+        "document:features_planning/chat_with_doc/rag_enhancement.md"
+      ],
+      "edgeCount": 11
+    },
+    {
+      "nodes": [
+        "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+        "document:features_planning/chat_with_doc/rag_enhancement.md",
+        "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+        "file:backend/app/config.py",
+        "file:backend/app/services/ingestion.py"
+      ],
+      "edgeCount": 11
+    },
+    {
+      "nodes": [
+        "file:src/components/DocumentSelector.css",
+        "file:src/components/DocumentSelector.jsx",
+        "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+        "file:src/pages/ChatPage.jsx",
+        "file:src/hooks/useChat.js"
+      ],
+      "edgeCount": 9
+    },
+    {
+      "nodes": [
+        "file:src/pages/ChatPage.css",
+        "file:src/pages/ChatPage.jsx",
+        "file:src/hooks/useChat.js",
+        "file:src/hooks/useConversations.js",
+        "document:features_planning/chat_history/plan.md"
+      ],
+      "edgeCount": 9
+    },
+    {
+      "nodes": [
+        "file:backend/evals/run_eval.py",
+        "file:backend/tests/test_eval_golden.py"
+      ],
+      "edgeCount": 2
+    },
+    {
+      "nodes": [
+        "file:src/components/ChatMessage.css",
+        "file:src/components/ChatMessage.jsx"
+      ],
+      "edgeCount": 2
+    },
+    {
+      "nodes": [
+        "file:src/components/ChatThread.css",
+        "file:src/components/ChatThread.jsx"
+      ],
+      "edgeCount": 2
+    },
+    {
+      "nodes": [
+        "file:src/components/Composer.css",
+        "file:src/components/Composer.jsx"
+      ],
+      "edgeCount": 2
+    },
+    {
+      "nodes": [
+        "file:src/components/Sidebar.css",
+        "file:src/components/Sidebar.jsx"
+      ],
+      "edgeCount": 2
+    }
+  ],
+  "layers": {
+    "count": 10,
+    "list": [
+      {
+        "id": "layer:frontend-ui",
+        "name": "Frontend UI Layer",
+        "description": "React components, pages, and the app shell (App.jsx, main.jsx, index.html) that render the chat, auth, and document-selection screens, plus their co-located CSS."
+      },
+      {
+        "id": "layer:frontend-data",
+        "name": "Frontend Data & State Layer",
+        "description": "Custom hooks, repository-pattern data access modules, the shared API client, and the auth context that mediate between UI components and the backend."
+      },
+      {
+        "id": "layer:api",
+        "name": "Backend API & Auth Layer",
+        "description": "FastAPI routers exposing auth, chat, conversation, and document endpoints, together with the JWT/password security utilities that gate them."
+      },
+      {
+        "id": "layer:rag-pipeline",
+        "name": "Agentic RAG Pipeline",
+        "description": "The LangGraph state machine (rewrite, hybrid retrieve/rerank, grade, retry, generate, faithfulness-check nodes) that powers document chat."
+      },
+      {
+        "id": "layer:service",
+        "name": "Backend Service & Jobs Layer",
+        "description": "Ingestion and OCR-client business logic, Celery worker/task definitions for background processing, and administrative CLI scripts."
+      },
+      {
+        "id": "layer:data",
+        "name": "Data Layer",
+        "description": "SQLAlchemy ORM models, Pydantic schemas, the DB session/engine setup, Alembic migrations, and the users table definition backing pgvector-based storage."
+      },
+      {
+        "id": "layer:test",
+        "name": "Test & Evaluation Layer",
+        "description": "The pytest suite covering auth, chat, ingestion, RAG graph/nodes/retrieval, and uploads, plus the golden-set evaluation harness for the RAG pipeline."
+      },
+      {
+        "id": "layer:ocr-service",
+        "name": "OCR Microservice",
+        "description": "The standalone PaddleOCR FastAPI microservice deployed as its own container, invoked by the backend's ingestion pipeline."
+      },
+      {
+        "id": "layer:infrastructure",
+        "name": "Infrastructure & Configuration",
+        "description": "Dockerfiles, docker-compose service definitions, nginx config, build/lint tooling, environment templates, and app-factory/settings code that assemble and deploy the three services."
+      },
+      {
+        "id": "layer:documentation",
+        "name": "Documentation & Planning",
+        "description": "Project docs (README, CLAUDE.md, DESIGN.md), architecture/spec write-ups, feature-planning notes, and brainstorming artifacts covering upload, chat, RAG, and login features."
+      }
+    ]
+  },
+  "nodeSummaryIndex": {
+    "file:backend/alembic/env.py": {
+      "name": "env.py",
+      "type": "file",
+      "summary": "Alembic migration environment that wires the app's SQLAlchemy metadata and database URL into online/offline migration runners."
+    },
+    "file:backend/app/database.py": {
+      "name": "database.py",
+      "type": "file",
+      "summary": "Sets up the SQLAlchemy engine, SessionLocal factory, and declarative Base, and exposes the get_db request-scoped session dependency."
+    },
+    "file:backend/app/main.py": {
+      "name": "main.py",
+      "type": "file",
+      "summary": "FastAPI application entry point that mounts the auth, chat, conversations, and documents routers, request-logging middleware, and a health endpoint."
+    },
+    "file:backend/app/models.py": {
+      "name": "models.py",
+      "type": "file",
+      "summary": "SQLAlchemy ORM models for the RAG chatbot: documents, parent/child chunks, users, conversations, and messages."
+    },
+    "file:backend/app/routers/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker for the FastAPI routers package."
+    },
+    "file:backend/app/routers/auth.py": {
+      "name": "auth.py",
+      "type": "file",
+      "summary": "Authentication router exposing a login endpoint that verifies credentials and mints a JWT, plus a /me endpoint returning the current user."
+    },
+    "file:backend/app/routers/chat.py": {
+      "name": "chat.py",
+      "type": "file",
+      "summary": "Chat router that validates the target document, persists conversation/message rows, and streams the agentic RAG answer as server-sent events."
+    },
+    "file:backend/app/routers/conversations.py": {
+      "name": "conversations.py",
+      "type": "file",
+      "summary": "Conversations router providing per-user CRUD: list, fetch with messages, delete a single conversation, and clear all conversations."
+    },
+    "file:backend/app/routers/documents.py": {
+      "name": "documents.py",
+      "type": "file",
+      "summary": "Documents router that lists ingested documents, handles validated file uploads dispatched to Celery ingestion, and streams ingestion status over SSE."
+    },
+    "file:backend/app/schemas.py": {
+      "name": "schemas.py",
+      "type": "file",
+      "summary": "Pydantic request/response schemas for documents, chat, auth tokens, users, conversations, and messages used across the API layer."
+    },
+    "file:backend/app/security.py": {
+      "name": "security.py",
+      "type": "file",
+      "summary": "Security utilities: passlib password hashing/verification, JWT access-token creation, and the get_current_user OAuth2 dependency used to guard routes."
+    },
+    "file:backend/scripts/create_user.py": {
+      "name": "create_user.py",
+      "type": "file",
+      "summary": "CLI script that creates or updates a user account with a hashed password directly against the database."
+    },
+    "file:backend/scripts/reingest_all.py": {
+      "name": "reingest_all.py",
+      "type": "file",
+      "summary": "Maintenance CLI that re-runs the parse/chunk/embed/store ingestion pipeline for one or all documents after a chunk-schema change."
+    },
+    "file:backend/tests/conftest.py": {
+      "name": "conftest.py",
+      "type": "file",
+      "summary": "Pytest fixtures that build tables, provide a transaction-rolled-back DB session, and a TestClient with the get_db dependency overridden."
+    },
+    "file:backend/tests/test_auth.py": {
+      "name": "test_auth.py",
+      "type": "file",
+      "summary": "Tests covering login success/failure, the /me endpoint, and that protected chat and document routes require a valid token."
+    },
+    "file:src/api/client.js": {
+      "name": "client.js",
+      "type": "file",
+      "summary": "Central API client wrapper that stores the JWT in localStorage, injects the Authorization header on every request via apiFetch, and dispatches an auth:unauthorized window event on 401 responses so AuthContext can log the user out and redirect to /login."
+    },
+    "file:src/components/ChatMessage.jsx": {
+      "name": "ChatMessage.jsx",
+      "type": "file",
+      "summary": "Renders a single chat message bubble (user or assistant) with lightweight markdown formatting (bold text, numbered label lists), an expandable citations panel, and message action buttons (feedback, copy, regenerate)."
+    },
+    "file:src/components/ChatThread.jsx": {
+      "name": "ChatThread.jsx",
+      "type": "file",
+      "summary": "Scrollable message list component that renders the conversation's messages as ChatMessage bubbles and auto-scrolls to the newest message."
+    },
+    "file:src/components/Composer.jsx": {
+      "name": "Composer.jsx",
+      "type": "file",
+      "summary": "Message input composer with an auto-resizing textarea, Enter-to-send keyboard handling, and a file-attachment control that surfaces a selected-file chip with upload progress state."
+    },
+    "file:src/components/DocumentSelector.jsx": {
+      "name": "DocumentSelector.jsx",
+      "type": "file",
+      "summary": "Dropdown selector that fetches the list of ingested documents from the backend and lets the user choose which document to chat with, refreshing on window focus."
+    },
+    "file:src/components/ThinkingIndicator.jsx": {
+      "name": "ThinkingIndicator.jsx",
+      "type": "file",
+      "summary": "Whimsical animated status indicator shown while the assistant is generating a response, rotating through status words and surfacing a 'taking longer than expected' hint after 12 seconds."
+    },
+    "file:src/components/UpgradeTab.jsx": {
+      "name": "UpgradeTab.jsx",
+      "type": "file",
+      "summary": "Trivial presentational 'Upgrade to Pro' call-to-action banner with no internal state or logic."
+    },
+    "file:src/components/UploadToast.jsx": {
+      "name": "UploadToast.jsx",
+      "type": "file",
+      "summary": "Toast notification that reports document ingestion success or failure, auto-dismissing after 5 seconds once the upload reaches a terminal state."
+    },
+    "file:src/hooks/useChat.js": {
+      "name": "useChat.js",
+      "type": "file",
+      "summary": "Custom hook implementing the chat conversation state machine: dispatches user/assistant messages through a reducer and streams assistant responses from the backend's SSE-style /api/chat/stream endpoint, parsing token/citations/done/error events."
+    },
+    "file:src/hooks/useConversations.js": {
+      "name": "useConversations.js",
+      "type": "file",
+      "summary": "Custom hook managing the sidebar conversation list — loading, deleting, and clearing conversations via the conversation repository."
+    },
+    "file:src/hooks/useUpload.js": {
+      "name": "useUpload.js",
+      "type": "file",
+      "summary": "Custom hook that uploads a file to the backend and tracks ingestion progress via a Server-Sent Events connection to the document status endpoint."
+    },
+    "file:src/pages/ChatPage.jsx": {
+      "name": "ChatPage.jsx",
+      "type": "file",
+      "summary": "Top-level chat page that wires together the sidebar, document selector, chat thread, composer, and upload toast, orchestrating the useChat/useConversations/useUpload hooks into a cohesive chat experience."
+    },
+    "file:src/repositories/conversationRepository.js": {
+      "name": "conversationRepository.js",
+      "type": "file",
+      "summary": "Repository-pattern data-access module for chat-history conversations, wrapping apiFetch calls to list, fetch, delete, and clear conversations."
+    },
+    "file:backend/app/config.py": {
+      "name": "config.py",
+      "type": "file",
+      "summary": "Centralized application settings loaded from the environment via a pydantic Settings class, covering database, Redis, OpenRouter/OpenAI credentials, JWT auth, retrieval and rerank tuning, and OCR service configuration."
+    },
+    "file:backend/app/services/ingestion.py": {
+      "name": "ingestion.py",
+      "type": "file",
+      "summary": "Document ingestion pipeline that parses PDFs, DOCX, and images (with OCR fallback), splits text into parent (~1500 token) and child (~300 token) chunks, embeds children via OpenRouter, and persists parent/child chunks to the database."
+    },
+    "file:backend/app/services/ocr_client.py": {
+      "name": "ocr_client.py",
+      "type": "file",
+      "summary": "HTTP client that sends image bytes to the PaddleOCR microservice and returns joined text with averaged confidence, raising OCRError on transport failures."
+    },
+    "file:backend/app/services/rag/graph.py": {
+      "name": "graph.py",
+      "type": "file",
+      "summary": "Assembles and runs the LangGraph agentic RAG state machine, wiring the six nodes together with conditional retry routing and streaming answer tokens and citations to callers."
+    },
+    "file:backend/app/services/rag/nodes.py": {
+      "name": "nodes.py",
+      "type": "file",
+      "summary": "Implements the individual LangGraph nodes of the agentic RAG pipeline: query rewrite, retrieve-and-rerank, chunk grading, retry rewrite, answer generation, and faithfulness check."
+    },
+    "file:backend/app/services/rag/prompts.py": {
+      "name": "prompts.py",
+      "type": "file",
+      "summary": "Prompt template string constants used by the RAG nodes for grading chunk relevance, rewriting queries on retry, and checking answer faithfulness."
+    },
+    "file:backend/app/services/rag/reranker.py": {
+      "name": "reranker.py",
+      "type": "file",
+      "summary": "Cross-encoder reranking client that scores retrieved chunks against the query via OpenRouter's /v1/rerank endpoint, sorting by score and falling back to input order on API errors."
+    },
+    "file:backend/app/services/rag/retrieval.py": {
+      "name": "retrieval.py",
+      "type": "file",
+      "summary": "Hybrid retrieval layer that runs pgvector similarity and Postgres FTS searches, fuses them with reciprocal rank fusion, reranks, applies metadata boosts, and returns parent chunks for the LLM."
+    },
+    "file:backend/app/services/rag/state.py": {
+      "name": "state.py",
+      "type": "file",
+      "summary": "Defines the AgentState TypedDict carrying data through the RAG graph and a factory that builds the initial state for a question."
+    },
+    "file:backend/app/workers/celery_app.py": {
+      "name": "celery_app.py",
+      "type": "file",
+      "summary": "Configures the Celery application (broker and backend from settings) and registers worker signal handlers for rotating-file logging and startup task logging."
+    },
+    "file:backend/app/workers/tasks.py": {
+      "name": "tasks.py",
+      "type": "file",
+      "summary": "Celery task that runs the full document ingestion pipeline (parse, chunk, embed, store) for an uploaded document, updating its status to done or failed with retry on error."
+    },
+    "file:backend/tests/test_rag_graph.py": {
+      "name": "test_rag_graph.py",
+      "type": "file",
+      "summary": "Unit tests for the RAG graph's route_after_grade conditional routing, covering the generate, retry-under-budget, and give-up-when-exhausted branches."
+    },
+    "file:src/App.jsx": {
+      "name": "App.jsx",
+      "type": "file",
+      "summary": "Root React component that wraps the tree in AuthProvider and defines the client-side route table (home, login, and the protected chat page) via react-router-dom."
+    },
+    "file:src/auth/AuthContext.jsx": {
+      "name": "AuthContext.jsx",
+      "type": "file",
+      "summary": "Defines the AuthContext and AuthProvider component that own token/user/loading state, validate a persisted token on mount, react to a global unauthorized event, and expose login/logout plus the useAuth hook to the rest of the app."
+    },
+    "file:src/components/ProtectedRoute.jsx": {
+      "name": "ProtectedRoute.jsx",
+      "type": "file",
+      "summary": "Route guard component that redirects unauthenticated visitors to /login (preserving the intended destination in router state) and renders children once auth state is confirmed."
+    },
+    "file:src/components/Sidebar.jsx": {
+      "name": "Sidebar.jsx",
+      "type": "file",
+      "summary": "Sidebar UI listing conversations with new-chat/search actions, hover-revealed delete buttons, and a footer showing the logged-in user's initials plus a logout button, sourcing auth state from useAuth."
+    },
+    "file:src/main.jsx": {
+      "name": "main.jsx",
+      "type": "file",
+      "summary": "Vite/React entry point that mounts the root App component inside StrictMode onto the #root DOM element and loads the global stylesheet."
+    },
+    "file:src/pages/HomePage.jsx": {
+      "name": "HomePage.jsx",
+      "type": "file",
+      "summary": "Landing/marketing page presenting the 'CHAT A.I+' brand with call-to-action buttons that navigate the user into the /chat route."
+    },
+    "file:src/pages/LoginPage.jsx": {
+      "name": "LoginPage.jsx",
+      "type": "file",
+      "summary": "Login form page that collects username/password, calls the auth context's login action, and redirects to the originally requested route (or /chat) on success while surfacing errors inline."
+    },
+    "file:src/repositories/authRepository.js": {
+      "name": "authRepository.js",
+      "type": "file",
+      "summary": "Repository-pattern data-access module for authentication endpoints; wraps fetch calls to /api/auth/login and /api/auth/me so UI components never call fetch directly."
+    },
+    "file:backend/app/services/rag/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Package barrel for the agentic RAG service that re-exports the public entry point (agentic_rag_stream) from graph.py so callers can import from app.services.rag directly."
+    },
+    "file:backend/evals/metrics.py": {
+      "name": "metrics.py",
+      "type": "file",
+      "summary": "Computes RAG evaluation metrics for the golden-set harness: RAGAS scores (faithfulness, answer relevancy, context precision/recall) via an OpenRouter LLM judge plus lightweight custom checks and per-run aggregation."
+    },
+    "file:backend/evals/run_eval.py": {
+      "name": "run_eval.py",
+      "type": "file",
+      "summary": "CLI eval harness that runs the golden question set through the agentic RAG stream, scores answers with the metrics module, and saves/compares timestamped JSON result snapshots (python -m evals.run_eval --name / --compare)."
+    },
+    "file:backend/tests/test_eval_golden.py": {
+      "name": "test_eval_golden.py",
+      "type": "file",
+      "summary": "Pytest test (marked eval) that runs the golden set end-to-end and asserts the aggregated summary metrics meet minimum quality thresholds."
+    },
+    "service:.dockerignore": {
+      "name": ".dockerignore",
+      "type": "service",
+      "summary": "Excludes node_modules, dist, git metadata, IDE files, and markdown/docs from the Docker build context so root-context image builds stay fast and don't leak source-control or documentation artifacts."
+    },
+    "service:docker-compose.yml": {
+      "name": "docker-compose.yml",
+      "type": "service",
+      "summary": "Orchestrates the full application stack — nginx-served React frontend, FastAPI backend, Celery worker, PaddleOCR microservice, Redis, and a pgvector-enabled Postgres database — wiring build contexts, healthchecks, volumes, and startup ordering via depends_on conditions."
+    },
+    "service:docker-compose.yml:frontend": {
+      "name": "frontend",
+      "type": "service",
+      "summary": "Builds and runs the React/Vite frontend from the root Dockerfile, mapping host port 3000 to nginx's port 80, and waits for the backend to report healthy before starting."
+    },
+    "service:docker-compose.yml:backend": {
+      "name": "backend",
+      "type": "service",
+      "summary": "Builds and runs the FastAPI backend from backend/Dockerfile on port 8000, mounts uploads/logs volumes, loads secrets from .env, and gates startup on the database, Redis, and worker being healthy or started."
+    },
+    "service:docker-compose.yml:worker": {
+      "name": "worker",
+      "type": "service",
+      "summary": "Runs the Celery worker (celery -A app.workers.celery_app.celery_app worker) built from the backend image, sharing the uploads/logs volumes and waiting on the database, Redis, and OCR service to be healthy."
+    },
+    "service:docker-compose.yml:ocr": {
+      "name": "ocr",
+      "type": "service",
+      "summary": "Builds and runs the PaddleOCR microservice from ocr-service/Dockerfile, exposing port 8080 internally with a health check that the worker's startup gate depends on."
+    },
+    "service:docker-compose.yml:redis": {
+      "name": "redis",
+      "type": "service",
+      "summary": "Runs the official redis:7-alpine image used as the Celery broker/result backend, with a redis-cli ping healthcheck gating dependent services."
+    },
+    "service:docker-compose.yml:db": {
+      "name": "db",
+      "type": "service",
+      "summary": "Runs the pgvector/pgvector:pg16 Postgres image as the primary datastore for the chatbot database, with a persistent named volume, seeded credentials, a pg_isready healthcheck, and host port 5434 exposed for local access."
+    },
+    "service:Dockerfile": {
+      "name": "Dockerfile",
+      "type": "service",
+      "summary": "Multi-stage Docker build that compiles the Vite/React frontend (npm ci + npm run build) in a node:22-alpine stage, then serves the resulting static bundle from an nginx:alpine runtime image with a wget-based health check on port 80."
+    },
+    "service:Dockerfile:builder": {
+      "name": "builder",
+      "type": "service",
+      "summary": "First build stage (node:22-alpine) that installs npm dependencies via npm ci and runs the production Vite build, producing the /app/dist output consumed by the runner stage."
+    },
+    "service:Dockerfile:runner": {
+      "name": "runner",
+      "type": "service",
+      "summary": "Final runtime stage (nginx:alpine) that copies the built frontend assets and nginx.conf into place, exposes port 80, and defines a container healthcheck against the served site."
+    },
+    "service:backend/Dockerfile": {
+      "name": "Dockerfile",
+      "type": "service",
+      "summary": "Single-stage Docker build for the FastAPI backend: installs Python dependencies from requirements.txt, copies the application source, and on container start runs Alembic migrations before launching Uvicorn to serve app.main:app on port 8000."
+    },
+    "service:backend/.dockerignore": {
+      "name": ".dockerignore",
+      "type": "service",
+      "summary": "Docker build-context exclusion list for the backend image, keeping Python bytecode caches, pytest caches, local .env secrets, and uploaded documents out of the built image."
+    },
+    "service:ocr-service/Dockerfile": {
+      "name": "Dockerfile",
+      "type": "service",
+      "summary": "Single-stage Docker build for the PaddleOCR/RapidOCR microservice: installs OpenCV/ONNXRuntime system libraries and Python dependencies, pre-warms the bundled PP-OCR ONNX models at build time, then serves the FastAPI app via uvicorn on port 8080."
+    },
+    "config:.env.example": {
+      "name": ".env.example",
+      "type": "config",
+      "summary": "Template environment file enumerating backend configuration variables: Postgres/Redis connection strings, OpenRouter API key and model slugs for chat/embedding/reranking, JWT signing secret, PaddleOCR microservice settings, and rerank scoring knobs."
+    },
+    "document:CLAUDE.md": {
+      "name": "CLAUDE.md",
+      "type": "document",
+      "summary": "Guidance file for Claude Code covering the project's stack, npm/lint commands, ESLint rules, frontend architecture, and the agentic LangGraph RAG backend pipeline (entry point, status-field convention, eval harness, and reingestion workflow)."
+    },
+    "document:DESIGN.md": {
+      "name": "DESIGN.md",
+      "type": "document",
+      "summary": "Apple-inspired visual design system specification covering color palette, typography scale, component styling, spacing, elevation, and responsive rules, including an agent prompt guide for generating UI components consistent with the style."
+    },
+    "document:README.md": {
+      "name": "README.md",
+      "type": "document",
+      "summary": "Default create-vite README describing the React + Vite scaffold, the available official Vite React plugins, and pointers for enabling the React Compiler or TypeScript/type-aware ESLint."
+    },
+    "file:index.html": {
+      "name": "index.html",
+      "type": "file",
+      "summary": "HTML shell for the Vite single-page app; defines the root mount div and loads the React entry module via a module script tag."
+    },
+    "config:package.json": {
+      "name": "package.json",
+      "type": "config",
+      "summary": "npm manifest for the frontend defining Vite dev/build/lint/preview scripts and pinning React 19.2, react-router-dom 7, and the ESLint 9 flat-config toolchain as dependencies."
+    },
+    "document:prompt.md": {
+      "name": "prompt.md",
+      "type": "document",
+      "summary": "Short scratch note instructing implementation of a Figma-designed chat UI reachable from the home page."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html": {
+      "name": "architecture-diagram.html",
+      "type": "file",
+      "summary": "Static HTML content fragment rendering a five-service system architecture diagram (React frontend, FastAPI backend, Redis queue, Celery worker, PostgreSQL+pgvector) for the document upload/RAG ingestion pipeline, including an SSE notification flow walkthrough and a docker-compose service breakdown. Produced as a visual mockup during a superpowers brainstorming session."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/architecture-options.html": {
+      "name": "architecture-options.html",
+      "type": "file",
+      "summary": "Static HTML content fragment presenting three candidate backend architectures for the RAG document upload pipeline — FastAPI+asyncio BackgroundTasks with Postgres job tracking (recommended), FastAPI+Celery+Redis, and FastAPI+Postgres LISTEN/NOTIFY — each with pros/cons and a service diagram, used in an interactive brainstorming decision UI."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/composer-ui.html": {
+      "name": "composer-ui.html",
+      "type": "file",
+      "summary": "Static HTML mockup of the chat Composer UI showing the proposed upload button placement, a selected-file chip, and a bottom-right toast notification for completed document ingestion, plus a summary list of new frontend/backend files needed to implement the upload feature."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/waiting.html": {
+      "name": "waiting.html",
+      "type": "file",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Writing spec document...\" loading message shown while the brainstorming session transitions to spec authoring."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/waiting-2.html": {
+      "name": "waiting-2.html",
+      "type": "file",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Continuing in terminal...\" loading message shown between steps of the brainstorming session."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/content/waiting-3.html": {
+      "name": "waiting-3.html",
+      "type": "file",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Continuing in terminal...\" loading message shown between steps of the brainstorming session, functionally identical to waiting-2.html."
+    },
+    "config:backend/alembic.ini": {
+      "name": "alembic.ini",
+      "type": "config",
+      "summary": "Alembic configuration file pointing migrations to the backend/alembic script directory, leaving the SQLAlchemy connection URL blank for runtime injection, and configuring root/sqlalchemy/alembic loggers."
+    },
+    "config:backend/pytest.ini": {
+      "name": "pytest.ini",
+      "type": "config",
+      "summary": "Pytest configuration that registers the custom 'eval' marker for slow golden-set evaluation tests and excludes them from default test runs via addopts."
+    },
+    "document:backend/requirements.txt": {
+      "name": "requirements.txt",
+      "type": "document",
+      "summary": "Pinned Python dependency manifest for the FastAPI backend, covering the web/task-queue stack (fastapi, uvicorn, celery, redis), the database layer (sqlalchemy, psycopg2, alembic, pgvector), the LangChain/LangGraph agentic RAG stack plus OpenAI-compatible client and evaluation tooling (ragas, datasets), and JWT/bcrypt authentication (PyJWT, passlib, bcrypt pinned to 4.0.x to avoid a passlib compatibility warning)."
+    },
+    "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md": {
+      "name": "2026-04-20-file-upload-rag-ingestion.md",
+      "type": "document",
+      "summary": "Task-by-task implementation plan for the original file upload and RAG ingestion pipeline: a Celery-backed chunk/embed/store flow behind a document upload endpoint, an SSE status endpoint for progress polling, and the docker-compose service topology (frontend, backend, worker, redis, pgvector db) needed to run it, spanning 12 tasks from infrastructure setup through an end-to-end smoke test."
+    },
+    "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md": {
+      "name": "2026-05-05-agentic-rag-chat.md",
+      "type": "document",
+      "summary": "Historical implementation plan (superseded 2026-06-28 when the stack moved off self-hosted Ollama to OpenRouter) for the original 'chat with document' feature: a ReAct-style agent that calls a pgvector search tool with a local qwen3 model and streams tokens/citations over SSE, covering the chat endpoint, DocumentSelector UI, and useChat hook across 11 tasks."
+    },
+    "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md": {
+      "name": "2026-05-15-agentic-rag-enhancement.md",
+      "type": "document",
+      "summary": "Historical, phased implementation plan (superseded 2026-06-28) for rebuilding the RAG pipeline as a LangGraph CRAG-lite state machine — baseline RAGAS evaluation, parent-child chunking, RRF hybrid retrieval with FlashRank reranking, and a six-node agent graph (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check) — replacing the original regex-preprocessor and tool-loop agent in `rag.py`."
+    },
+    "document:docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md": {
+      "name": "2026-04-20-file-upload-rag-ingestion-design.md",
+      "type": "document",
+      "summary": "Approved v1 design spec for file upload and ingestion: a five-service pipeline (React, FastAPI, Redis, Celery worker, PostgreSQL+pgvector) that saves an uploaded PDF/DOCX/image, parses and chunks it, embeds chunks via OpenAI, and notifies the client over SSE when ingestion completes. Documents the original `documents`/`document_chunks` schema, the upload/status API contract, and the specific backend and frontend files the feature touches."
+    },
+    "document:docs/superpowers/specs/2026-05-04-agentic-rag-design.md": {
+      "name": "2026-05-04-agentic-rag-design.md",
+      "type": "document",
+      "summary": "Approved-but-superseded design spec for the original 'chat with document' feature: a ReAct agent (qwen3 via Ollama) that iteratively calls a vector-search tool before streaming a grounded answer with citations, plus the DocumentSelector UI, useChat streaming hook, and SSE token/citations/done protocol. Carries a historical note that the stack later moved off Ollama to OpenRouter-hosted models."
+    },
+    "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md": {
+      "name": "2026-05-15-agentic-rag-enhancement-design.md",
+      "type": "document",
+      "summary": "Design spec for the agentic RAG enhancement that replaces the single `rag.py` with the `backend/app/services/rag/` LangGraph package: parent-child chunking, hybrid (vector + FTS) retrieval fused via RRF and reranked with a cross-encoder, and a six-node CRAG-lite state machine (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), plus a RAGAS-based evaluation harness and a four-phase rollout plan. This is the architecture CLAUDE.md currently describes as production, with a historical note that the model substrate later moved from Ollama/TEI to OpenRouter."
+    },
+    "file:src/components/ChatMessage.css": {
+      "name": "ChatMessage.css",
+      "type": "file",
+      "summary": "Styles individual chat message bubbles for both user and assistant turns, including avatars, markdown-rendered paragraphs and lists, hover action buttons, a blinking streaming cursor, error states, and a collapsible citation list."
+    },
+    "file:src/components/ChatThread.css": {
+      "name": "ChatThread.css",
+      "type": "file",
+      "summary": "Minimal styles for the scrollable chat thread container, defining a thin custom scrollbar for the message list."
+    },
+    "file:src/components/Composer.css": {
+      "name": "Composer.css",
+      "type": "file",
+      "summary": "Styles the message composer input bar, including the auto-resizing textarea, send button active/hover states, file upload button with a loading spinner, and attached-file chip tags."
+    },
+    "file:src/components/DocumentSelector.css": {
+      "name": "DocumentSelector.css",
+      "type": "file",
+      "summary": "Styles the document selector dropdown row used to pick which document a conversation is scoped to, including focus and disabled select states."
+    },
+    "file:src/components/Sidebar.css": {
+      "name": "Sidebar.css",
+      "type": "file",
+      "summary": "Styles the dark-themed application sidebar: logo, new-chat and search actions, scrollable conversation list with active/hover/disabled item states, and a footer with user avatar and logout affordance."
+    },
+    "file:src/components/ThinkingIndicator.css": {
+      "name": "ThinkingIndicator.css",
+      "type": "file",
+      "summary": "Styles the animated 'thinking' status row shown while the assistant is generating a response, including a spinning glyph and a shimmering gradient-text sweep, with a reduced-motion fallback for accessibility."
+    },
+    "file:src/components/UpgradeTab.css": {
+      "name": "UpgradeTab.css",
+      "type": "file",
+      "summary": "Styles a fixed, vertically-rotated 'upgrade' call-to-action tab anchored to the screen edge."
+    },
+    "file:src/components/UploadToast.css": {
+      "name": "UploadToast.css",
+      "type": "file",
+      "summary": "Styles a fixed-position toast notification that reports document upload success or failure, with a slide-in animation and a dismiss button."
+    },
+    "file:src/pages/ChatPage.css": {
+      "name": "ChatPage.css",
+      "type": "file",
+      "summary": "Layout stylesheet for the chat page shell, defining the full-viewport flex container, the chat card surface, an absolutely-positioned upgrade badge, and a placeholder hint shown when no conversation is active."
+    },
+    "file:src/pages/HomePage.css": {
+      "name": "HomePage.css",
+      "type": "file",
+      "summary": "Landing/hero page stylesheet centering a dark full-screen layout with a badge, logo, tagline, and primary/outline call-to-action buttons, including a responsive breakpoint for narrow viewports."
+    },
+    "file:src/pages/LoginPage.css": {
+      "name": "LoginPage.css",
+      "type": "file",
+      "summary": "Stylesheet for the login form card, covering the centered page background, card container, title/subtitle typography, input fields, error message styling, and submit button hover/disabled states."
+    },
+    "config:.claude/settings.local.json": {
+      "name": "settings.local.json",
+      "type": "config",
+      "summary": "Local Claude Code settings file defining project-specific tool-permission rules that govern which commands and actions the coding agent may run automatically in this repository."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/state/server-stopped": {
+      "name": "server-stopped",
+      "type": "file",
+      "summary": "Runtime state marker created by the superpowers brainstorming skill to record that its background server process has stopped."
+    },
+    "file:.superpowers/brainstorm/37604-1776700392/state/server.pid": {
+      "name": "server.pid",
+      "type": "file",
+      "summary": "Runtime PID file recorded by the superpowers brainstorming skill to track its background server process."
+    },
+    "file:.understand-anything/.understandignore": {
+      "name": ".understandignore",
+      "type": "file",
+      "summary": "Ignore-pattern list for the Understand-Anything code-analysis plugin, excluding directories and files such as build output and dependencies from the project scan and knowledge-graph generation."
+    },
+    "config:.understand-anything/config.json": {
+      "name": "config.json",
+      "type": "config",
+      "summary": "Minimal configuration for the Understand-Anything plugin, setting the output language used when generating knowledge-graph summaries and documentation."
+    },
+    "file:backend/alembic/script.py.mako": {
+      "name": "script.py.mako",
+      "type": "file",
+      "summary": "Mako template used by Alembic's `revision` command to scaffold new migration files with the standard `upgrade`/`downgrade` function stubs and revision metadata."
+    },
+    "file:backend/alembic/versions/0001_initial.py": {
+      "name": "0001_initial.py",
+      "type": "file",
+      "summary": "Initial Alembic migration that enables the pgvector extension and creates the core `documents` and `chunks` tables, including the chunk embedding vector column."
+    },
+    "file:backend/alembic/versions/0002_fix_embedding_dim.py": {
+      "name": "0002_fix_embedding_dim.py",
+      "type": "file",
+      "summary": "Follow-up migration that drops and recreates the `chunks` table to fix an incorrect pgvector embedding column dimension introduced by the initial migration."
+    },
+    "file:backend/alembic/versions/0003_add_fts_gin_index.py": {
+      "name": "0003_add_fts_gin_index.py",
+      "type": "file",
+      "summary": "Migration adding a PostgreSQL GIN index for full-text search over chunk content, enabling the FTS side of the hybrid (vector + keyword) retrieval pipeline."
+    },
+    "file:backend/alembic/versions/0004_parent_child_chunks.py": {
+      "name": "0004_parent_child_chunks.py",
+      "type": "file",
+      "summary": "Migration introducing the parent-child chunk model: adds a parent-chunks table with constraints and indexes, and links existing chunks to their parent via a new foreign key column."
+    },
+    "file:backend/alembic/versions/0005_embedding_to_1536.py": {
+      "name": "0005_embedding_to_1536.py",
+      "type": "file",
+      "summary": "Migration resizing the chunk embedding column to 1536 dimensions to match the truncated qwen3-embedding-8b output routed through OpenRouter."
+    },
+    "file:backend/alembic/versions/0006_document_metadata.py": {
+      "name": "0006_document_metadata.py",
+      "type": "file",
+      "summary": "Migration adding metadata columns (type, page/chunk counts, JSONB metadata, status fields) to the `documents` table along with a supporting index."
+    },
+    "file:backend/alembic/versions/0007_create_users.py": {
+      "name": "0007_create_users.py",
+      "type": "file",
+      "summary": "Migration creating the `users` table (UUID id, username, password hash, active flag, created-at timestamp) with a unique index, establishing the schema for JWT-based authentication."
+    },
+    "file:backend/alembic/versions/0008_create_conversations_messages.py": {
+      "name": "0008_create_conversations_messages.py",
+      "type": "file",
+      "summary": "Migration creating `conversations` and `messages` tables with foreign keys to users and conversations, JSONB message metadata, and indexes — the schema backbone for persisted chat history."
+    },
+    "file:backend/app/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/app` importable as the root Python package for the FastAPI backend."
+    },
+    "file:backend/app/services/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/app/services` importable as a Python package for the backend's service layer, including the RAG pipeline."
+    },
+    "file:backend/app/workers/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/app/workers` importable as a Python package for Celery background worker code."
+    },
+    "file:backend/evals/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/evals` importable as a Python package for the RAG evaluation harness."
+    },
+    "config:backend/evals/golden_set.yaml": {
+      "name": "golden_set.yaml",
+      "type": "config",
+      "summary": "Golden evaluation dataset (question/expected-answer pairs) consumed by the `evals.run_eval` harness to score and compare RAG retrieval and generation quality across runs."
+    },
+    "file:backend/evals/results/.gitkeep": {
+      "name": ".gitkeep",
+      "type": "file",
+      "summary": "Empty placeholder file that keeps the otherwise-empty `backend/evals/results/` output directory tracked in git."
+    },
+    "file:backend/scripts/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/scripts` importable as a Python package for backend maintenance and bootstrap scripts."
+    },
+    "table:backend/scripts/create_users_table.sql:users": {
+      "name": "users",
+      "type": "table",
+      "summary": "Raw SQL DDL script defining the `users` table (id, username, password_hash, is_active, created_at) with a unique index on username, usable as a manual bootstrap alternative to the Alembic migration."
+    },
+    "file:backend/tests/__init__.py": {
+      "name": "__init__.py",
+      "type": "file",
+      "summary": "Empty package marker file that makes `backend/tests` importable as a Python package for the backend's pytest test suite."
+    },
+    "file:backend/tests/test_chat.py": {
+      "name": "test_chat.py",
+      "type": "file",
+      "summary": "Pytest suite for the chat streaming endpoint, covering a 404 for unknown documents, a 400 for documents still processing, and a successful event-stream response for a fully ingested document."
+    },
+    "file:backend/tests/test_graph.py": {
+      "name": "test_graph.py",
+      "type": "file",
+      "summary": "Pytest suite covering RAG helper functions `_build_citations` and `_format_context`, verifying citation deduplication and page-number-prefixed context formatting."
+    },
+    "file:backend/tests/test_ingestion.py": {
+      "name": "test_ingestion.py",
+      "type": "file",
+      "summary": "Unit and integration tests for the document ingestion pipeline covering chunking, parsing (DOCX/PDF/image with OCR fallback), embedding, and chunk persistence into parent/child tables."
+    },
+    "file:backend/tests/test_ocr_client.py": {
+      "name": "test_ocr_client.py",
+      "type": "file",
+      "summary": "Tests the OCR client wrapper that calls the OCR microservice over HTTP, covering line joining, confidence averaging, empty results, and error propagation."
+    },
+    "file:backend/tests/test_rag.py": {
+      "name": "test_rag.py",
+      "type": "file",
+      "summary": "Integration test for the public agentic_rag_stream entry point, asserting the SSE event stream emits token, citation, and done events in the correct order."
+    },
+    "file:backend/tests/test_rag_nodes.py": {
+      "name": "test_rag_nodes.py",
+      "type": "file",
+      "summary": "Unit tests for the individual LangGraph nodes of the agentic RAG pipeline: query rewriting, retrieval+reranking, chunk grading, retry rewriting, and faithfulness checking."
+    },
+    "file:backend/tests/test_retrieval.py": {
+      "name": "test_retrieval.py",
+      "type": "file",
+      "summary": "Tests the hybrid retrieval pipeline: reranker configuration, cross-encoder reranking behavior, RRF fusion of ranked lists, parent chunk fetching, metadata boosting, and page-filtered hybrid search."
+    },
+    "file:backend/tests/test_tasks.py": {
+      "name": "test_tasks.py",
+      "type": "file",
+      "summary": "Tests the Celery ingest_document task, covering successful ingestion, exception handling that marks a document failed, and failure on empty text extraction."
+    },
+    "file:backend/tests/test_upload.py": {
+      "name": "test_upload.py",
+      "type": "file",
+      "summary": "API tests for the document upload and status endpoints, covering accepted uploads, type/size validation, SSE status streaming, and filtering the document list to fully-ingested documents."
+    },
+    "file:eslint.config.js": {
+      "name": "eslint.config.js",
+      "type": "file",
+      "summary": "ESLint 9 flat configuration for the React/Vite frontend, enabling recommended JS rules plus React Hooks and React Refresh plugin rules with a custom no-unused-vars exception for uppercase/underscore-prefixed names."
+    },
+    "document:features_planning/account_login/plan.md": {
+      "name": "plan.md",
+      "type": "document",
+      "summary": "Implementation plan for gating chat access behind username/password login, covering the JWT auth backend (User model, migration, security helpers, auth router) and the React login flow (AuthContext, ProtectedRoute, LoginPage)."
+    },
+    "document:features_planning/chat_history/plan.md": {
+      "name": "plan.md",
+      "type": "document",
+      "summary": "Implementation plan for persisting real chat conversations and messages (Conversation and Message models, migration, conversations router, frontend wiring), plus a smaller 'AI response animation' enhancement for the thinking/loading state."
+    },
+    "document:features_planning/chat_with_doc/planning.md": {
+      "name": "planning.md",
+      "type": "document",
+      "summary": "Initial feature request outlining the chat-with-document flow: a document selector, a chat endpoint backed by agentic RAG over the vector store, and streaming the response to the frontend."
+    },
+    "document:features_planning/chat_with_doc/rag_enhancement.md": {
+      "name": "rag_enhancement.md",
+      "type": "document",
+      "summary": "Describes the enhanced agentic RAG architecture as a LangGraph state machine with six nodes (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), documents the OpenRouter model cutover (Claude Haiku 4.5 chat/rerank, Qwen3 embeddings), the parent/child chunk data model, evaluation harness, and tunable config knobs."
+    },
+    "document:features_planning/file_processing/planing.md": {
+      "name": "planing.md",
+      "type": "document",
+      "summary": "Initial feature request for document upload and background ingestion: an upload button in the chat UI, storing document metadata in Postgres, and a background job that chunks, embeds, and stores vectors in pgvector before notifying the user."
+    },
+    "file:nginx.conf": {
+      "name": "nginx.conf",
+      "type": "file",
+      "summary": "Nginx reverse proxy configuration that serves the built frontend as an SPA, proxies /api/ requests to the FastAPI backend with buffering disabled for streaming responses, and sets long-lived caching headers for static assets."
+    },
+    "file:ocr-service/app.py": {
+      "name": "app.py",
+      "type": "file",
+      "summary": "Standalone FastAPI OCR microservice exposing a health check and an /ocr endpoint that runs RapidOCR (ONNXRuntime) over an uploaded image and returns line-level text, bounding boxes, and confidence scores."
+    },
+    "document:ocr-service/requirements.txt": {
+      "name": "requirements.txt",
+      "type": "document",
+      "summary": "Pinned Python dependencies for the OCR microservice: FastAPI, Uvicorn, python-multipart, RapidOCR (ONNXRuntime), Pillow, and NumPy."
+    },
+    "file:src/App.css": {
+      "name": "App.css",
+      "type": "file",
+      "summary": "Legacy create-vite scaffold styles (counter button, hero/logo layout, ticking animation) that appear to predate the chat UI rewrite and are no longer referenced from App.jsx."
+    },
+    "file:src/index.css": {
+      "name": "index.css",
+      "type": "file",
+      "summary": "Global stylesheet entry point that imports src/styles/global.css, pulled in by main.jsx to bootstrap the app's base styles."
+    },
+    "file:src/styles/global.css": {
+      "name": "global.css",
+      "type": "file",
+      "summary": "Base global stylesheet applying a CSS reset, body typography/background driven by design tokens, and default button/input/link resets; imports tokens.css."
+    },
+    "file:src/styles/tokens.css": {
+      "name": "tokens.css",
+      "type": "file",
+      "summary": "CSS custom-property design tokens (Apple-Blue brand colors, backgrounds, text colors, radii, shadows, typography, and layout widths) shared across the app's stylesheets."
+    },
+    "file:vite.config.js": {
+      "name": "vite.config.js",
+      "type": "file",
+      "summary": "Vite build configuration registering the React plugin and proxying /api requests to the local FastAPI backend during development."
+    }
+  },
+  "totalNodes": 145,
+  "totalEdges": 319
+}

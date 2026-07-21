@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md", "language": "markdown", "sizeLines": 1896, "fileCategory": "docs"},
+    {"path": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md", "language": "markdown", "sizeLines": 1521, "fileCategory": "docs"},
+    {"path": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md", "language": "markdown", "sizeLines": 2925, "fileCategory": "docs"}
+  ],
+  "batchImportData": {
+    "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md": [],
+    "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md": [],
+    "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md": []
+  }
+}

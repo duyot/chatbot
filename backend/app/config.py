@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
 
+    # Auth / JWT. jwt_secret_key MUST be set in .env for production; an empty
+    # value is only tolerable for local dev/tests.
+    jwt_secret_key: str = ""
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60 * 24
+
     # Retrieval tunables
     vector_top_k: int = 30
     fts_top_k: int = 30

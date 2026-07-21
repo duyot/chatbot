@@ -1,0 +1,40 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Built-in defaults always excluded: node_modules/, .git/, dist/, build/, *.lock, *.min.js, etc.
+
+# --- Binary / uploaded content (not source) ---
+uploads/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.svg
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Secrets / env ---
+.env
+.env.local
+
+# --- Python caches / virtualenv ---
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/.venv/
+backend/evals/results/*.json
+
+# --- IDE / editor ---
+.idea/
+.vscode/
+chatbot.iml
+
+# --- Lockfiles (large, not analyzable source) ---
+package-lock.json
+
+# --- Kept INCLUDED on purpose (do NOT uncomment unless desired) ---
+# docs/                 -> design docs become useful "document" nodes
+# features_planning/    -> planning markdown, useful context
+# backend/tests/        -> produce tested_by coverage edges
+# *.test.*  *.spec.*     -> frontend tests, coverage edges

@@ -1,0 +1,794 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "backend/app/services/rag/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/evals/metrics.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 110,
+      "nonEmptyLines": 94,
+      "functions": [
+        {
+          "name": "_build_judge",
+          "startLine": 25,
+          "endLine": 31,
+          "params": []
+        },
+        {
+          "name": "_build_embeddings",
+          "startLine": 34,
+          "endLine": 40,
+          "params": []
+        },
+        {
+          "name": "run_ragas_metrics",
+          "startLine": 43,
+          "endLine": 75,
+          "params": [
+            "questions",
+            "answers",
+            "contexts",
+            "ground_truths"
+          ]
+        },
+        {
+          "name": "expected_substring_match",
+          "startLine": 78,
+          "endLine": 83,
+          "params": [
+            "answer",
+            "expected_substring"
+          ]
+        },
+        {
+          "name": "answered",
+          "startLine": 86,
+          "endLine": 90,
+          "params": [
+            "answer"
+          ]
+        },
+        {
+          "name": "summarize",
+          "startLine": 93,
+          "endLine": 110,
+          "params": [
+            "per_question"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_build_judge",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "_build_embeddings",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "run_ragas_metrics",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "expected_substring_match",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "answered",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "summarize",
+          "line": 93,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_build_judge",
+          "callee": "ChatOpenAI",
+          "lineNumber": 26
+        },
+        {
+          "caller": "_build_embeddings",
+          "callee": "OpenAIEmbeddings",
+          "lineNumber": 35
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "len",
+          "lineNumber": 50
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "len",
+          "lineNumber": 51
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "len",
+          "lineNumber": 51
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "len",
+          "lineNumber": 51
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "Dataset.from_list",
+          "lineNumber": 54
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "range",
+          "lineNumber": 61
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "evaluate",
+          "lineNumber": 63
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "_build_judge",
+          "lineNumber": 66
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "_build_embeddings",
+          "lineNumber": 67
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "result.to_pandas",
+          "lineNumber": 69
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"faithfulness\"].fillna(0.0).tolist",
+          "lineNumber": 71
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"faithfulness\"].fillna",
+          "lineNumber": 71
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"answer_relevancy\"].fillna(0.0).tolist",
+          "lineNumber": 72
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"answer_relevancy\"].fillna",
+          "lineNumber": 72
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"context_precision\"].fillna(0.0).tolist",
+          "lineNumber": 73
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"context_precision\"].fillna",
+          "lineNumber": 73
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"context_recall\"].fillna(0.0).tolist",
+          "lineNumber": 74
+        },
+        {
+          "caller": "run_ragas_metrics",
+          "callee": "df[\"context_recall\"].fillna",
+          "lineNumber": 74
+        },
+        {
+          "caller": "expected_substring_match",
+          "callee": "expected_substring.lower",
+          "lineNumber": 83
+        },
+        {
+          "caller": "expected_substring_match",
+          "callee": "(answer or \"\").lower",
+          "lineNumber": 83
+        },
+        {
+          "caller": "answered",
+          "callee": "len",
+          "lineNumber": 88
+        },
+        {
+          "caller": "answered",
+          "callee": "answer.strip",
+          "lineNumber": 88
+        },
+        {
+          "caller": "mean",
+          "callee": "q[\"metrics\"].get",
+          "lineNumber": 96
+        },
+        {
+          "caller": "mean",
+          "callee": "q[\"metrics\"].get",
+          "lineNumber": 96
+        },
+        {
+          "caller": "mean",
+          "callee": "sum",
+          "lineNumber": 97
+        },
+        {
+          "caller": "mean",
+          "callee": "len",
+          "lineNumber": 97
+        },
+        {
+          "caller": "summarize",
+          "callee": "len",
+          "lineNumber": 99
+        },
+        {
+          "caller": "summarize",
+          "callee": "mean",
+          "lineNumber": 102
+        },
+        {
+          "caller": "summarize",
+          "callee": "mean",
+          "lineNumber": 103
+        },
+        {
+          "caller": "summarize",
+          "callee": "mean",
+          "lineNumber": 104
+        },
+        {
+          "caller": "summarize",
+          "callee": "mean",
+          "lineNumber": 105
+        },
+        {
+          "caller": "summarize",
+          "callee": "sum",
+          "lineNumber": 106
+        },
+        {
+          "caller": "summarize",
+          "callee": "sum",
+          "lineNumber": 108
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/evals/run_eval.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 178,
+      "nonEmptyLines": 151,
+      "functions": [
+        {
+          "name": "_git_sha",
+          "startLine": 36,
+          "endLine": 42,
+          "params": []
+        },
+        {
+          "name": "_load_golden",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "_resolve_document_id",
+          "startLine": 50,
+          "endLine": 61,
+          "params": [
+            "db",
+            "file_name"
+          ]
+        },
+        {
+          "name": "_run_one",
+          "startLine": 64,
+          "endLine": 73,
+          "params": [
+            "db",
+            "document_id",
+            "question"
+          ]
+        },
+        {
+          "name": "run_eval",
+          "startLine": 76,
+          "endLine": 128,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "_save",
+          "startLine": 131,
+          "endLine": 136,
+          "params": [
+            "payload",
+            "name"
+          ]
+        },
+        {
+          "name": "_compare",
+          "startLine": 139,
+          "endLine": 155,
+          "params": [
+            "name_a",
+            "name_b"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 158,
+          "endLine": 174,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_git_sha",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "_load_golden",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "_resolve_document_id",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "_run_one",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "run_eval",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "_save",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "_compare",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 158,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_git_sha",
+          "callee": "subprocess.check_output(\n            [\"git\", \"rev-parse\", \"--short\", \"HEAD\"], text=True\n        ).strip",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_git_sha",
+          "callee": "subprocess.check_output",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_load_golden",
+          "callee": "open",
+          "lineNumber": 46
+        },
+        {
+          "caller": "_load_golden",
+          "callee": "yaml.safe_load",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_resolve_document_id",
+          "callee": "db.query(Document)\n        .filter(Document.file_name == file_name, Document.status == \"done\")\n        .first",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_resolve_document_id",
+          "callee": "db.query(Document)\n        .filter",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_resolve_document_id",
+          "callee": "db.query",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_resolve_document_id",
+          "callee": "RuntimeError",
+          "lineNumber": 57
+        },
+        {
+          "caller": "_resolve_document_id",
+          "callee": "str",
+          "lineNumber": 61
+        },
+        {
+          "caller": "_run_one",
+          "callee": "agentic_rag_stream",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_run_one",
+          "callee": "answer_parts.append",
+          "lineNumber": 70
+        },
+        {
+          "caller": "_run_one",
+          "callee": "\"\".join(answer_parts).strip",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_run_one",
+          "callee": "\"\".join",
+          "lineNumber": 73
+        },
+        {
+          "caller": "run_eval",
+          "callee": "_load_golden",
+          "lineNumber": 77
+        },
+        {
+          "caller": "run_eval",
+          "callee": "SessionLocal",
+          "lineNumber": 78
+        },
+        {
+          "caller": "run_eval",
+          "callee": "_resolve_document_id",
+          "lineNumber": 84
+        },
+        {
+          "caller": "run_eval",
+          "callee": "logger.info",
+          "lineNumber": 85
+        },
+        {
+          "caller": "run_eval",
+          "callee": "_run_one",
+          "lineNumber": 86
+        },
+        {
+          "caller": "run_eval",
+          "callee": "questions.append",
+          "lineNumber": 87
+        },
+        {
+          "caller": "run_eval",
+          "callee": "answers.append",
+          "lineNumber": 88
+        },
+        {
+          "caller": "run_eval",
+          "callee": "ctx_lists.append",
+          "lineNumber": 89
+        },
+        {
+          "caller": "run_eval",
+          "callee": "gts.append",
+          "lineNumber": 90
+        },
+        {
+          "caller": "run_eval",
+          "callee": "logger.info",
+          "lineNumber": 93
+        },
+        {
+          "caller": "run_eval",
+          "callee": "len",
+          "lineNumber": 93
+        },
+        {
+          "caller": "run_eval",
+          "callee": "run_ragas_metrics",
+          "lineNumber": 94
+        },
+        {
+          "caller": "run_eval",
+          "callee": "enumerate",
+          "lineNumber": 97
+        },
+        {
+          "caller": "run_eval",
+          "callee": "per_question.append",
+          "lineNumber": 98
+        },
+        {
+          "caller": "run_eval",
+          "callee": "answered",
+          "lineNumber": 103
+        },
+        {
+          "caller": "run_eval",
+          "callee": "expected_substring_match",
+          "lineNumber": 104
+        },
+        {
+          "caller": "run_eval",
+          "callee": "entry.get",
+          "lineNumber": 105
+        },
+        {
+          "caller": "run_eval",
+          "callee": "db.close",
+          "lineNumber": 115
+        },
+        {
+          "caller": "run_eval",
+          "callee": "datetime.now(timezone.utc).isoformat(timespec=\"seconds\").replace",
+          "lineNumber": 119
+        },
+        {
+          "caller": "run_eval",
+          "callee": "datetime.now(timezone.utc).isoformat",
+          "lineNumber": 119
+        },
+        {
+          "caller": "run_eval",
+          "callee": "datetime.now",
+          "lineNumber": 119
+        },
+        {
+          "caller": "run_eval",
+          "callee": "_git_sha",
+          "lineNumber": 120
+        },
+        {
+          "caller": "run_eval",
+          "callee": "os.environ.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "run_eval",
+          "callee": "os.environ.get",
+          "lineNumber": 123
+        },
+        {
+          "caller": "run_eval",
+          "callee": "summarize",
+          "lineNumber": 126
+        },
+        {
+          "caller": "_save",
+          "callee": "RESULTS_DIR.mkdir",
+          "lineNumber": 132
+        },
+        {
+          "caller": "_save",
+          "callee": "datetime.now(timezone.utc).strftime",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_save",
+          "callee": "datetime.now",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_save",
+          "callee": "out.write_text",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_save",
+          "callee": "json.dumps",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_latest",
+          "callee": "sorted",
+          "lineNumber": 141
+        },
+        {
+          "caller": "_latest",
+          "callee": "RESULTS_DIR.glob",
+          "lineNumber": 141
+        },
+        {
+          "caller": "_latest",
+          "callee": "RuntimeError",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_latest",
+          "callee": "json.loads",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_latest",
+          "callee": "candidates[-1].read_text",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_compare",
+          "callee": "_latest",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_compare",
+          "callee": "_latest",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_compare",
+          "callee": "print",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_compare",
+          "callee": "print",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_compare",
+          "callee": "a[\"summary\"].get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_compare",
+          "callee": "b[\"summary\"].get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_compare",
+          "callee": "print",
+          "lineNumber": 155
+        },
+        {
+          "caller": "main",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 159
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 161
+        },
+        {
+          "caller": "main",
+          "callee": "parser.parse_args",
+          "lineNumber": 164
+        },
+        {
+          "caller": "main",
+          "callee": "_compare",
+          "lineNumber": 167
+        },
+        {
+          "caller": "main",
+          "callee": "parser.error",
+          "lineNumber": 170
+        },
+        {
+          "caller": "main",
+          "callee": "asyncio.run",
+          "lineNumber": 171
+        },
+        {
+          "caller": "main",
+          "callee": "run_eval",
+          "lineNumber": 171
+        },
+        {
+          "caller": "main",
+          "callee": "_save",
+          "lineNumber": 172
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 173
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 174
+        },
+        {
+          "caller": "main",
+          "callee": "json.dumps",
+          "lineNumber": 174
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/tests/test_eval_golden.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 14,
+      "functions": [
+        {
+          "name": "test_golden_set_runs_and_summary_meets_thresholds",
+          "startLine": 13,
+          "endLine": 18,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "test_golden_set_runs_and_summary_meets_thresholds",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_golden_set_runs_and_summary_meets_thresholds",
+          "callee": "asyncio.run",
+          "lineNumber": 14
+        },
+        {
+          "caller": "test_golden_set_runs_and_summary_meets_thresholds",
+          "callee": "run_eval",
+          "lineNumber": 14
+        },
+        {
+          "caller": "test_golden_set_runs_and_summary_meets_thresholds",
+          "callee": "_save",
+          "lineNumber": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

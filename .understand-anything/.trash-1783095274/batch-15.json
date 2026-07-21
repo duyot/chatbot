@@ -1,0 +1,56 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/pages/ChatPage.css",
+      "type": "file",
+      "name": "ChatPage.css",
+      "filePath": "src/pages/ChatPage.css",
+      "summary": "Layout stylesheet for the chat page shell, defining the full-viewport flex container, the chat card surface, an absolutely-positioned upgrade badge, and a placeholder hint shown when no conversation is active.",
+      "tags": ["styling", "layout", "chat-page", "css", "component-styling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/pages/HomePage.css",
+      "type": "file",
+      "name": "HomePage.css",
+      "filePath": "src/pages/HomePage.css",
+      "summary": "Landing/hero page stylesheet centering a dark full-screen layout with a badge, logo, tagline, and primary/outline call-to-action buttons, including a responsive breakpoint for narrow viewports.",
+      "tags": ["styling", "landing-page", "responsive-design", "css", "hero-section"],
+      "complexity": "moderate",
+      "languageNotes": "Uses CSS custom properties (design tokens like --font-body, --color-primary) for consistent theming and a max-width media query for mobile layout adjustments."
+    },
+    {
+      "id": "file:src/pages/LoginPage.css",
+      "type": "file",
+      "name": "LoginPage.css",
+      "filePath": "src/pages/LoginPage.css",
+      "summary": "Stylesheet for the login form card, covering the centered page background, card container, title/subtitle typography, input fields, error message styling, and submit button hover/disabled states.",
+      "tags": ["styling", "login-form", "authentication-ui", "css", "component-styling"],
+      "complexity": "moderate",
+      "languageNotes": "Relies heavily on shared CSS custom properties (colors, radii, shadows) for theme consistency with the rest of the app."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/pages/ChatPage.css",
+      "target": "file:src/pages/ChatPage.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/pages/HomePage.css",
+      "target": "file:src/pages/HomePage.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/pages/LoginPage.css",
+      "target": "file:src/pages/LoginPage.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "id": "service:ocr-service/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "ocr-service/Dockerfile",
+      "summary": "Single-stage Docker build for the PaddleOCR/RapidOCR microservice: installs OpenCV/ONNXRuntime system libraries and Python dependencies, pre-warms the bundled PP-OCR ONNX models at build time, then serves the FastAPI app via uvicorn on port 8080.",
+      "tags": ["containerization", "infrastructure", "deployment", "ocr-service", "python"],
+      "complexity": "simple",
+      "languageNotes": "Runs `python -c \"from rapidocr_onnxruntime import RapidOCR; RapidOCR()\"` during the build stage specifically to force unpacking/initialization of the bundled ONNX models at build time, avoiding a network download or cold-start delay at container runtime."
+    }
+  ],
+  "edges": [
+    {
+      "source": "service:ocr-service/Dockerfile",
+      "target": "file:ocr-service/app.py",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

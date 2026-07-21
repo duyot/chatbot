@@ -1,0 +1,9 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "ocr-service/Dockerfile", "language": "dockerfile", "sizeLines": 20, "fileCategory": "infra"}
+  ],
+  "batchImportData": {
+    "ocr-service/Dockerfile": []
+  }
+}

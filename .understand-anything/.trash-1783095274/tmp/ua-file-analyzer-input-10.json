@@ -1,0 +1,19 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html", "language": "html", "sizeLines": 114, "fileCategory": "markup"},
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html", "language": "html", "sizeLines": 49, "fileCategory": "markup"},
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html", "language": "html", "sizeLines": 88, "fileCategory": "markup"},
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html", "language": "html", "sizeLines": 3, "fileCategory": "markup"},
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html", "language": "html", "sizeLines": 3, "fileCategory": "markup"},
+    {"path": ".superpowers/brainstorm/37604-1776700392/content/waiting.html", "language": "html", "sizeLines": 3, "fileCategory": "markup"}
+  ],
+  "batchImportData": {
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting.html": []
+  }
+}

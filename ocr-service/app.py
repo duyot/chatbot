@@ -46,6 +46,7 @@ async def ocr(file: UploadFile = File(...)):
             "bbox": [[float(p[0]), float(p[1])] for p in box],
             "confidence": float(score),
         })
+        logger.info(f"box: {box}, text: {text}, score: {score}")
 
     logger.info("ocr: file=%s lines=%d", file.filename, len(lines))
     return {"lines": lines, "width": width, "height": height}

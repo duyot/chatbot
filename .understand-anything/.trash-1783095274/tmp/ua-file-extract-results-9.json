@@ -1,0 +1,551 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".env.example",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 51,
+      "nonEmptyLines": 43,
+      "definitions": [
+        {
+          "name": "DATABASE_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "REDIS_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 2,
+          "endLine": 2
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 7,
+          "endLine": 7
+        },
+        {
+          "name": "OPENROUTER_API_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 10,
+          "endLine": 10
+        },
+        {
+          "name": "OPENROUTER_BASE_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 11,
+          "endLine": 11
+        },
+        {
+          "name": "OPENROUTER_CHAT_MODEL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "OPENAI_EMBEDDING_MODEL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 18,
+          "endLine": 18
+        },
+        {
+          "name": "EMBEDDING_DIM",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "RERANKER_MODEL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 24,
+          "endLine": 24
+        },
+        {
+          "name": "UPLOAD_DIR",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 26,
+          "endLine": 26
+        },
+        {
+          "name": "MAX_UPLOAD_MB",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 27,
+          "endLine": 27
+        },
+        {
+          "name": "CORS_ORIGINS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 28,
+          "endLine": 28
+        },
+        {
+          "name": "JWT_SECRET_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 32,
+          "endLine": 32
+        },
+        {
+          "name": "OCR_ENABLED",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 39,
+          "endLine": 39
+        },
+        {
+          "name": "OCR_SERVICE_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 40,
+          "endLine": 40
+        },
+        {
+          "name": "OCR_TIMEOUT_S",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 41,
+          "endLine": 41
+        },
+        {
+          "name": "OCR_MIN_TEXT_CHARS",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 44,
+          "endLine": 44
+        },
+        {
+          "name": "OCR_DPI",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 46,
+          "endLine": 46
+        },
+        {
+          "name": "RERANK_NATIVE_BOOST",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "RERANK_LOWCONF_PENALTY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "RERANK_LOWCONF_THRESHOLD",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 51,
+          "endLine": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 21
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 82,
+      "nonEmptyLines": 53,
+      "sections": [
+        {
+          "heading": "CLAUDE.md",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Project State",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Stack",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Commands",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "ESLint notes",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Working in this repo",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "Backend — RAG pipeline",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Status string",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "Evaluation",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Reingestion after schema changes",
+          "level": 3,
+          "line": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "DESIGN.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 313,
+      "nonEmptyLines": 261,
+      "sections": [
+        {
+          "heading": "Design System Inspired by Apple",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Visual Theme & Atmosphere",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "2. Color Palette & Roles",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Primary",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "Interactive",
+          "level": 3,
+          "line": 28
+        },
+        {
+          "heading": "Text",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "Surface & Dark Variants",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "Button States",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "Shadows",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "3. Typography Rules",
+          "level": 2,
+          "line": 55
+        },
+        {
+          "heading": "Font Family",
+          "level": 3,
+          "line": 57
+        },
+        {
+          "heading": "Hierarchy",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "Principles",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "4. Component Stylings",
+          "level": 2,
+          "line": 90
+        },
+        {
+          "heading": "Buttons",
+          "level": 3,
+          "line": 92
+        },
+        {
+          "heading": "Cards & Containers",
+          "level": 3,
+          "line": 140
+        },
+        {
+          "heading": "Navigation",
+          "level": 3,
+          "line": 148
+        },
+        {
+          "heading": "Image Treatment",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "Distinctive Components",
+          "level": 3,
+          "line": 163
+        },
+        {
+          "heading": "5. Layout Principles",
+          "level": 2,
+          "line": 182
+        },
+        {
+          "heading": "Spacing System",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "Grid & Container",
+          "level": 3,
+          "line": 189
+        },
+        {
+          "heading": "Whitespace Philosophy",
+          "level": 3,
+          "line": 196
+        },
+        {
+          "heading": "Border Radius Scale",
+          "level": 3,
+          "line": 201
+        },
+        {
+          "heading": "6. Depth & Elevation",
+          "level": 2,
+          "line": 209
+        },
+        {
+          "heading": "Decorative Depth",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "7. Do's and Don'ts",
+          "level": 2,
+          "line": 226
+        },
+        {
+          "heading": "Do",
+          "level": 3,
+          "line": 228
+        },
+        {
+          "heading": "Don't",
+          "level": 3,
+          "line": 238
+        },
+        {
+          "heading": "8. Responsive Behavior",
+          "level": 2,
+          "line": 249
+        },
+        {
+          "heading": "Breakpoints",
+          "level": 3,
+          "line": 251
+        },
+        {
+          "heading": "Touch Targets",
+          "level": 3,
+          "line": 263
+        },
+        {
+          "heading": "Collapsing Strategy",
+          "level": 3,
+          "line": 269
+        },
+        {
+          "heading": "Image Behavior",
+          "level": 3,
+          "line": 277
+        },
+        {
+          "heading": "9. Agent Prompt Guide",
+          "level": 2,
+          "line": 284
+        },
+        {
+          "heading": "Quick Color Reference",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "Example Component Prompts",
+          "level": 3,
+          "line": 298
+        },
+        {
+          "heading": "Iteration Guide",
+          "level": 3,
+          "line": 305
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 38
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 16,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "React + Vite",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "React Compiler",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Expanding the ESLint configuration",
+          "level": 2,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 13,
+      "nonEmptyLines": 13,
+      "metrics": {}
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 28,
+      "nonEmptyLines": 28,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "private",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "scripts",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "devDependencies",
+          "level": 1,
+          "line": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "prompt.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    }
+  ]
+}

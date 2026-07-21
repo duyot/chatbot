@@ -1,0 +1,231 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/App.jsx",
+      "type": "file",
+      "name": "App.jsx",
+      "filePath": "src/App.jsx",
+      "summary": "Root React component that wraps the tree in AuthProvider and defines the client-side route table (home, login, and the protected chat page) via react-router-dom.",
+      "tags": ["routing", "react-router", "root-component", "auth-provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/App.jsx:App",
+      "type": "function",
+      "name": "App",
+      "filePath": "src/App.jsx",
+      "lineRange": [8, 27],
+      "summary": "Declares the app's routes (/, /login, /chat) inside AuthProvider and BrowserRouter, gating /chat behind ProtectedRoute so only authenticated users reach ChatPage.",
+      "tags": ["routing", "react-router", "root-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/auth/AuthContext.jsx",
+      "type": "file",
+      "name": "AuthContext.jsx",
+      "filePath": "src/auth/AuthContext.jsx",
+      "summary": "Defines the AuthContext and AuthProvider component that own token/user/loading state, validate a persisted token on mount, react to a global unauthorized event, and expose login/logout plus the useAuth hook to the rest of the app.",
+      "tags": ["authentication", "context", "state-management", "react-context"],
+      "complexity": "moderate",
+      "languageNotes": "Uses React context + a custom useAuth hook (the standard provider/consumer pattern) and a window CustomEvent ('auth:unauthorized') as a lightweight cross-component signal so the API client can force a logout without a direct dependency on this file."
+    },
+    {
+      "id": "function:src/auth/AuthContext.jsx:AuthProvider",
+      "type": "function",
+      "name": "AuthProvider",
+      "filePath": "src/auth/AuthContext.jsx",
+      "lineRange": [7, 73],
+      "summary": "Provider component holding token/user/loading state; on mount it revalidates a stored token via getMe, clears state on 'auth:unauthorized' events, and exposes memoized login/logout callbacks through context.",
+      "tags": ["authentication", "provider", "state-management", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/auth/AuthContext.jsx:useAuth",
+      "type": "function",
+      "name": "useAuth",
+      "filePath": "src/auth/AuthContext.jsx",
+      "lineRange": [76, 80],
+      "summary": "Hook that reads AuthContext and throws if called outside an AuthProvider, giving consumers access to token, user, loading, isAuthenticated, login, and logout.",
+      "tags": ["hook", "authentication", "custom-hook"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/ProtectedRoute.jsx",
+      "type": "file",
+      "name": "ProtectedRoute.jsx",
+      "filePath": "src/components/ProtectedRoute.jsx",
+      "summary": "Route guard component that redirects unauthenticated visitors to /login (preserving the intended destination in router state) and renders children once auth state is confirmed.",
+      "tags": ["routing", "authentication", "guard", "component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/ProtectedRoute.jsx:ProtectedRoute",
+      "type": "function",
+      "name": "ProtectedRoute",
+      "filePath": "src/components/ProtectedRoute.jsx",
+      "lineRange": [7, 17],
+      "summary": "Reads isAuthenticated/loading from useAuth; renders nothing while a stored token is being validated, redirects to /login with the current location saved for post-login return, or renders the protected children.",
+      "tags": ["routing", "authentication", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/Sidebar.jsx",
+      "type": "file",
+      "name": "Sidebar.jsx",
+      "filePath": "src/components/Sidebar.jsx",
+      "summary": "Sidebar UI listing conversations with new-chat/search actions, hover-revealed delete buttons, and a footer showing the logged-in user's initials plus a logout button, sourcing auth state from useAuth.",
+      "tags": ["component", "ui", "navigation", "conversation-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/Sidebar.jsx:ChatIcon",
+      "type": "function",
+      "name": "ChatIcon",
+      "filePath": "src/components/Sidebar.jsx",
+      "lineRange": [5, 16],
+      "summary": "Small presentational SVG chat-bubble icon whose stroke color changes when the parent conversation item is active.",
+      "tags": ["ui", "icon", "presentational"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/Sidebar.jsx:Sidebar",
+      "type": "function",
+      "name": "Sidebar",
+      "filePath": "src/components/Sidebar.jsx",
+      "lineRange": [25, 128],
+      "summary": "Renders the sidebar layout (logo, new-chat/search actions, conversation list with hover-reveal delete, and footer with settings/logout/user avatar), driven by conversations/activeId/onSelect/onNewChat/onDelete/onClearAll props and the authenticated user from useAuth.",
+      "tags": ["component", "ui", "navigation", "conversation-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/main.jsx",
+      "type": "file",
+      "name": "main.jsx",
+      "filePath": "src/main.jsx",
+      "summary": "Vite/React entry point that mounts the root App component inside StrictMode onto the #root DOM element and loads the global stylesheet.",
+      "tags": ["entry-point", "bootstrap", "react-dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/pages/HomePage.jsx",
+      "type": "file",
+      "name": "HomePage.jsx",
+      "filePath": "src/pages/HomePage.jsx",
+      "summary": "Landing/marketing page presenting the 'CHAT A.I+' brand with call-to-action buttons that navigate the user into the /chat route.",
+      "tags": ["component", "landing-page", "marketing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/pages/HomePage.jsx:HomePage",
+      "type": "function",
+      "name": "HomePage",
+      "filePath": "src/pages/HomePage.jsx",
+      "lineRange": [4, 27],
+      "summary": "Renders the home hero section with tagline and two CTA buttons, both of which navigate to /chat via useNavigate.",
+      "tags": ["component", "landing-page", "navigation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/pages/LoginPage.jsx",
+      "type": "file",
+      "name": "LoginPage.jsx",
+      "filePath": "src/pages/LoginPage.jsx",
+      "summary": "Login form page that collects username/password, calls the auth context's login action, and redirects to the originally requested route (or /chat) on success while surfacing errors inline.",
+      "tags": ["component", "authentication", "form", "login"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/pages/LoginPage.jsx:LoginPage",
+      "type": "function",
+      "name": "LoginPage",
+      "filePath": "src/pages/LoginPage.jsx",
+      "lineRange": [6, 70],
+      "summary": "Renders the sign-in form; on submit it calls useAuth().login, then navigates to the redirect target saved in router location state (defaulting to /chat), showing an inline error and disabling the submit button while pending.",
+      "tags": ["component", "authentication", "form"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/repositories/authRepository.js",
+      "type": "file",
+      "name": "authRepository.js",
+      "filePath": "src/repositories/authRepository.js",
+      "summary": "Repository-pattern data-access module for authentication endpoints; wraps fetch calls to /api/auth/login and /api/auth/me so UI components never call fetch directly.",
+      "tags": ["repository", "api-client", "authentication", "data-access"],
+      "complexity": "simple",
+      "languageNotes": "Follows the repository-abstraction convention called out in the project's CLAUDE.md: data-fetching is isolated here rather than inlined in components/hooks."
+    },
+    {
+      "id": "function:src/repositories/authRepository.js:login",
+      "type": "function",
+      "name": "login",
+      "filePath": "src/repositories/authRepository.js",
+      "lineRange": [4, 22],
+      "summary": "POSTs { username, password } to /api/auth/login and returns the parsed { access_token, token_type } response, throwing an Error (annotated with .status) using the server's detail message on failure.",
+      "tags": ["api-handler", "authentication", "http-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/repositories/authRepository.js:getMe",
+      "type": "function",
+      "name": "getMe",
+      "filePath": "src/repositories/authRepository.js",
+      "lineRange": [24, 30],
+      "summary": "Fetches the current authenticated user from /api/auth/me using a bearer token, throwing if the request is not authenticated.",
+      "tags": ["api-handler", "authentication", "http-client"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/App.jsx", "target": "function:src/App.jsx:App", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "function:src/auth/AuthContext.jsx:AuthProvider", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "function:src/auth/AuthContext.jsx:useAuth", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/ProtectedRoute.jsx", "target": "function:src/components/ProtectedRoute.jsx:ProtectedRoute", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/Sidebar.jsx", "target": "function:src/components/Sidebar.jsx:ChatIcon", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/Sidebar.jsx", "target": "function:src/components/Sidebar.jsx:Sidebar", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/pages/HomePage.jsx", "target": "function:src/pages/HomePage.jsx:HomePage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/pages/LoginPage.jsx", "target": "function:src/pages/LoginPage.jsx:LoginPage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/repositories/authRepository.js", "target": "function:src/repositories/authRepository.js:login", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/repositories/authRepository.js", "target": "function:src/repositories/authRepository.js:getMe", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/App.jsx", "target": "function:src/App.jsx:App", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "function:src/auth/AuthContext.jsx:AuthProvider", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "function:src/auth/AuthContext.jsx:useAuth", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/ProtectedRoute.jsx", "target": "function:src/components/ProtectedRoute.jsx:ProtectedRoute", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/Sidebar.jsx", "target": "function:src/components/Sidebar.jsx:Sidebar", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/pages/HomePage.jsx", "target": "function:src/pages/HomePage.jsx:HomePage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/pages/LoginPage.jsx", "target": "function:src/pages/LoginPage.jsx:LoginPage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/repositories/authRepository.js", "target": "function:src/repositories/authRepository.js:login", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/repositories/authRepository.js", "target": "function:src/repositories/authRepository.js:getMe", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/App.jsx", "target": "file:src/auth/AuthContext.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/App.jsx", "target": "file:src/components/ProtectedRoute.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/App.jsx", "target": "file:src/pages/ChatPage.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/App.jsx", "target": "file:src/pages/HomePage.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/App.jsx", "target": "file:src/pages/LoginPage.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "file:src/api/client.js", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/auth/AuthContext.jsx", "target": "file:src/repositories/authRepository.js", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/components/ProtectedRoute.jsx", "target": "file:src/auth/AuthContext.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/components/Sidebar.jsx", "target": "file:src/auth/AuthContext.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/components/Sidebar.jsx", "target": "file:src/components/Sidebar.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/main.jsx", "target": "file:src/App.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/main.jsx", "target": "file:src/index.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/pages/HomePage.jsx", "target": "file:src/pages/HomePage.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/pages/LoginPage.jsx", "target": "file:src/auth/AuthContext.jsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/pages/LoginPage.jsx", "target": "file:src/pages/LoginPage.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src/auth/AuthContext.jsx:AuthProvider", "target": "function:src/repositories/authRepository.js:login", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/auth/AuthContext.jsx:AuthProvider", "target": "function:src/repositories/authRepository.js:getMe", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/auth/AuthContext.jsx:AuthProvider", "target": "function:src/api/client.js:getToken", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/auth/AuthContext.jsx:AuthProvider", "target": "function:src/api/client.js:setToken", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/ProtectedRoute.jsx:ProtectedRoute", "target": "function:src/auth/AuthContext.jsx:useAuth", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/Sidebar.jsx:Sidebar", "target": "function:src/auth/AuthContext.jsx:useAuth", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/pages/LoginPage.jsx:LoginPage", "target": "function:src/auth/AuthContext.jsx:useAuth", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/App.jsx:App", "target": "function:src/auth/AuthContext.jsx:AuthProvider", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "function:src/App.jsx:App", "target": "function:src/components/ProtectedRoute.jsx:ProtectedRoute", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "function:src/App.jsx:App", "target": "function:src/pages/HomePage.jsx:HomePage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "function:src/App.jsx:App", "target": "function:src/pages/LoginPage.jsx:LoginPage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "function:src/App.jsx:App", "target": "function:src/pages/ChatPage.jsx:ChatPage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "function:src/components/Sidebar.jsx:Sidebar", "target": "function:src/components/Sidebar.jsx:ChatIcon", "type": "contains", "direction": "forward", "weight": 1.0 }
+  ]
+}

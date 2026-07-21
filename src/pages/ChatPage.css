@@ -12,12 +12,32 @@
   position: relative;
 }
 
-.chat-page-upgrade {
+.sidebar-reopen-btn {
   position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 14px;
+  top: 14px;
   z-index: 10;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-sidebar-bg);
+  color: var(--color-text-on-dark-secondary);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-reopen-btn:hover {
+  background: var(--color-dark-surface-1);
+  color: var(--color-text-on-dark);
+}
+
+.chat-split {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
 }
 
 .chat-main {

@@ -1,0 +1,5617 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "22bb20519fad98e0de4bf328eaf03519ec22802d",
+  "generatedAt": "2026-07-03T16:14:13.189Z",
+  "files": {
+    ".claude/settings.local.json": {
+      "filePath": ".claude/settings.local.json",
+      "contentHash": "7f5d119e1b450a88da69bf472a4845370c26e43627b058978866ca8434110760",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 63,
+      "hasStructuralAnalysis": true
+    },
+    ".dockerignore": {
+      "filePath": ".dockerignore",
+      "contentHash": "878331c3167ee0c1f1a4dedbbbad9bf038bf3f00a65f4bc3d9fc032c327ca0d6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    ".env.example": {
+      "filePath": ".env.example",
+      "contentHash": "47941e9f986de266938bdbfc8a1ff8c4a2bbd3cfcee5fd13f761719cd8ed5d14",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": true
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "contentHash": "9e057ffe231072710c7ce3eb63eaf664759fa5b8a4e623e6aa215c967e99426f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 115,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "contentHash": "3af114f091cfe4e2f2ff91c50b9b060969f5ff067aea5614188762ebc259da20",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "contentHash": "b9630ca085633fde0581e85123cff50ce293a3ddd41885c0ac2809371de23308",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 89,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "contentHash": "a2dd7c5c10738954455a9b10574d745bf071cb7728fefae28fbbb776bef0fc1a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "contentHash": "c5a332ec497b26f454b54f8e3dc8884316395fe5692ef112355835d5df2aecce",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/content/waiting.html": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "contentHash": "a2dd7c5c10738954455a9b10574d745bf071cb7728fefae28fbbb776bef0fc1a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/state/server-stopped": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "contentHash": "ab81476385dded3892f3a563f7a28b582b08128c049458d7b6ddb6d04a067ec9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    ".superpowers/brainstorm/37604-1776700392/state/server.pid": {
+      "filePath": ".superpowers/brainstorm/37604-1776700392/state/server.pid",
+      "contentHash": "0310a067999dec8b936668b35ad6fc057057f563da82f511fcae1007d1f3bb3a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "bfb30dbe04f9f34a2d09f92737b3d7cdbfb1af157748467b4af8eacbf1f163d3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 41,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/config.json": {
+      "filePath": ".understand-anything/config.json",
+      "contentHash": "08d37f20ea0af2233ae24f094723759f952381ecb6dd7f2aaa05ef96e95eae6b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": true
+    },
+    "backend/.dockerignore": {
+      "filePath": "backend/.dockerignore",
+      "contentHash": "e395434ce2b89b97155db973d10bac31da41cfeb51421ba813b9c4aaba51e7d6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "backend/alembic.ini": {
+      "filePath": "backend/alembic.ini",
+      "contentHash": "c0545adf555df46655a12b3c79b9bf673d4008e54ae5bbed0e0623bbb730e01f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": false
+    },
+    "backend/alembic/env.py": {
+      "filePath": "backend/alembic/env.py",
+      "contentHash": "f7fcd492cbf5873a3f3866a0d22859d6dc24e20ed22fb79f18c2a340252ff865",
+      "functions": [
+        {
+          "name": "run_migrations_offline",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "run_migrations_online",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging.config",
+          "specifiers": [
+            "fileConfig"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "engine_from_config",
+            "pool"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "app.config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": "app.database",
+          "specifiers": [
+            "Base"
+          ]
+        },
+        {
+          "source": "app.models",
+          "specifiers": [
+            "app.models"
+          ]
+        }
+      ],
+      "exports": [
+        "run_migrations_offline",
+        "run_migrations_online"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/script.py.mako": {
+      "filePath": "backend/alembic/script.py.mako",
+      "contentHash": "2f260b482ec7cc1046c0767cb364a0b813cc5ec582a61d05269e3d90fb06854f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 22,
+      "hasStructuralAnalysis": false
+    },
+    "backend/alembic/versions/0001_initial.py": {
+      "filePath": "backend/alembic/versions/0001_initial.py",
+      "contentHash": "6aa5844c59d5cefcebdf2cdb5fab3372b341bca7bc1065db1731251154ba67f9",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID"
+          ]
+        },
+        {
+          "source": "pgvector.sqlalchemy",
+          "specifiers": [
+            "Vector"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 43,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0002_fix_embedding_dim.py": {
+      "filePath": "backend/alembic/versions/0002_fix_embedding_dim.py",
+      "contentHash": "bbed4da8349b6357d51815dcb902a61b0a016ab60a6587672dd8fec71f97e720",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID"
+          ]
+        },
+        {
+          "source": "pgvector.sqlalchemy",
+          "specifiers": [
+            "Vector"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 43,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0003_add_fts_gin_index.py": {
+      "filePath": "backend/alembic/versions/0003_add_fts_gin_index.py",
+      "contentHash": "c41c0d9eda3ce547fe1c581bd83b1b6ddc7259f26f8e7d578c895c8f8c3850de",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0004_parent_child_chunks.py": {
+      "filePath": "backend/alembic/versions/0004_parent_child_chunks.py",
+      "contentHash": "d1d8469e272d8a49ec76da3ba1c66c54db7c3eff06ce239b94ce09c8134470dd",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0005_embedding_to_1536.py": {
+      "filePath": "backend/alembic/versions/0005_embedding_to_1536.py",
+      "contentHash": "d8005559f2164107fbda99a9acd1a3ddecf8ed08da3a1952e9c40c696ca984e5",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "pgvector.sqlalchemy",
+          "specifiers": [
+            "Vector"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 42,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0006_document_metadata.py": {
+      "filePath": "backend/alembic/versions/0006_document_metadata.py",
+      "contentHash": "e48d5aeb69d4fbfb927ac2329e2b6651267e09e414e840fcbc8315b5fac9c728",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "JSONB"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 58,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0007_create_users.py": {
+      "filePath": "backend/alembic/versions/0007_create_users.py",
+      "contentHash": "4b49d8d701226b2b8b4d2dd18035b960661986c16affd47f99b276be76cce5c7",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "backend/alembic/versions/0008_create_conversations_messages.py": {
+      "filePath": "backend/alembic/versions/0008_create_conversations_messages.py",
+      "contentHash": "2ab1392ab9e323c811e174044093c8ff9c6292a27554bb37af987e8a66921297",
+      "functions": [
+        {
+          "name": "upgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 59
+        },
+        {
+          "name": "downgrade",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "Sequence",
+            "Union"
+          ]
+        },
+        {
+          "source": "alembic",
+          "specifiers": [
+            "op"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID",
+            "JSONB"
+          ]
+        }
+      ],
+      "exports": [
+        "upgrade",
+        "downgrade"
+      ],
+      "totalLines": 90,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/__init__.py": {
+      "filePath": "backend/app/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/config.py": {
+      "filePath": "backend/app/config.py",
+      "contentHash": "f18d243d8f853bff401d4b1fedc12d4a9f86a298fe0d4fd153de950096259a7f",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Settings",
+          "methods": [],
+          "properties": [
+            "database_url",
+            "redis_url",
+            "openai_api_key",
+            "openai_embedding_model",
+            "embedding_dim",
+            "openrouter_api_key",
+            "openrouter_base_url",
+            "openrouter_chat_model",
+            "upload_dir",
+            "max_upload_mb",
+            "cors_origins",
+            "log_level",
+            "jwt_secret_key",
+            "jwt_algorithm",
+            "access_token_expire_minutes",
+            "vector_top_k",
+            "fts_top_k",
+            "rrf_k",
+            "rerank_top_n",
+            "rerank_score_floor",
+            "reranker_model",
+            "max_retrieval_retries",
+            "strict_grader",
+            "ocr_enabled",
+            "ocr_service_url",
+            "ocr_timeout_s",
+            "ocr_min_text_chars",
+            "ocr_dpi",
+            "rerank_native_boost",
+            "rerank_lowconf_penalty",
+            "rerank_lowconf_threshold"
+          ],
+          "exported": true,
+          "lineCount": 65
+        }
+      ],
+      "imports": [
+        {
+          "source": "pydantic_settings",
+          "specifiers": [
+            "BaseSettings",
+            "SettingsConfigDict"
+          ]
+        }
+      ],
+      "exports": [
+        "Settings"
+      ],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/database.py": {
+      "filePath": "backend/app/database.py",
+      "contentHash": "f0e6b42b8d78c5b65ede9ee03cb4890191319b041e747d819c4c85c9d4166416",
+      "functions": [
+        {
+          "name": "get_db",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [
+        {
+          "name": "Base",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "imports": [
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "create_engine"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "sessionmaker",
+            "DeclarativeBase"
+          ]
+        },
+        {
+          "source": ".config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "Base",
+        "get_db"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/main.py": {
+      "filePath": "backend/app/main.py",
+      "contentHash": "8c2707761bb0027d67270a12df1b475e81284ef57e578c9ea9a679644a7e54e8",
+      "functions": [
+        {
+          "name": "log_requests",
+          "params": [
+            "request",
+            "call_next"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "health",
+          "params": [],
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "logging.handlers",
+          "specifiers": [
+            "RotatingFileHandler"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "FastAPI",
+            "Request"
+          ]
+        },
+        {
+          "source": "fastapi.middleware.cors",
+          "specifiers": [
+            "CORSMiddleware"
+          ]
+        },
+        {
+          "source": ".config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": ".routers",
+          "specifiers": [
+            "documents"
+          ]
+        },
+        {
+          "source": ".routers",
+          "specifiers": [
+            "chat"
+          ]
+        },
+        {
+          "source": ".routers",
+          "specifiers": [
+            "auth"
+          ]
+        },
+        {
+          "source": ".routers",
+          "specifiers": [
+            "conversations"
+          ]
+        }
+      ],
+      "exports": [
+        "log_requests",
+        "health"
+      ],
+      "totalLines": 49,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/models.py": {
+      "filePath": "backend/app/models.py",
+      "contentHash": "ded3e8ef3ae627610b981b577ab7a80da61df0c94bac29b5014893168703ac02",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Document",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "DocumentParentChunk",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "DocumentChunk",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "User",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "Conversation",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "Message",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 24
+        }
+      ],
+      "imports": [
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timezone"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "Column",
+            "String",
+            "Text",
+            "DateTime",
+            "Integer",
+            "Float",
+            "Boolean",
+            "ForeignKey",
+            "UniqueConstraint",
+            "Index"
+          ]
+        },
+        {
+          "source": "sqlalchemy.dialects.postgresql",
+          "specifiers": [
+            "UUID",
+            "JSONB"
+          ]
+        },
+        {
+          "source": "pgvector.sqlalchemy",
+          "specifiers": [
+            "Vector"
+          ]
+        },
+        {
+          "source": ".database",
+          "specifiers": [
+            "Base"
+          ]
+        }
+      ],
+      "exports": [
+        "Document",
+        "DocumentParentChunk",
+        "DocumentChunk",
+        "User",
+        "Conversation",
+        "Message"
+      ],
+      "totalLines": 129,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/routers/__init__.py": {
+      "filePath": "backend/app/routers/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/routers/auth.py": {
+      "filePath": "backend/app/routers/auth.py",
+      "contentHash": "8adedcc243e129cc1a76c458f77ed08f9a1e7909632fdbc4e4d4e164810c4cc4",
+      "functions": [
+        {
+          "name": "login",
+          "params": [
+            "payload",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "me",
+          "params": [
+            "user"
+          ],
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "APIRouter",
+            "Depends",
+            "HTTPException",
+            "status"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "..database",
+          "specifiers": [
+            "get_db"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "..schemas",
+          "specifiers": [
+            "LoginRequest",
+            "TokenResponse",
+            "UserResponse"
+          ]
+        },
+        {
+          "source": "..security",
+          "specifiers": [
+            "create_access_token",
+            "get_current_user",
+            "verify_password"
+          ]
+        }
+      ],
+      "exports": [
+        "login",
+        "me"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/routers/chat.py": {
+      "filePath": "backend/app/routers/chat.py",
+      "contentHash": "4e65a29b1090f7da1c8df0d3c770d04e8ea6307ccb6162fc8f71aa5b58ad39e3",
+      "functions": [
+        {
+          "name": "_make_title",
+          "params": [
+            "message",
+            "limit"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "chat_stream",
+          "params": [
+            "request",
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 98
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timezone"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "APIRouter",
+            "Depends",
+            "HTTPException"
+          ]
+        },
+        {
+          "source": "fastapi.responses",
+          "specifiers": [
+            "StreamingResponse"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "..database",
+          "specifiers": [
+            "get_db",
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "Conversation",
+            "Document",
+            "Message",
+            "User"
+          ]
+        },
+        {
+          "source": "..schemas",
+          "specifiers": [
+            "ChatRequest"
+          ]
+        },
+        {
+          "source": "..security",
+          "specifiers": [
+            "get_current_user"
+          ]
+        },
+        {
+          "source": "..services.rag",
+          "specifiers": [
+            "agentic_rag_stream"
+          ]
+        }
+      ],
+      "exports": [
+        "_make_title",
+        "chat_stream"
+      ],
+      "totalLines": 128,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/routers/conversations.py": {
+      "filePath": "backend/app/routers/conversations.py",
+      "contentHash": "09615c5fce045219840a61ae742fa7b115a988387858b1272e5aada7c1b729e9",
+      "functions": [
+        {
+          "name": "list_conversations",
+          "params": [
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "get_conversation",
+          "params": [
+            "conversation_id",
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "delete_conversation",
+          "params": [
+            "conversation_id",
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "clear_conversations",
+          "params": [
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "UUID"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "APIRouter",
+            "Depends",
+            "HTTPException",
+            "status"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "..database",
+          "specifiers": [
+            "get_db"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "Conversation",
+            "Message",
+            "User"
+          ]
+        },
+        {
+          "source": "..schemas",
+          "specifiers": [
+            "ConversationDetail",
+            "ConversationListItem",
+            "MessageResponse"
+          ]
+        },
+        {
+          "source": "..security",
+          "specifiers": [
+            "get_current_user"
+          ]
+        }
+      ],
+      "exports": [
+        "list_conversations",
+        "get_conversation",
+        "delete_conversation",
+        "clear_conversations"
+      ],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/routers/documents.py": {
+      "filePath": "backend/app/routers/documents.py",
+      "contentHash": "92656036a0ef379d0cccc36b830f304c260baea2d887a430cd56f3e6bda641bc",
+      "functions": [
+        {
+          "name": "list_documents",
+          "params": [
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "upload_document",
+          "params": [
+            "file",
+            "db",
+            "current_user"
+          ],
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "stream_status",
+          "params": [
+            "document_id",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 30
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "APIRouter",
+            "Depends",
+            "File",
+            "UploadFile",
+            "HTTPException"
+          ]
+        },
+        {
+          "source": "fastapi.responses",
+          "specifiers": [
+            "StreamingResponse"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "..database",
+          "specifiers": [
+            "get_db",
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "Document",
+            "User"
+          ]
+        },
+        {
+          "source": "..schemas",
+          "specifiers": [
+            "DocumentResponse",
+            "DocumentListItem"
+          ]
+        },
+        {
+          "source": "..security",
+          "specifiers": [
+            "get_current_user"
+          ]
+        },
+        {
+          "source": "..config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "list_documents",
+        "upload_document",
+        "stream_status"
+      ],
+      "totalLines": 104,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/schemas.py": {
+      "filePath": "backend/app/schemas.py",
+      "contentHash": "3197e2880abbd83b5b1415d20ccf8771f93bcbba6bba47c5d143770352953b93",
+      "functions": [],
+      "classes": [
+        {
+          "name": "DocumentResponse",
+          "methods": [],
+          "properties": [
+            "id",
+            "file_name",
+            "status"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "DocumentListItem",
+          "methods": [],
+          "properties": [
+            "id",
+            "file_name",
+            "uploaded_at"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "ChatRequest",
+          "methods": [],
+          "properties": [
+            "document_id",
+            "message",
+            "conversation_id"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "LoginRequest",
+          "methods": [],
+          "properties": [
+            "username",
+            "password"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "TokenResponse",
+          "methods": [],
+          "properties": [
+            "access_token",
+            "token_type"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "UserResponse",
+          "methods": [],
+          "properties": [
+            "id",
+            "username"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "ConversationListItem",
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "created_at",
+            "updated_at"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "MessageResponse",
+          "methods": [],
+          "properties": [
+            "id",
+            "role",
+            "content",
+            "citations",
+            "document_id",
+            "created_at"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "ConversationDetail",
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "created_at",
+            "messages"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "imports": [
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime"
+          ]
+        },
+        {
+          "source": "pydantic",
+          "specifiers": [
+            "BaseModel"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "UUID"
+          ]
+        }
+      ],
+      "exports": [
+        "DocumentResponse",
+        "DocumentListItem",
+        "ChatRequest",
+        "LoginRequest",
+        "TokenResponse",
+        "UserResponse",
+        "ConversationListItem",
+        "MessageResponse",
+        "ConversationDetail"
+      ],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/security.py": {
+      "filePath": "backend/app/security.py",
+      "contentHash": "54cb6a04a1d5a0863285618a91814eaffb1d6d9d082b7027f2800c3d70e82369",
+      "functions": [
+        {
+          "name": "hash_password",
+          "params": [
+            "password"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "verify_password",
+          "params": [
+            "plain",
+            "hashed"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "create_access_token",
+          "params": [
+            "subject",
+            "expires_minutes"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "get_current_user",
+          "params": [
+            "token",
+            "db"
+          ],
+          "returnType": "User",
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timedelta",
+            "timezone"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Optional"
+          ]
+        },
+        {
+          "source": "jwt",
+          "specifiers": [
+            "jwt"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "Depends",
+            "HTTPException",
+            "status"
+          ]
+        },
+        {
+          "source": "fastapi.security",
+          "specifiers": [
+            "OAuth2PasswordBearer"
+          ]
+        },
+        {
+          "source": "passlib.context",
+          "specifiers": [
+            "CryptContext"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": ".config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": ".database",
+          "specifiers": [
+            "get_db"
+          ]
+        },
+        {
+          "source": ".models",
+          "specifiers": [
+            "User"
+          ]
+        }
+      ],
+      "exports": [
+        "hash_password",
+        "verify_password",
+        "create_access_token",
+        "get_current_user"
+      ],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/__init__.py": {
+      "filePath": "backend/app/services/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/ingestion.py": {
+      "filePath": "backend/app/services/ingestion.py",
+      "contentHash": "964ddcbd03548cb2aa57921927db16b5a60383c4ba5466b547eb4ea3a1b97f5c",
+      "functions": [
+        {
+          "name": "_ocr_page_image",
+          "params": [
+            "image_bytes",
+            "filename"
+          ],
+          "returnType": "Tuple[str, Optional[float]]",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "_parse_pdf",
+          "params": [
+            "file_path",
+            "file_name"
+          ],
+          "returnType": "ParsedDocument",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "_parse_docx",
+          "params": [
+            "file_path"
+          ],
+          "returnType": "ParsedDocument",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_parse_image",
+          "params": [
+            "file_path",
+            "file_name"
+          ],
+          "returnType": "ParsedDocument",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "parse_document",
+          "params": [
+            "file_path",
+            "file_name"
+          ],
+          "returnType": "ParsedDocument",
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "_parent_splitter",
+          "params": [],
+          "returnType": "RecursiveCharacterTextSplitter",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_child_splitter",
+          "params": [],
+          "returnType": "RecursiveCharacterTextSplitter",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "chunk_text",
+          "params": [
+            "text"
+          ],
+          "returnType": "Tuple[List[str], List[List[str]]]",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "chunk_document",
+          "params": [
+            "parsed"
+          ],
+          "returnType": "Tuple[List[ParentChunk], List[List[ChildChunk]]]",
+          "exported": true,
+          "lineCount": 31
+        },
+        {
+          "name": "_openai_client",
+          "params": [],
+          "returnType": "OpenAI",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "embed_text",
+          "params": [
+            "text"
+          ],
+          "returnType": "List[float]",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "embed_chunks",
+          "params": [
+            "chunks"
+          ],
+          "returnType": "List[List[float]]",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "store_chunks",
+          "params": [
+            "db",
+            "document_id",
+            "parents",
+            "children_per_parent",
+            "child_embeddings"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 45
+        }
+      ],
+      "classes": [
+        {
+          "name": "PageContent",
+          "methods": [],
+          "properties": [
+            "page",
+            "text",
+            "source",
+            "ocr_confidence"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "ParsedDocument",
+          "methods": [
+            "text"
+          ],
+          "properties": [
+            "pages",
+            "metadata"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "ParentChunk",
+          "methods": [],
+          "properties": [
+            "content",
+            "page_start",
+            "page_end",
+            "source"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "ChildChunk",
+          "methods": [],
+          "properties": [
+            "content",
+            "page",
+            "source",
+            "ocr_confidence"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "dataclasses",
+          "specifiers": [
+            "dataclass"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "List",
+            "Optional",
+            "Tuple"
+          ]
+        },
+        {
+          "source": "fitz",
+          "specifiers": [
+            "fitz"
+          ]
+        },
+        {
+          "source": "docx",
+          "specifiers": [
+            "DocxDocument"
+          ]
+        },
+        {
+          "source": "langchain_text_splitters",
+          "specifiers": [
+            "RecursiveCharacterTextSplitter"
+          ]
+        },
+        {
+          "source": "openai",
+          "specifiers": [
+            "OpenAI"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "..config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "DocumentChunk",
+            "DocumentParentChunk"
+          ]
+        },
+        {
+          "source": ".ocr_client",
+          "specifiers": [
+            "ocr_image",
+            "OCRError"
+          ]
+        }
+      ],
+      "exports": [
+        "PageContent",
+        "ParsedDocument",
+        "ParentChunk",
+        "ChildChunk",
+        "_ocr_page_image",
+        "_parse_pdf",
+        "_parse_docx",
+        "_parse_image",
+        "parse_document",
+        "_parent_splitter",
+        "_child_splitter",
+        "chunk_text",
+        "chunk_document",
+        "_openai_client",
+        "embed_text",
+        "embed_chunks",
+        "store_chunks"
+      ],
+      "totalLines": 304,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/ocr_client.py": {
+      "filePath": "backend/app/services/ocr_client.py",
+      "contentHash": "29c87eacc3f7d90e122ee87175e89ce7bd3fb07115bfbeeb876a37522e17ff72",
+      "functions": [
+        {
+          "name": "ocr_image",
+          "params": [
+            "image_bytes",
+            "filename"
+          ],
+          "returnType": "tuple[str, float | None]",
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "classes": [
+        {
+          "name": "OCRError",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "httpx",
+          "specifiers": [
+            "httpx"
+          ]
+        },
+        {
+          "source": "..config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "OCRError",
+        "ocr_image"
+      ],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/__init__.py": {
+      "filePath": "backend/app/services/rag/__init__.py",
+      "contentHash": "8571324c05f595698dd81431d2281467b0bb805df5a942f5e60be1072b24f0bb",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": ".graph",
+          "specifiers": [
+            "agentic_rag_stream"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/graph.py": {
+      "filePath": "backend/app/services/rag/graph.py",
+      "contentHash": "df952b78a1ab123c2f29a659eb2b80cfe83c8696aed1ca8f8a8f38e054a2db37",
+      "functions": [
+        {
+          "name": "route_after_grade",
+          "params": [
+            "state"
+          ],
+          "returnType": "Literal[\"generate\", \"retry\", \"give_up\"]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "build_graph",
+          "params": [
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "_build_citations",
+          "params": [
+            "state"
+          ],
+          "returnType": "list[dict]",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "agentic_rag_stream",
+          "params": [
+            "document_id",
+            "message",
+            "db"
+          ],
+          "returnType": "AsyncGenerator[dict, None]",
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "functools",
+          "specifiers": [
+            "partial"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "AsyncGenerator",
+            "Literal"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "langgraph.graph",
+          "specifiers": [
+            "StateGraph",
+            "END"
+          ]
+        },
+        {
+          "source": "...config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": ".state",
+          "specifiers": [
+            "AgentState",
+            "initial_state"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "nodes"
+          ]
+        }
+      ],
+      "exports": [
+        "route_after_grade",
+        "build_graph",
+        "_build_citations",
+        "agentic_rag_stream"
+      ],
+      "totalLines": 123,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/nodes.py": {
+      "filePath": "backend/app/services/rag/nodes.py",
+      "contentHash": "6cf565c0afbc2948cec4e7565bfa7ddab6af3ad922da0288db1fae75b9223f0b",
+      "functions": [
+        {
+          "name": "_chat_llm",
+          "params": [
+            "temperature"
+          ],
+          "returnType": "ChatOpenAI",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "rewrite_query",
+          "params": [
+            "state"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "retrieve_and_rerank",
+          "params": [
+            "state",
+            "db"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "grade_chunks",
+          "params": [
+            "state"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 42
+        },
+        {
+          "name": "rewrite_and_retry",
+          "params": [
+            "state"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_format_context",
+          "params": [
+            "parents"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "generate_answer",
+          "params": [
+            "state"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "faithfulness_check",
+          "params": [
+            "state"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [
+        {
+          "name": "QueryRewrite",
+          "methods": [],
+          "properties": [
+            "rewritten_query",
+            "intent"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Literal"
+          ]
+        },
+        {
+          "source": "pydantic",
+          "specifiers": [
+            "BaseModel",
+            "Field"
+          ]
+        },
+        {
+          "source": "langchain_core.messages",
+          "specifiers": [
+            "SystemMessage",
+            "HumanMessage"
+          ]
+        },
+        {
+          "source": "langchain_openai",
+          "specifiers": [
+            "ChatOpenAI"
+          ]
+        },
+        {
+          "source": "...config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": ".",
+          "specifiers": [
+            "prompts"
+          ]
+        },
+        {
+          "source": ".state",
+          "specifiers": [
+            "AgentState"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": ".retrieval",
+          "specifiers": [
+            "retrieve"
+          ]
+        }
+      ],
+      "exports": [
+        "_chat_llm",
+        "QueryRewrite",
+        "rewrite_query",
+        "retrieve_and_rerank",
+        "grade_chunks",
+        "rewrite_and_retry",
+        "_format_context",
+        "generate_answer",
+        "faithfulness_check"
+      ],
+      "totalLines": 185,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/prompts.py": {
+      "filePath": "backend/app/services/rag/prompts.py",
+      "contentHash": "b837e11462b5309d56f1a335ee3d416307471441de0660cc1fb41a03ede62acf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/reranker.py": {
+      "filePath": "backend/app/services/rag/reranker.py",
+      "contentHash": "15adcb739897675c6465c2b5e16bd06f7cc47b3a12c394e4023f2edb615b52ec",
+      "functions": [
+        {
+          "name": "get_reranker",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "rerank",
+          "params": [
+            "query",
+            "chunks",
+            "top_n"
+          ],
+          "returnType": "list[tuple[Any, float]]",
+          "exported": true,
+          "lineCount": 63
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "httpx",
+          "specifiers": [
+            "httpx"
+          ]
+        },
+        {
+          "source": "...config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "get_reranker",
+        "rerank"
+      ],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/retrieval.py": {
+      "filePath": "backend/app/services/rag/retrieval.py",
+      "contentHash": "3c137ed9720827a008ab44e075e49ab734faeed2da7327fe1d197ed233ba2ac9",
+      "functions": [
+        {
+          "name": "hybrid_search",
+          "params": [
+            "db",
+            "document_id",
+            "query",
+            "page_range"
+          ],
+          "returnType": "tuple[list[DocumentChunk], list[Any]]",
+          "exported": true,
+          "lineCount": 46
+        },
+        {
+          "name": "rrf_fuse",
+          "params": [
+            "vec_hits",
+            "fts_rows",
+            "k"
+          ],
+          "returnType": "list[tuple[Any, float]]",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "fetch_chunks_by_ids",
+          "params": [
+            "db",
+            "ids"
+          ],
+          "returnType": "list[DocumentChunk]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "fetch_parents",
+          "params": [
+            "db",
+            "child_chunks"
+          ],
+          "returnType": "list[DocumentParentChunk]",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "apply_metadata_boost",
+          "params": [
+            "reranked"
+          ],
+          "returnType": "list[tuple[DocumentChunk, float]]",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "retrieve",
+          "params": [
+            "db",
+            "document_id",
+            "query",
+            "page_range"
+          ],
+          "returnType": "tuple[list[DocumentChunk], list[DocumentParentChunk], list[float]]",
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "collections",
+          "specifiers": [
+            "defaultdict"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "UUID"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "sa_text"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "...config",
+          "specifiers": [
+            "settings"
+          ]
+        },
+        {
+          "source": "...models",
+          "specifiers": [
+            "DocumentChunk",
+            "DocumentParentChunk"
+          ]
+        },
+        {
+          "source": "..ingestion",
+          "specifiers": [
+            "embed_text"
+          ]
+        },
+        {
+          "source": ".reranker",
+          "specifiers": [
+            "rerank"
+          ]
+        }
+      ],
+      "exports": [
+        "hybrid_search",
+        "rrf_fuse",
+        "fetch_chunks_by_ids",
+        "fetch_parents",
+        "apply_metadata_boost",
+        "retrieve"
+      ],
+      "totalLines": 162,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/services/rag/state.py": {
+      "filePath": "backend/app/services/rag/state.py",
+      "contentHash": "53982cbdb94cf994c6c44d2a18618c7f3493d15d0e781a9d7efdd8a6b438270b",
+      "functions": [
+        {
+          "name": "initial_state",
+          "params": [
+            "document_id",
+            "question"
+          ],
+          "returnType": "AgentState",
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [
+        {
+          "name": "AgentState",
+          "methods": [],
+          "properties": [
+            "document_id",
+            "question",
+            "rewritten_query",
+            "intent",
+            "attempted_queries",
+            "retry_count",
+            "retrieved_children",
+            "parents",
+            "rerank_scores",
+            "graded_useful",
+            "answer",
+            "answer_chunks",
+            "citations",
+            "warnings",
+            "notes"
+          ],
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "imports": [
+        {
+          "source": "typing",
+          "specifiers": [
+            "TypedDict",
+            "Literal"
+          ]
+        }
+      ],
+      "exports": [
+        "AgentState",
+        "initial_state"
+      ],
+      "totalLines": 53,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/workers/__init__.py": {
+      "filePath": "backend/app/workers/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/workers/celery_app.py": {
+      "filePath": "backend/app/workers/celery_app.py",
+      "contentHash": "b9494e065791fcafeb74f18333d1fb552f42b591ca1d78b33c229267d4127a20",
+      "functions": [
+        {
+          "name": "add_file_handler",
+          "params": [
+            "logger",
+            "**kwargs"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "on_worker_ready",
+          "params": [
+            "sender",
+            "**kwargs"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "logging.handlers",
+          "specifiers": [
+            "RotatingFileHandler"
+          ]
+        },
+        {
+          "source": "celery",
+          "specifiers": [
+            "Celery"
+          ]
+        },
+        {
+          "source": "celery.signals",
+          "specifiers": [
+            "after_setup_logger",
+            "worker_ready"
+          ]
+        },
+        {
+          "source": "..config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "add_file_handler",
+        "on_worker_ready"
+      ],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app/workers/tasks.py": {
+      "filePath": "backend/app/workers/tasks.py",
+      "contentHash": "bbee829bbdc55ca2a7a6b4f6000fbb18e81b7a7b8be819af8e9ce44d5bcfa5a3",
+      "functions": [
+        {
+          "name": "ingest_document",
+          "params": [
+            "document_id"
+          ],
+          "exported": true,
+          "lineCount": 51
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "celery.exceptions",
+          "specifiers": [
+            "MaxRetriesExceededError",
+            "Retry"
+          ]
+        },
+        {
+          "source": ".celery_app",
+          "specifiers": [
+            "celery_app"
+          ]
+        },
+        {
+          "source": "..database",
+          "specifiers": [
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "..models",
+          "specifiers": [
+            "Document"
+          ]
+        },
+        {
+          "source": "..services.ingestion",
+          "specifiers": [
+            "parse_document",
+            "chunk_document",
+            "embed_chunks",
+            "store_chunks"
+          ]
+        }
+      ],
+      "exports": [
+        "ingest_document"
+      ],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "backend/Dockerfile": {
+      "filePath": "backend/Dockerfile",
+      "contentHash": "6912c5a150304d529a31cf501ce8a442a7faba9b57aa9d9d965d8af0f7b5ceb2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "backend/evals/__init__.py": {
+      "filePath": "backend/evals/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/evals/golden_set.yaml": {
+      "filePath": "backend/evals/golden_set.yaml",
+      "contentHash": "a4b06c1dfedd4c83ed9a3a8dc54b3cba1442c7be7f849fbec3f3d5f03c09b4c0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "backend/evals/metrics.py": {
+      "filePath": "backend/evals/metrics.py",
+      "contentHash": "acb6f46b136974a5a87effb4b67915ac4dcb07e032b51e9bdea00fc1b1650642",
+      "functions": [
+        {
+          "name": "_build_judge",
+          "params": [],
+          "returnType": "ChatOpenAI",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_build_embeddings",
+          "params": [],
+          "returnType": "OpenAIEmbeddings",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "run_ragas_metrics",
+          "params": [
+            "questions",
+            "answers",
+            "contexts",
+            "ground_truths"
+          ],
+          "returnType": "dict[str, list[float]]",
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "expected_substring_match",
+          "params": [
+            "answer",
+            "expected_substring"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "answered",
+          "params": [
+            "answer"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "summarize",
+          "params": [
+            "per_question"
+          ],
+          "returnType": "dict[str, float]",
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "typing",
+          "specifiers": [
+            "Any"
+          ]
+        },
+        {
+          "source": "datasets",
+          "specifiers": [
+            "Dataset"
+          ]
+        },
+        {
+          "source": "ragas",
+          "specifiers": [
+            "evaluate"
+          ]
+        },
+        {
+          "source": "ragas.metrics",
+          "specifiers": [
+            "faithfulness",
+            "answer_relevancy",
+            "context_precision",
+            "context_recall"
+          ]
+        },
+        {
+          "source": "langchain_openai",
+          "specifiers": [
+            "ChatOpenAI",
+            "OpenAIEmbeddings"
+          ]
+        },
+        {
+          "source": "app.config",
+          "specifiers": [
+            "settings"
+          ]
+        }
+      ],
+      "exports": [
+        "_build_judge",
+        "_build_embeddings",
+        "run_ragas_metrics",
+        "expected_substring_match",
+        "answered",
+        "summarize"
+      ],
+      "totalLines": 111,
+      "hasStructuralAnalysis": true
+    },
+    "backend/evals/results/.gitkeep": {
+      "filePath": "backend/evals/results/.gitkeep",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": false
+    },
+    "backend/evals/run_eval.py": {
+      "filePath": "backend/evals/run_eval.py",
+      "contentHash": "2f96001f9d6021e36826a85d9d580ba0d5b778cde52d1dff4dcc09c85ee8a116",
+      "functions": [
+        {
+          "name": "_git_sha",
+          "params": [],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "_load_golden",
+          "params": [],
+          "returnType": "list[dict]",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "_resolve_document_id",
+          "params": [
+            "db",
+            "file_name"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "_run_one",
+          "params": [
+            "db",
+            "document_id",
+            "question"
+          ],
+          "returnType": "tuple[str, list[str]]",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "run_eval",
+          "params": [
+            "name"
+          ],
+          "returnType": "dict",
+          "exported": true,
+          "lineCount": 53
+        },
+        {
+          "name": "_save",
+          "params": [
+            "payload",
+            "name"
+          ],
+          "returnType": "Path",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "_compare",
+          "params": [
+            "name_a",
+            "name_b"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "asyncio",
+          "specifiers": [
+            "asyncio"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "subprocess",
+          "specifiers": [
+            "subprocess"
+          ]
+        },
+        {
+          "source": "datetime",
+          "specifiers": [
+            "datetime",
+            "timezone"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "yaml",
+          "specifiers": [
+            "yaml"
+          ]
+        },
+        {
+          "source": "app.database",
+          "specifiers": [
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "app.models",
+          "specifiers": [
+            "Document"
+          ]
+        },
+        {
+          "source": "app.services.rag",
+          "specifiers": [
+            "agentic_rag_stream"
+          ]
+        },
+        {
+          "source": "evals.metrics",
+          "specifiers": [
+            "answered",
+            "expected_substring_match",
+            "run_ragas_metrics",
+            "summarize"
+          ]
+        }
+      ],
+      "exports": [
+        "_git_sha",
+        "_load_golden",
+        "_resolve_document_id",
+        "_run_one",
+        "run_eval",
+        "_save",
+        "_compare",
+        "main"
+      ],
+      "totalLines": 179,
+      "hasStructuralAnalysis": true
+    },
+    "backend/pytest.ini": {
+      "filePath": "backend/pytest.ini",
+      "contentHash": "da6806bd51fed75fdc7b3f3bad3ddac01a630447a0b5c62942169721c4943548",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": false
+    },
+    "backend/requirements.txt": {
+      "filePath": "backend/requirements.txt",
+      "contentHash": "370ab36042448bc50d8e1d153283e19705ab32935f96660cdfa5810f0aaf6383",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 33,
+      "hasStructuralAnalysis": false
+    },
+    "backend/scripts/__init__.py": {
+      "filePath": "backend/scripts/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/scripts/create_user.py": {
+      "filePath": "backend/scripts/create_user.py",
+      "contentHash": "f85f5bee0199c21f33104fd7d5c029dd234320a52e940aecd88f44d65c607a16",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "sys",
+          "specifiers": [
+            "sys"
+          ]
+        },
+        {
+          "source": "app.database",
+          "specifiers": [
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "app.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "app.security",
+          "specifiers": [
+            "hash_password"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "backend/scripts/create_users_table.sql": {
+      "filePath": "backend/scripts/create_users_table.sql",
+      "contentHash": "d03791f18242aa3aeeb5dbdb267e1cc8a10a75dd14b95de295494e73a6764f14",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "backend/scripts/reingest_all.py": {
+      "filePath": "backend/scripts/reingest_all.py",
+      "contentHash": "1ee07ad10a5269520faa1071f56a01bee5abb78e83164f8ae95d496a95ab44f9",
+      "functions": [
+        {
+          "name": "reingest_one",
+          "params": [
+            "doc_id"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 39
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 24
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "UUID"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "select",
+            "delete"
+          ]
+        },
+        {
+          "source": "app.database",
+          "specifiers": [
+            "SessionLocal"
+          ]
+        },
+        {
+          "source": "app.models",
+          "specifiers": [
+            "Document",
+            "DocumentChunk",
+            "DocumentParentChunk"
+          ]
+        },
+        {
+          "source": "app.services.ingestion",
+          "specifiers": [
+            "parse_document",
+            "chunk_document",
+            "embed_chunks",
+            "store_chunks"
+          ]
+        }
+      ],
+      "exports": [
+        "reingest_one",
+        "main"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/__init__.py": {
+      "filePath": "backend/tests/__init__.py",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/conftest.py": {
+      "filePath": "backend/tests/conftest.py",
+      "contentHash": "bd35592cf5b6f77350a9d1256c30c5b1b697c1eba41b2d4568864589749e9150",
+      "functions": [
+        {
+          "name": "setup_tables",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "db",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "client",
+          "params": [
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "fastapi.testclient",
+          "specifiers": [
+            "TestClient"
+          ]
+        },
+        {
+          "source": "sqlalchemy",
+          "specifiers": [
+            "create_engine"
+          ]
+        },
+        {
+          "source": "sqlalchemy.orm",
+          "specifiers": [
+            "sessionmaker"
+          ]
+        },
+        {
+          "source": "app.main",
+          "specifiers": [
+            "app"
+          ]
+        },
+        {
+          "source": "app.database",
+          "specifiers": [
+            "Base",
+            "get_db"
+          ]
+        }
+      ],
+      "exports": [
+        "setup_tables",
+        "db",
+        "client"
+      ],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_auth.py": {
+      "filePath": "backend/tests/test_auth.py",
+      "contentHash": "3fbf26a5c11068fa0420272499ba27537b7423eff6f0ee2c8ac8fc4ac51ea400",
+      "functions": [
+        {
+          "name": "_make_user",
+          "params": [
+            "db",
+            "username",
+            "password",
+            "is_active"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "test_login_success_returns_token",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "test_login_wrong_password_401",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "test_login_unknown_user_401",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_me_requires_token",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "test_me_with_token_returns_user",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "test_protected_chat_requires_token",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_protected_documents_list_requires_token",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "app.models",
+          "specifiers": [
+            "User"
+          ]
+        },
+        {
+          "source": "app.security",
+          "specifiers": [
+            "hash_password"
+          ]
+        }
+      ],
+      "exports": [
+        "_make_user",
+        "test_login_success_returns_token",
+        "test_login_wrong_password_401",
+        "test_login_unknown_user_401",
+        "test_me_requires_token",
+        "test_me_with_token_returns_user",
+        "test_protected_chat_requires_token",
+        "test_protected_documents_list_requires_token"
+      ],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_chat.py": {
+      "filePath": "backend/tests/test_chat.py",
+      "contentHash": "4629da50b4c081fed6f507b67841d397d3daa2f5398450d8f8eb949a1e01436f",
+      "functions": [
+        {
+          "name": "test_chat_stream_404_for_unknown_document",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_chat_stream_400_for_processing_document",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "test_chat_stream_returns_event_stream_for_done_document",
+          "params": [
+            "client",
+            "db",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 24
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        }
+      ],
+      "exports": [
+        "test_chat_stream_404_for_unknown_document",
+        "test_chat_stream_400_for_processing_document",
+        "test_chat_stream_returns_event_stream_for_done_document"
+      ],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_eval_golden.py": {
+      "filePath": "backend/tests/test_eval_golden.py",
+      "contentHash": "cd72d82dd6424718778170bb04f3bf888ae72397059b0c0de51968abaaf41778",
+      "functions": [
+        {
+          "name": "test_golden_set_runs_and_summary_meets_thresholds",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "asyncio",
+          "specifiers": [
+            "asyncio"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "evals.run_eval",
+          "specifiers": [
+            "run_eval",
+            "_save"
+          ]
+        }
+      ],
+      "exports": [
+        "test_golden_set_runs_and_summary_meets_thresholds"
+      ],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_graph.py": {
+      "filePath": "backend/tests/test_graph.py",
+      "contentHash": "17bc98039a23646c6dd6879068dad61fac84610da8612205a34f8f2aef3e9050",
+      "functions": [
+        {
+          "name": "test_build_citations_includes_page_and_source_and_dedups",
+          "params": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_format_context_prefixes_page_number",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock"
+          ]
+        }
+      ],
+      "exports": [
+        "test_build_citations_includes_page_and_source_and_dedups",
+        "test_format_context_prefixes_page_number"
+      ],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_ingestion.py": {
+      "filePath": "backend/tests/test_ingestion.py",
+      "contentHash": "096f5e6451462308cb3d3d6d406dacc9647d15f1894b8916b5ae2c97260c630d",
+      "functions": [
+        {
+          "name": "test_chunk_text_splits_long_content",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_chunk_text_short_content_stays_one_chunk",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_parse_document_docx_returns_native_page",
+          "params": [
+            "tmp_path"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_parse_document_image_uses_ocr",
+          "params": [
+            "tmp_path",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_parse_document_pdf_native_text_skips_ocr",
+          "params": [
+            "tmp_path",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "test_parse_document_pdf_scanned_triggers_ocr",
+          "params": [
+            "tmp_path",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_embed_chunks_calls_openai_and_returns_vectors",
+          "params": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_store_chunks_inserts_rows",
+          "params": [],
+          "exported": true,
+          "lineCount": 36
+        },
+        {
+          "name": "test_embed_text_calls_openai_and_returns_vector",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "test_document_parent_chunk_model_round_trips",
+          "params": [
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "test_chunk_document_carries_page_and_source",
+          "params": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "test_chunk_document_skips_blank_pages",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "test_chunk_metadata_columns_round_trip",
+          "params": [
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 52
+        },
+        {
+          "name": "test_chunk_text_produces_parents_and_children",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock",
+            "patch"
+          ]
+        }
+      ],
+      "exports": [
+        "test_chunk_text_splits_long_content",
+        "test_chunk_text_short_content_stays_one_chunk",
+        "test_parse_document_docx_returns_native_page",
+        "test_parse_document_image_uses_ocr",
+        "test_parse_document_pdf_native_text_skips_ocr",
+        "test_parse_document_pdf_scanned_triggers_ocr",
+        "test_embed_chunks_calls_openai_and_returns_vectors",
+        "test_store_chunks_inserts_rows",
+        "test_embed_text_calls_openai_and_returns_vector",
+        "test_document_parent_chunk_model_round_trips",
+        "test_chunk_document_carries_page_and_source",
+        "test_chunk_document_skips_blank_pages",
+        "test_chunk_metadata_columns_round_trip",
+        "test_chunk_text_produces_parents_and_children"
+      ],
+      "totalLines": 281,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_ocr_client.py": {
+      "filePath": "backend/tests/test_ocr_client.py",
+      "contentHash": "4b39932e9cc9a800314667b64a15654a03a217b227611cc8a5c0095d26ee016d",
+      "functions": [
+        {
+          "name": "_mock_httpx_client",
+          "params": [
+            "mocker",
+            "body",
+            "raises"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "test_ocr_image_joins_lines_and_averages_confidence",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "test_ocr_image_empty_lines_returns_empty_and_none",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "test_ocr_image_raises_ocr_error_on_http_failure",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock"
+          ]
+        }
+      ],
+      "exports": [
+        "_mock_httpx_client",
+        "test_ocr_image_joins_lines_and_averages_confidence",
+        "test_ocr_image_empty_lines_returns_empty_and_none",
+        "test_ocr_image_raises_ocr_error_on_http_failure"
+      ],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_rag_graph.py": {
+      "filePath": "backend/tests/test_rag_graph.py",
+      "contentHash": "e758718bc817c55637b65e9f361ac44cd8808d466953612a02bd1b919e1c117e",
+      "functions": [
+        {
+          "name": "test_route_after_grade_generate_when_useful",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "test_route_after_grade_retry_when_not_useful_under_budget",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "test_route_after_grade_give_up_when_budget_exhausted",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "app.services.rag.state",
+          "specifiers": [
+            "initial_state"
+          ]
+        }
+      ],
+      "exports": [
+        "test_route_after_grade_generate_when_useful",
+        "test_route_after_grade_retry_when_not_useful_under_budget",
+        "test_route_after_grade_give_up_when_budget_exhausted"
+      ],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_rag_nodes.py": {
+      "filePath": "backend/tests/test_rag_nodes.py",
+      "contentHash": "56d26ac566353cd124db0c08c204f01c74b8d72a1f2bc2c4cedefe7927b78ab3",
+      "functions": [
+        {
+          "name": "test_rewrite_query_strips_framing_and_sets_intent",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "test_retrieve_and_rerank_writes_children_parents_scores",
+          "params": [
+            "mocker",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "test_grade_chunks_fast_path_useful_when_chunks_present",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_grade_chunks_fast_path_not_useful_when_no_chunks",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_grade_chunks_fast_path_honors_explicit_floor",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "test_rewrite_and_retry_produces_new_query",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "test_faithfulness_check_yes_emits_no_warning",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "test_faithfulness_check_no_appends_warning",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock",
+            "AsyncMock"
+          ]
+        },
+        {
+          "source": "asyncio",
+          "specifiers": [
+            "asyncio"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock"
+          ]
+        }
+      ],
+      "exports": [
+        "test_rewrite_query_strips_framing_and_sets_intent",
+        "test_retrieve_and_rerank_writes_children_parents_scores",
+        "test_grade_chunks_fast_path_useful_when_chunks_present",
+        "test_grade_chunks_fast_path_not_useful_when_no_chunks",
+        "test_grade_chunks_fast_path_honors_explicit_floor",
+        "test_rewrite_and_retry_produces_new_query",
+        "test_faithfulness_check_yes_emits_no_warning",
+        "test_faithfulness_check_no_appends_warning"
+      ],
+      "totalLines": 143,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_rag.py": {
+      "filePath": "backend/tests/test_rag.py",
+      "contentHash": "33314758f58141d2d389731486afeba1e56a0a2932521d7f69e756df48276b1c",
+      "functions": [
+        {
+          "name": "test_agentic_rag_stream_emits_token_citation_done_in_order",
+          "params": [
+            "mocker",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "asyncio",
+          "specifiers": [
+            "asyncio"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock"
+          ]
+        }
+      ],
+      "exports": [
+        "test_agentic_rag_stream_emits_token_citation_done_in_order"
+      ],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_retrieval.py": {
+      "filePath": "backend/tests/test_retrieval.py",
+      "contentHash": "02a77740d301ee271548356d2894d1119df2817e1e4ecc390afa69a2873ccf7e",
+      "functions": [
+        {
+          "name": "test_get_reranker_returns_configured_model_name",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "_mock_rerank_response",
+          "params": [
+            "mocker",
+            "body",
+            "raises"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "test_rerank_sorts_by_score",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "test_rerank_handles_bare_list_response",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "test_rerank_skips_out_of_range_index",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "test_rerank_truncates_to_top_n",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "test_rerank_falls_back_to_input_order_on_api_error",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_rerank_empty_chunks_returns_empty",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "test_rrf_fuse_combines_two_ranked_lists",
+          "params": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "test_rrf_fuse_empty_legs",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "test_fetch_parents_dedups_and_preserves_first_appearance",
+          "params": [
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "test_apply_metadata_boost_noop_by_default",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_apply_metadata_boost_promotes_native",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "test_apply_metadata_boost_penalizes_lowconf_ocr",
+          "params": [
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "test_hybrid_search_page_filter_restricts_results",
+          "params": [
+            "db",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "MagicMock"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        }
+      ],
+      "exports": [
+        "test_get_reranker_returns_configured_model_name",
+        "_mock_rerank_response",
+        "test_rerank_sorts_by_score",
+        "test_rerank_handles_bare_list_response",
+        "test_rerank_skips_out_of_range_index",
+        "test_rerank_truncates_to_top_n",
+        "test_rerank_falls_back_to_input_order_on_api_error",
+        "test_rerank_empty_chunks_returns_empty",
+        "test_rrf_fuse_combines_two_ranked_lists",
+        "test_rrf_fuse_empty_legs",
+        "test_fetch_parents_dedups_and_preserves_first_appearance",
+        "test_apply_metadata_boost_noop_by_default",
+        "test_apply_metadata_boost_promotes_native",
+        "test_apply_metadata_boost_penalizes_lowconf_ocr",
+        "test_hybrid_search_page_filter_restricts_results"
+      ],
+      "totalLines": 235,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_tasks.py": {
+      "filePath": "backend/tests/test_tasks.py",
+      "contentHash": "372711649c536dd11aa65145760736e127dfc5441d2d5589cf24f4545088bdec",
+      "functions": [
+        {
+          "name": "make_doc",
+          "params": [
+            "doc_id",
+            "status",
+            "file_path",
+            "file_name"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_ingest_document_sets_done_on_success",
+          "params": [],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "test_ingest_document_sets_failed_on_exception",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_ingest_document_fails_on_empty_extraction",
+          "params": [],
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "patch",
+            "MagicMock"
+          ]
+        }
+      ],
+      "exports": [
+        "make_doc",
+        "test_ingest_document_sets_done_on_success",
+        "test_ingest_document_sets_failed_on_exception",
+        "test_ingest_document_fails_on_empty_extraction"
+      ],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "backend/tests/test_upload.py": {
+      "filePath": "backend/tests/test_upload.py",
+      "contentHash": "275559b789d338dd3333641f7e26f7d7ece9a75681de7257c37eac0eb5994333",
+      "functions": [
+        {
+          "name": "test_upload_pdf_returns_pending",
+          "params": [
+            "client",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "test_upload_rejects_unsupported_type",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "test_upload_rejects_oversized_file",
+          "params": [
+            "client",
+            "mocker"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "test_status_stream_returns_done",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "test_status_stream_404_for_unknown_id",
+          "params": [
+            "client"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "test_list_documents_returns_only_done",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "test_list_documents_returns_empty_when_none_done",
+          "params": [
+            "client",
+            "db"
+          ],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "pytest",
+          "specifiers": [
+            "pytest"
+          ]
+        }
+      ],
+      "exports": [
+        "test_upload_pdf_returns_pending",
+        "test_upload_rejects_unsupported_type",
+        "test_upload_rejects_oversized_file",
+        "test_status_stream_returns_done",
+        "test_status_stream_404_for_unknown_id",
+        "test_list_documents_returns_only_done",
+        "test_list_documents_returns_empty_when_none_done"
+      ],
+      "totalLines": 80,
+      "hasStructuralAnalysis": true
+    },
+    "CLAUDE.md": {
+      "filePath": "CLAUDE.md",
+      "contentHash": "a0c85ba319afb2fbfbb282b9fa99c9ea8038a6db7476598e43af067d10ffbf6b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "DESIGN.md": {
+      "filePath": "DESIGN.md",
+      "contentHash": "40b693a04ee09cab54649709803c25fd6edfd2b7073488c9f44d440accb95ded",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 314,
+      "hasStructuralAnalysis": true
+    },
+    "docker-compose.yml": {
+      "filePath": "docker-compose.yml",
+      "contentHash": "372955813dcffc4d81956b49912868c8447a1d708d308455240c944685db4f9f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "Dockerfile": {
+      "filePath": "Dockerfile",
+      "contentHash": "7f9a13b7cc3d8ed5f33989223657967d6c39dcd7308a87b32f48c073d46c7a6d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md": {
+      "filePath": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "contentHash": "d98b8e93fc0c570d022f9ff1577cf55631818bd36b30027fdc6816054d3c8fe6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1897,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md": {
+      "filePath": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "contentHash": "b945be97fb2f8e53925cec816b287a2fe6648cfeeb79b06d5857a10b41730eda",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1522,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md": {
+      "filePath": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "contentHash": "adfd9811be30409743f0cc00efab2739c4adc60d4bd55a14f3319a74891b1378",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2926,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md": {
+      "filePath": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "contentHash": "aecc1acc5339285f2ab0d03329f879cb60049ed9bd6634ef3ea2d22b90aec930",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 205,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/specs/2026-05-04-agentic-rag-design.md": {
+      "filePath": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "contentHash": "f9935b2c23b1685af789c0edfd09c9e076ed9d1a62d8927795617fbc748c6e47",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 288,
+      "hasStructuralAnalysis": true
+    },
+    "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md": {
+      "filePath": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "contentHash": "42014bbfe9aba617ca78a500044f14d63bb307be9c393c89e19b84d754abbc2f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 437,
+      "hasStructuralAnalysis": true
+    },
+    "eslint.config.js": {
+      "filePath": "eslint.config.js",
+      "contentHash": "da0cbf3213f2994741024e2aa5165d017e0345f389dcd2f8a0db97fee7289d1b",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@eslint/js",
+          "specifiers": [
+            "js"
+          ]
+        },
+        {
+          "source": "globals",
+          "specifiers": [
+            "globals"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-hooks",
+          "specifiers": [
+            "reactHooks"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-refresh",
+          "specifiers": [
+            "reactRefresh"
+          ]
+        },
+        {
+          "source": "eslint/config",
+          "specifiers": [
+            "defineConfig",
+            "globalIgnores"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "features_planning/account_login/plan.md": {
+      "filePath": "features_planning/account_login/plan.md",
+      "contentHash": "ffbfa786699db07e4440d3c2a7e8f5f9efab1b0e6b8d39c09645487de217bbbe",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 49,
+      "hasStructuralAnalysis": true
+    },
+    "features_planning/chat_history/plan.md": {
+      "filePath": "features_planning/chat_history/plan.md",
+      "contentHash": "3b31d4fe846ea07303c3be7a4ae2beecc6394b4f37857076af4b85fe90cb2385",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 218,
+      "hasStructuralAnalysis": true
+    },
+    "features_planning/chat_with_doc/planning.md": {
+      "filePath": "features_planning/chat_with_doc/planning.md",
+      "contentHash": "78f6acfff4199d3a286a6f574626f6a34fdaa7709c717b87dc40621a3ce8761f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "features_planning/chat_with_doc/rag_enhancement.md": {
+      "filePath": "features_planning/chat_with_doc/rag_enhancement.md",
+      "contentHash": "a806367307f07c8b2a8c74a9548997313748a7dc803fdb88a12ae8d8992f3550",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
+    },
+    "features_planning/file_processing/planing.md": {
+      "filePath": "features_planning/file_processing/planing.md",
+      "contentHash": "5a186c9c8007512b453839ef34cedc6ed16efec00e3951b156f7969acbdbcc5f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "index.html": {
+      "filePath": "index.html",
+      "contentHash": "7c849711559e03ea2948cd8840f8086a8aec8e5952c76534288b946fbfb36023",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 14,
+      "hasStructuralAnalysis": false
+    },
+    "nginx.conf": {
+      "filePath": "nginx.conf",
+      "contentHash": "385f02a7bef2d55e7fca44412c42ce043d2b3836cbd11dcf786235fe5bd4fb7a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "ocr-service/app.py": {
+      "filePath": "ocr-service/app.py",
+      "contentHash": "c9e70a93d442520d83bdd62db631bc9dd3fc3c2ee715a64c56a36f87ac81a791",
+      "functions": [
+        {
+          "name": "health",
+          "params": [],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "ocr",
+          "params": [
+            "file"
+          ],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "logging",
+          "specifiers": [
+            "logging"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "FastAPI",
+            "File",
+            "UploadFile"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image"
+          ]
+        },
+        {
+          "source": "rapidocr_onnxruntime",
+          "specifiers": [
+            "RapidOCR"
+          ]
+        }
+      ],
+      "exports": [
+        "health",
+        "ocr"
+      ],
+      "totalLines": 52,
+      "hasStructuralAnalysis": true
+    },
+    "ocr-service/Dockerfile": {
+      "filePath": "ocr-service/Dockerfile",
+      "contentHash": "e4f9e90b24fdb9061de9c93686060fdc62521de5e446c740784e94601723f7d5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "ocr-service/requirements.txt": {
+      "filePath": "ocr-service/requirements.txt",
+      "contentHash": "0f2cf10386c2debba861e8cb3065fe2581b06b23eff4fe3f5613e1267c91994c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "package.json": {
+      "filePath": "package.json",
+      "contentHash": "f9cea29ce79e7a905f05567cbe1d48e49f271aacc0855861dcb3e383dbc80b24",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "prompt.md": {
+      "filePath": "prompt.md",
+      "contentHash": "c2eb6f8f262eb30ec56508038e8ae3d8ee886c03dcf8e5aece7fa51f2260def2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "a460b4dc7e6392e76aa54d844c9261b8db0adb7f967ba8300526456f1dcf5fb4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "src/api/client.js": {
+      "filePath": "src/api/client.js",
+      "contentHash": "e5b1d86d4a249967b192740765c9330b5b752809f2481687f43b730ca690ccc2",
+      "functions": [
+        {
+          "name": "getToken",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "setToken",
+          "params": [
+            "token"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "authHeaders",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "apiFetch",
+          "params": [
+            "input"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "TOKEN_KEY",
+        "getToken",
+        "setToken",
+        "authHeaders",
+        "apiFetch"
+      ],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "src/App.css": {
+      "filePath": "src/App.css",
+      "contentHash": "6e25a776d3e8102da5bacb3cb99f4a5fc662a2e01e6143140671a556d28c3d5c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 185,
+      "hasStructuralAnalysis": false
+    },
+    "src/App.jsx": {
+      "filePath": "src/App.jsx",
+      "contentHash": "30cd4e003cc458ee74c2551be6644e6c5c3e798447694a929746bb66bfb26872",
+      "functions": [
+        {
+          "name": "App",
+          "params": [],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "BrowserRouter",
+            "Routes",
+            "Route"
+          ]
+        },
+        {
+          "source": "./auth/AuthContext",
+          "specifiers": [
+            "AuthProvider"
+          ]
+        },
+        {
+          "source": "./components/ProtectedRoute",
+          "specifiers": [
+            "ProtectedRoute"
+          ]
+        },
+        {
+          "source": "./pages/HomePage",
+          "specifiers": [
+            "HomePage"
+          ]
+        },
+        {
+          "source": "./pages/LoginPage",
+          "specifiers": [
+            "LoginPage"
+          ]
+        },
+        {
+          "source": "./pages/ChatPage",
+          "specifiers": [
+            "ChatPage"
+          ]
+        }
+      ],
+      "exports": [
+        "App"
+      ],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "src/auth/AuthContext.jsx": {
+      "filePath": "src/auth/AuthContext.jsx",
+      "contentHash": "b066c2e499db94079a4c52d4215baa232501ce6cc479961aca9771940d5a27e0",
+      "functions": [
+        {
+          "name": "AuthProvider",
+          "params": [],
+          "exported": true,
+          "lineCount": 67
+        },
+        {
+          "name": "useAuth",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "createContext",
+            "useContext",
+            "useState",
+            "useEffect",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../repositories/authRepository",
+          "specifiers": [
+            "loginRequest",
+            "getMe"
+          ]
+        },
+        {
+          "source": "../api/client",
+          "specifiers": [
+            "getToken",
+            "setToken"
+          ]
+        }
+      ],
+      "exports": [
+        "AuthProvider",
+        "useAuth"
+      ],
+      "totalLines": 81,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ChatMessage.css": {
+      "filePath": "src/components/ChatMessage.css",
+      "contentHash": "02519b858535a920ad4ed7583e9c4347821a7f86db10259421fc357fea8b7540",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 266,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/ChatMessage.jsx": {
+      "filePath": "src/components/ChatMessage.jsx",
+      "contentHash": "89427e937b014f75e331ad11317ad7d4478384231c507d33e40b666120a75200",
+      "functions": [
+        {
+          "name": "renderContent",
+          "params": [
+            "content"
+          ],
+          "exported": false,
+          "lineCount": 42
+        },
+        {
+          "name": "ChatMessage",
+          "params": [],
+          "exported": true,
+          "lineCount": 102
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState"
+          ]
+        },
+        {
+          "source": "./ThinkingIndicator",
+          "specifiers": [
+            "ThinkingIndicator"
+          ]
+        },
+        {
+          "source": "./ChatMessage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "ChatMessage"
+      ],
+      "totalLines": 150,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ChatThread.css": {
+      "filePath": "src/components/ChatThread.css",
+      "contentHash": "cb0a754b39dc14e0da1eead38f02cd9e64808aa7ac2fbf1808408086664c39b4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/ChatThread.jsx": {
+      "filePath": "src/components/ChatThread.jsx",
+      "contentHash": "33df2973fd725342d3dbc04ebd21d9da7a4a22437fe2188695eddbbfb82ab604",
+      "functions": [
+        {
+          "name": "ChatThread",
+          "params": [],
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useRef"
+          ]
+        },
+        {
+          "source": "./ChatMessage",
+          "specifiers": [
+            "ChatMessage"
+          ]
+        },
+        {
+          "source": "./ChatThread.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "ChatThread"
+      ],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/Composer.css": {
+      "filePath": "src/components/Composer.css",
+      "contentHash": "411b21f20dd3274ca196412ed2606ef02ef3195b9b8785b5f9e38bb817450073",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 154,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/Composer.jsx": {
+      "filePath": "src/components/Composer.jsx",
+      "contentHash": "6b26479cd90b3f3bfaac310bf987e0e4da2dfbfd5d50ec3036a570323fb946b3",
+      "functions": [
+        {
+          "name": "Composer",
+          "params": [],
+          "exported": true,
+          "lineCount": 127
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useRef"
+          ]
+        },
+        {
+          "source": "./Composer.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Composer"
+      ],
+      "totalLines": 131,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/DocumentSelector.css": {
+      "filePath": "src/components/DocumentSelector.css",
+      "contentHash": "939b49c599f1b533e1f7cb6c88d3e2da2879af9eaf6c29dfa09dbd3929950945",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 41,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/DocumentSelector.jsx": {
+      "filePath": "src/components/DocumentSelector.jsx",
+      "contentHash": "48b9babaa0118f93351c9503b3b6bfc99ac6bbfc0c34b5c411c4d5fa160ba6d6",
+      "functions": [
+        {
+          "name": "DocumentSelector",
+          "params": [],
+          "exported": true,
+          "lineCount": 39
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../api/client",
+          "specifiers": [
+            "apiFetch"
+          ]
+        },
+        {
+          "source": "./DocumentSelector.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "DocumentSelector"
+      ],
+      "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ProtectedRoute.jsx": {
+      "filePath": "src/components/ProtectedRoute.jsx",
+      "contentHash": "dcbfd1cd47b06e9b6ae1dfb9c22aa076520373b1e59aaa5869bc0ea4b8ad0358",
+      "functions": [
+        {
+          "name": "ProtectedRoute",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "Navigate",
+            "useLocation"
+          ]
+        },
+        {
+          "source": "../auth/AuthContext",
+          "specifiers": [
+            "useAuth"
+          ]
+        }
+      ],
+      "exports": [
+        "ProtectedRoute"
+      ],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/Sidebar.css": {
+      "filePath": "src/components/Sidebar.css",
+      "contentHash": "6bf3cce8465575999721d8598607270d7bcd37d12fbdcb30ce9fb48004ea9977",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 275,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/Sidebar.jsx": {
+      "filePath": "src/components/Sidebar.jsx",
+      "contentHash": "bc21914d7f2aeac57d18aa23c4f462c694bce98949b9bdd1f09dcf1d9ce713fa",
+      "functions": [
+        {
+          "name": "ChatIcon",
+          "params": [],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "initials",
+          "params": [
+            "name"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "Sidebar",
+          "params": [],
+          "exported": true,
+          "lineCount": 104
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState"
+          ]
+        },
+        {
+          "source": "../auth/AuthContext",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "./Sidebar.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Sidebar"
+      ],
+      "totalLines": 129,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ThinkingIndicator.css": {
+      "filePath": "src/components/ThinkingIndicator.css",
+      "contentHash": "592221afba607cd27a8597924db8826d2603f346072fd625e79453f5c4a9f073",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/ThinkingIndicator.jsx": {
+      "filePath": "src/components/ThinkingIndicator.jsx",
+      "contentHash": "4eda9511deffe3d961152d5941018deb5429c4b804911a07b567bd3e1706945e",
+      "functions": [
+        {
+          "name": "ThinkingIndicator",
+          "params": [],
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect"
+          ]
+        },
+        {
+          "source": "./ThinkingIndicator.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "ThinkingIndicator"
+      ],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/UpgradeTab.css": {
+      "filePath": "src/components/UpgradeTab.css",
+      "contentHash": "0fd46cf11f13b846af4c28543877992969cbb5bf99ce18c99206ecc4c2a56ecc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 35,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/UpgradeTab.jsx": {
+      "filePath": "src/components/UpgradeTab.jsx",
+      "contentHash": "ec3cd3d0f5f425bcc52298ae0bf74d0c50e6b9cf5045d0585dae34eabfcd0042",
+      "functions": [
+        {
+          "name": "UpgradeTab",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./UpgradeTab.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "UpgradeTab"
+      ],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/UploadToast.css": {
+      "filePath": "src/components/UploadToast.css",
+      "contentHash": "6068be127056978c01439336b110f97bee668afc1a743abd1f297c5290e8c101",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 66,
+      "hasStructuralAnalysis": false
+    },
+    "src/components/UploadToast.jsx": {
+      "filePath": "src/components/UploadToast.jsx",
+      "contentHash": "e64f86c93ce5df1731b7964a1eb8cc826368ef6213d4a76c3313537ed4d7c515",
+      "functions": [
+        {
+          "name": "UploadToast",
+          "params": [],
+          "exported": true,
+          "lineCount": 36
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect"
+          ]
+        },
+        {
+          "source": "./UploadToast.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "UploadToast"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "src/hooks/useChat.js": {
+      "filePath": "src/hooks/useChat.js",
+      "contentHash": "8beb2895b40bb451f2d5209b9833a77aeb48117eb17975c990be76b87aeda402",
+      "functions": [
+        {
+          "name": "makeId",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "reducer",
+          "params": [
+            "state",
+            "action"
+          ],
+          "exported": false,
+          "lineCount": 55
+        },
+        {
+          "name": "useChat",
+          "params": [],
+          "exported": true,
+          "lineCount": 87
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useReducer",
+            "useCallback",
+            "useRef"
+          ]
+        },
+        {
+          "source": "../api/client",
+          "specifiers": [
+            "apiFetch"
+          ]
+        }
+      ],
+      "exports": [
+        "useChat"
+      ],
+      "totalLines": 150,
+      "hasStructuralAnalysis": true
+    },
+    "src/hooks/useConversations.js": {
+      "filePath": "src/hooks/useConversations.js",
+      "contentHash": "116792a4383d92da40feb58b812864dcbe4fa78b72712bf1fbca7d85cfc6745f",
+      "functions": [
+        {
+          "name": "useConversations",
+          "params": [],
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../repositories/conversationRepository",
+          "specifiers": [
+            "listConversations",
+            "deleteConversation",
+            "clearConversations"
+          ]
+        }
+      ],
+      "exports": [
+        "useConversations"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "src/hooks/useUpload.js": {
+      "filePath": "src/hooks/useUpload.js",
+      "contentHash": "461f056bd9ef9f4583ba90aa5d0ad8d821b158305839449525d860cb9b7e2f63",
+      "functions": [
+        {
+          "name": "useUpload",
+          "params": [],
+          "exported": true,
+          "lineCount": 58
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useRef"
+          ]
+        },
+        {
+          "source": "../api/client",
+          "specifiers": [
+            "apiFetch"
+          ]
+        }
+      ],
+      "exports": [
+        "useUpload"
+      ],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "src/index.css": {
+      "filePath": "src/index.css",
+      "contentHash": "6e41817606bba0608da148f1b105dc164ab42b313c8dc38b5c931ae03909efd4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "src/main.jsx": {
+      "filePath": "src/main.jsx",
+      "contentHash": "4b4b864dbe45253425d0c925337180ec07e204295179f80f59551216f466f618",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "StrictMode"
+          ]
+        },
+        {
+          "source": "react-dom/client",
+          "specifiers": [
+            "createRoot"
+          ]
+        },
+        {
+          "source": "./index.css",
+          "specifiers": []
+        },
+        {
+          "source": "./App.jsx",
+          "specifiers": [
+            "App"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "src/pages/ChatPage.css": {
+      "filePath": "src/pages/ChatPage.css",
+      "contentHash": "2f537e13d846d37be93b8333413ebfb650578d92b13be0d2f0912ed9921ef77c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 42,
+      "hasStructuralAnalysis": false
+    },
+    "src/pages/ChatPage.jsx": {
+      "filePath": "src/pages/ChatPage.jsx",
+      "contentHash": "4a2ac47c671fdefeb4246be812c426dabfa737c1f4513fd6ecdbff2536128498",
+      "functions": [
+        {
+          "name": "ChatPage",
+          "params": [],
+          "exported": true,
+          "lineCount": 107
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../components/Sidebar",
+          "specifiers": [
+            "Sidebar"
+          ]
+        },
+        {
+          "source": "../components/ChatThread",
+          "specifiers": [
+            "ChatThread"
+          ]
+        },
+        {
+          "source": "../components/Composer",
+          "specifiers": [
+            "Composer"
+          ]
+        },
+        {
+          "source": "../components/UpgradeTab",
+          "specifiers": [
+            "UpgradeTab"
+          ]
+        },
+        {
+          "source": "../components/UploadToast",
+          "specifiers": [
+            "UploadToast"
+          ]
+        },
+        {
+          "source": "../components/DocumentSelector",
+          "specifiers": [
+            "DocumentSelector"
+          ]
+        },
+        {
+          "source": "../hooks/useUpload",
+          "specifiers": [
+            "useUpload"
+          ]
+        },
+        {
+          "source": "../hooks/useChat",
+          "specifiers": [
+            "useChat"
+          ]
+        },
+        {
+          "source": "../hooks/useConversations",
+          "specifiers": [
+            "useConversations"
+          ]
+        },
+        {
+          "source": "../repositories/conversationRepository",
+          "specifiers": [
+            "getConversation"
+          ]
+        },
+        {
+          "source": "./ChatPage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "ChatPage"
+      ],
+      "totalLines": 121,
+      "hasStructuralAnalysis": true
+    },
+    "src/pages/HomePage.css": {
+      "filePath": "src/pages/HomePage.css",
+      "contentHash": "0e44e340027cfaab78c5a42703bf3db3cf7b1d455c42110513717319009e7cf1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 116,
+      "hasStructuralAnalysis": false
+    },
+    "src/pages/HomePage.jsx": {
+      "filePath": "src/pages/HomePage.jsx",
+      "contentHash": "7db3955ba1b947434c6295b15c04d2f2d640465788f12092309b576a3df94307",
+      "functions": [
+        {
+          "name": "HomePage",
+          "params": [],
+          "exported": true,
+          "lineCount": 24
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "useNavigate"
+          ]
+        },
+        {
+          "source": "./HomePage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "HomePage"
+      ],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "src/pages/LoginPage.css": {
+      "filePath": "src/pages/LoginPage.css",
+      "contentHash": "3aee33cb3bba913313e3dffde40aecea3f21bac1c076b08f4c7282bcecfdda50",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 96,
+      "hasStructuralAnalysis": false
+    },
+    "src/pages/LoginPage.jsx": {
+      "filePath": "src/pages/LoginPage.jsx",
+      "contentHash": "fd423f881df8ea979344aa936d37bcc6866542018f30503693fda161cd34774f",
+      "functions": [
+        {
+          "name": "LoginPage",
+          "params": [],
+          "exported": true,
+          "lineCount": 65
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState"
+          ]
+        },
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "useNavigate",
+            "useLocation"
+          ]
+        },
+        {
+          "source": "../auth/AuthContext",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "./LoginPage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LoginPage"
+      ],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "src/repositories/authRepository.js": {
+      "filePath": "src/repositories/authRepository.js",
+      "contentHash": "a55b88cc940eb4ae1d11c58b2d6d59379b782ec752c0622328dbb240f4deb254",
+      "functions": [
+        {
+          "name": "login",
+          "params": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "getMe",
+          "params": [
+            "token"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "login",
+        "getMe"
+      ],
+      "totalLines": 31,
+      "hasStructuralAnalysis": true
+    },
+    "src/repositories/conversationRepository.js": {
+      "filePath": "src/repositories/conversationRepository.js",
+      "contentHash": "2cc172e8b86b42da516f06809bb451b9388ef32939e9a015457178a4886ae077",
+      "functions": [
+        {
+          "name": "listConversations",
+          "params": [],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "getConversation",
+          "params": [
+            "id"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "deleteConversation",
+          "params": [
+            "id"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "clearConversations",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../api/client",
+          "specifiers": [
+            "apiFetch"
+          ]
+        }
+      ],
+      "exports": [
+        "listConversations",
+        "getConversation",
+        "deleteConversation",
+        "clearConversations"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "src/styles/global.css": {
+      "filePath": "src/styles/global.css",
+      "contentHash": "7733d7b3d913ba51309460977f574f144267f6e01949d5914e3b0298cc402281",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 37,
+      "hasStructuralAnalysis": false
+    },
+    "src/styles/tokens.css": {
+      "filePath": "src/styles/tokens.css",
+      "contentHash": "fd97f93e66dce5ab232fa36358f24f934595fa6b2e8a4390852f82f56161fd45",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": false
+    },
+    "vite.config.js": {
+      "filePath": "vite.config.js",
+      "contentHash": "6ea1ed373c90404a0e3a08cf6cbb9e41ba4eeaaaa480caa0d7e39b126fd07cf0",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vite",
+          "specifiers": [
+            "defineConfig"
+          ]
+        },
+        {
+          "source": "@vitejs/plugin-react",
+          "specifiers": [
+            "react"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

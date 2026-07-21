@@ -1,0 +1,356 @@
+{
+  "nodes": [
+    {
+      "id": "file:backend/app/services/rag/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/app/services/rag/__init__.py",
+      "summary": "Package barrel for the agentic RAG service that re-exports the public entry point (agentic_rag_stream) from graph.py so callers can import from app.services.rag directly.",
+      "tags": ["entry-point", "barrel", "rag", "package-init"],
+      "complexity": "simple",
+      "languageNotes": "Python package __init__ used purely as a re-export surface for the LangGraph RAG state machine."
+    },
+    {
+      "id": "file:backend/evals/metrics.py",
+      "type": "file",
+      "name": "metrics.py",
+      "filePath": "backend/evals/metrics.py",
+      "summary": "Computes RAG evaluation metrics for the golden-set harness: RAGAS scores (faithfulness, answer relevancy, context precision/recall) via an OpenRouter LLM judge plus lightweight custom checks and per-run aggregation.",
+      "tags": ["evaluation", "metrics", "rag", "ragas", "validation"],
+      "complexity": "moderate",
+      "languageNotes": "Builds a ChatOpenAI judge and OpenAIEmbeddings pointed at OpenRouter, then hands a HuggingFace Dataset to ragas.evaluate."
+    },
+    {
+      "id": "file:backend/evals/run_eval.py",
+      "type": "file",
+      "name": "run_eval.py",
+      "filePath": "backend/evals/run_eval.py",
+      "summary": "CLI eval harness that runs the golden question set through the agentic RAG stream, scores answers with the metrics module, and saves/compares timestamped JSON result snapshots (python -m evals.run_eval --name / --compare).",
+      "tags": ["evaluation", "cli", "entry-point", "rag", "harness"],
+      "complexity": "moderate",
+      "languageNotes": "Async orchestration driven by asyncio.run; stamps runs with the current git SHA for reproducible baselines."
+    },
+    {
+      "id": "file:backend/tests/test_eval_golden.py",
+      "type": "file",
+      "name": "test_eval_golden.py",
+      "filePath": "backend/tests/test_eval_golden.py",
+      "summary": "Pytest test (marked eval) that runs the golden set end-to-end and asserts the aggregated summary metrics meet minimum quality thresholds.",
+      "tags": ["test", "evaluation", "rag", "golden-set"],
+      "complexity": "simple",
+      "languageNotes": "Excluded from default pytest runs via the @pytest.mark.eval marker (addopts = -m 'not eval')."
+    },
+    {
+      "id": "function:backend/evals/metrics.py:run_ragas_metrics",
+      "type": "function",
+      "name": "run_ragas_metrics",
+      "filePath": "backend/evals/metrics.py",
+      "lineRange": [43, 75],
+      "summary": "Assembles questions/answers/contexts/ground-truths into a Dataset and runs ragas.evaluate with an LLM judge and embeddings, returning per-question faithfulness, answer relevancy, and context precision/recall lists.",
+      "tags": ["evaluation", "ragas", "metrics", "rag"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/evals/metrics.py:expected_substring_match",
+      "type": "function",
+      "name": "expected_substring_match",
+      "filePath": "backend/evals/metrics.py",
+      "lineRange": [78, 83],
+      "summary": "Case-insensitive check for whether the model's answer contains an expected substring, used as a deterministic correctness signal.",
+      "tags": ["evaluation", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/metrics.py:answered",
+      "type": "function",
+      "name": "answered",
+      "filePath": "backend/evals/metrics.py",
+      "lineRange": [86, 90],
+      "summary": "Boolean check that the model produced a non-empty, substantive answer for a question.",
+      "tags": ["evaluation", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/metrics.py:summarize",
+      "type": "function",
+      "name": "summarize",
+      "filePath": "backend/evals/metrics.py",
+      "lineRange": [93, 110],
+      "summary": "Aggregates per-question metric dictionaries into run-level averages and pass counts for the eval summary block.",
+      "tags": ["evaluation", "aggregation", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/run_eval.py:_resolve_document_id",
+      "type": "function",
+      "name": "_resolve_document_id",
+      "filePath": "backend/evals/run_eval.py",
+      "lineRange": [50, 61],
+      "summary": "Looks up an ingested Document by file name (status='done') and returns its id, raising if the document has not been ingested.",
+      "tags": ["evaluation", "database", "lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/run_eval.py:_run_one",
+      "type": "function",
+      "name": "_run_one",
+      "filePath": "backend/evals/run_eval.py",
+      "lineRange": [64, 73],
+      "summary": "Streams a single question through agentic_rag_stream for a document, collecting the streamed tokens into a final answer string.",
+      "tags": ["evaluation", "rag", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/run_eval.py:run_eval",
+      "type": "function",
+      "name": "run_eval",
+      "filePath": "backend/evals/run_eval.py",
+      "lineRange": [76, 128],
+      "summary": "Core async harness that iterates the golden set, runs each question through the RAG stream, scores answers with RAGAS and custom checks, and assembles a full result payload with metadata and summary.",
+      "tags": ["evaluation", "orchestration", "rag", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/evals/run_eval.py:_compare",
+      "type": "function",
+      "name": "_compare",
+      "filePath": "backend/evals/run_eval.py",
+      "lineRange": [139, 155],
+      "summary": "Loads two saved eval runs by name and prints a side-by-side comparison of their summary metrics for regression checking.",
+      "tags": ["evaluation", "comparison", "reporting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/evals/run_eval.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "backend/evals/run_eval.py",
+      "lineRange": [158, 174],
+      "summary": "CLI entry point that parses --name/--compare arguments and either runs a new eval (saving results) or compares two existing runs.",
+      "tags": ["entry-point", "cli", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/tests/test_eval_golden.py:test_golden_set_runs_and_summary_meets_thresholds",
+      "type": "function",
+      "name": "test_golden_set_runs_and_summary_meets_thresholds",
+      "filePath": "backend/tests/test_eval_golden.py",
+      "lineRange": [13, 18],
+      "summary": "Eval-marked pytest that runs the golden set via run_eval and asserts the summary metrics clear minimum quality thresholds.",
+      "tags": ["test", "evaluation", "golden-set"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:backend/app/services/rag/__init__.py",
+      "target": "file:backend/app/services/rag/graph.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "file:backend/app/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "file:backend/app/database.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "file:backend/app/models.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "file:backend/app/services/rag/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "file:backend/evals/metrics.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/tests/test_eval_golden.py",
+      "target": "file:backend/evals/run_eval.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:run_ragas_metrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:expected_substring_match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:answered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:summarize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:_resolve_document_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:_run_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:run_eval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:_compare",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/tests/test_eval_golden.py",
+      "target": "function:backend/tests/test_eval_golden.py:test_golden_set_runs_and_summary_meets_thresholds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:run_ragas_metrics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:expected_substring_match",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:answered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/metrics.py",
+      "target": "function:backend/evals/metrics.py:summarize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:run_eval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "function:backend/evals/run_eval.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/evals/run_eval.py:run_eval",
+      "target": "function:backend/evals/metrics.py:run_ragas_metrics",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/evals/run_eval.py:run_eval",
+      "target": "function:backend/evals/metrics.py:answered",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/evals/run_eval.py:run_eval",
+      "target": "function:backend/evals/metrics.py:expected_substring_match",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/evals/run_eval.py:run_eval",
+      "target": "function:backend/evals/metrics.py:summarize",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/evals/run_eval.py:_run_one",
+      "target": "function:backend/app/services/rag/graph.py:agentic_rag_stream",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:backend/tests/test_eval_golden.py:test_golden_set_runs_and_summary_meets_thresholds",
+      "target": "function:backend/evals/run_eval.py:run_eval",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/evals/run_eval.py",
+      "target": "file:backend/tests/test_eval_golden.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

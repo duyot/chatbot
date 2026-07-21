@@ -1,0 +1,22 @@
+{
+  "batchIndex": 7,
+  "files": [
+    {
+      "path": "backend/.dockerignore",
+      "language": "unknown",
+      "sizeLines": 6,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "backend/Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 10,
+      "fileCategory": "infra"
+    }
+  ],
+  "batchImportData": {
+    "backend/.dockerignore": [],
+    "backend/Dockerfile": []
+  },
+  "neighborMap": {}
+}

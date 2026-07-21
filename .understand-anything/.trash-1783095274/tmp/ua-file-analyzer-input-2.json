@@ -1,0 +1,70 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "src/api/client.js", "language": "javascript", "sizeLines": 31, "fileCategory": "code"},
+    {"path": "src/components/ChatMessage.jsx", "language": "javascript", "sizeLines": 149, "fileCategory": "code"},
+    {"path": "src/components/ChatThread.jsx", "language": "javascript", "sizeLines": 27, "fileCategory": "code"},
+    {"path": "src/components/Composer.jsx", "language": "javascript", "sizeLines": 130, "fileCategory": "code"},
+    {"path": "src/components/DocumentSelector.jsx", "language": "javascript", "sizeLines": 43, "fileCategory": "code"},
+    {"path": "src/components/ThinkingIndicator.jsx", "language": "javascript", "sizeLines": 37, "fileCategory": "code"},
+    {"path": "src/components/UpgradeTab.jsx", "language": "javascript", "sizeLines": 10, "fileCategory": "code"},
+    {"path": "src/components/UploadToast.jsx", "language": "javascript", "sizeLines": 39, "fileCategory": "code"},
+    {"path": "src/hooks/useChat.js", "language": "javascript", "sizeLines": 149, "fileCategory": "code"},
+    {"path": "src/hooks/useConversations.js", "language": "javascript", "sizeLines": 39, "fileCategory": "code"},
+    {"path": "src/hooks/useUpload.js", "language": "javascript", "sizeLines": 61, "fileCategory": "code"},
+    {"path": "src/pages/ChatPage.jsx", "language": "javascript", "sizeLines": 120, "fileCategory": "code"},
+    {"path": "src/repositories/conversationRepository.js", "language": "javascript", "sizeLines": 25, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "src/api/client.js": [],
+    "src/components/ChatMessage.jsx": [
+      "src/components/ChatMessage.css",
+      "src/components/ThinkingIndicator.jsx"
+    ],
+    "src/components/ChatThread.jsx": [
+      "src/components/ChatMessage.jsx",
+      "src/components/ChatThread.css"
+    ],
+    "src/components/Composer.jsx": [
+      "src/components/Composer.css"
+    ],
+    "src/components/DocumentSelector.jsx": [
+      "src/api/client.js",
+      "src/components/DocumentSelector.css"
+    ],
+    "src/components/ThinkingIndicator.jsx": [
+      "src/components/ThinkingIndicator.css"
+    ],
+    "src/components/UpgradeTab.jsx": [
+      "src/components/UpgradeTab.css"
+    ],
+    "src/components/UploadToast.jsx": [
+      "src/components/UploadToast.css"
+    ],
+    "src/hooks/useChat.js": [
+      "src/api/client.js"
+    ],
+    "src/hooks/useConversations.js": [
+      "src/repositories/conversationRepository.js"
+    ],
+    "src/hooks/useUpload.js": [
+      "src/api/client.js"
+    ],
+    "src/pages/ChatPage.jsx": [
+      "src/components/ChatThread.jsx",
+      "src/components/Composer.jsx",
+      "src/components/DocumentSelector.jsx",
+      "src/components/Sidebar.jsx",
+      "src/components/UpgradeTab.jsx",
+      "src/components/UploadToast.jsx",
+      "src/hooks/useChat.js",
+      "src/hooks/useConversations.js",
+      "src/hooks/useUpload.js",
+      "src/pages/ChatPage.css",
+      "src/repositories/conversationRepository.js"
+    ],
+    "src/repositories/conversationRepository.js": [
+      "src/api/client.js"
+    ]
+  }
+}

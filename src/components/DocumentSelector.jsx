@@ -1,22 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
 import './DocumentSelector.css'
 
-export default function DocumentSelector({ onChange }) {
-  const [documents, setDocuments] = useState([])
-
-  const fetchDocs = useCallback(async () => {
-    try {
-      const res = await fetch('/api/documents')
-      if (res.ok) setDocuments(await res.json())
-    } catch (_) {}
-  }, [])
-
-  useEffect(() => {
-    fetchDocs()
-    window.addEventListener('focus', fetchDocs)
-    return () => window.removeEventListener('focus', fetchDocs)
-  }, [fetchDocs])
-
+export default function DocumentSelector({ documents = [], value, onChange }) {
   return (
     <div className="doc-selector-row">
       <label className="doc-selector-label" htmlFor="doc-select">
@@ -25,7 +9,7 @@ export default function DocumentSelector({ onChange }) {
       <select
         id="doc-select"
         className="doc-selector-select"
-        defaultValue=""
+        value={value ?? ''}
         onChange={(e) => onChange(e.target.value || null)}
       >
         <option value="">Select a document…</option>

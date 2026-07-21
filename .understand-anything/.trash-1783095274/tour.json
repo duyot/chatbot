@@ -1,0 +1,96 @@
+[
+  {
+    "order": 1,
+    "title": "Project Overview: The Real Architecture",
+    "description": "Start with CLAUDE.md, the project's authoritative guide — not the generic root README, which is leftover create-vite boilerplate and does not describe this project. CLAUDE.md lays out the actual system: a React 19 frontend, a FastAPI backend built around a LangGraph agentic RAG pipeline, hybrid pgvector+Postgres-FTS retrieval reranked via OpenRouter, JWT authentication, Celery background ingestion, and a standalone PaddleOCR microservice. It also documents key conventions (the status='done' field, the eval harness, the reingestion workflow) that recur throughout this tour.",
+    "nodeIds": ["document:CLAUDE.md"]
+  },
+  {
+    "order": 2,
+    "title": "Frontend Entry Point",
+    "description": "The frontend boots the way any Vite app does: index.html loads a module script that executes src/main.jsx, which mounts the root <App/> component inside StrictMode onto the #root div and pulls in the global stylesheet. Everything the user sees — chat UI, login, routing — grows out of this single mount call. From here the tour follows the same path a browser does: down into App.jsx's route table.",
+    "nodeIds": ["file:index.html", "file:src/main.jsx"],
+    "languageLesson": "React 18+ StrictMode intentionally double-invokes components and effects in development to surface side-effect bugs early; this is expected behavior and does not happen in production builds."
+  },
+  {
+    "order": 3,
+    "title": "Auth State: Context, Token & Repository",
+    "description": "src/App.jsx wraps the entire route tree in AuthProvider (from AuthContext.jsx), which owns the current user/token/loading state and exposes login/logout plus a useAuth hook to any descendant component. AuthContext delegates HTTP calls to authRepository.js — a repository-pattern module that never calls fetch directly — which in turn goes through the shared client.js API wrapper: that wrapper stores the JWT in localStorage, attaches the Authorization header to every request, and fires a global 'auth:unauthorized' event on any 401 so AuthContext can force a logout. This three-layer split (context -> repository -> client) is the pattern used everywhere the frontend touches the network.",
+    "nodeIds": ["file:src/App.jsx", "file:src/auth/AuthContext.jsx", "file:src/repositories/authRepository.js", "file:src/api/client.js"],
+    "languageLesson": "The repository pattern isolates fetch/network calls into dedicated modules (authRepository.js, conversationRepository.js) so React components and hooks never call fetch inline — this keeps components testable and gives you one place to change API behavior."
+  },
+  {
+    "order": 4,
+    "title": "Login Form & Route Guarding",
+    "description": "LoginPage.jsx is the UI half of the auth flow from Step 3: it collects a username/password, calls the AuthContext login() action, and on success redirects to the page the user originally tried to reach (or /chat by default). That protection is enforced by ProtectedRoute.jsx, a guard component wrapped around the chat route in App.jsx's table — it reads useAuth() and redirects unauthenticated visitors to /login, preserving the intended destination in router state so LoginPage can send them back afterward.",
+    "nodeIds": ["file:src/pages/LoginPage.jsx", "file:src/components/ProtectedRoute.jsx"]
+  },
+  {
+    "order": 5,
+    "title": "Chat UI & the Streaming Hook",
+    "description": "ChatPage.jsx orchestrates the actual chat experience, wiring together DocumentSelector (choose which ingested document to chat with), ChatThread (the scrollable message list), and the useChat hook. useChat models the conversation as a reducer-based state machine that opens a connection to the backend's SSE-style /api/chat/stream endpoint and parses token, citations, done, and error events as they arrive — this is what makes the assistant's reply appear to type itself in real time. ChatThread renders each turn via ChatMessage, which does lightweight markdown formatting plus an expandable citations panel showing exactly which retrieved chunks backed the answer.",
+    "nodeIds": ["file:src/pages/ChatPage.jsx", "file:src/hooks/useChat.js", "file:src/components/ChatThread.jsx", "file:src/components/ChatMessage.jsx", "file:src/components/DocumentSelector.jsx"],
+    "languageLesson": "useChat models the conversation with useReducer instead of several useState calls — a reducer centralizes how streaming events (token/citations/done/error) transition state, avoiding the update-ordering bugs that plague ad hoc setState calls during a fast SSE stream."
+  },
+  {
+    "order": 6,
+    "title": "Backend App Factory & Routers",
+    "description": "backend/app/main.py is the FastAPI counterpart to src/main.jsx — it builds the app, adds request-logging middleware, a health endpoint, and mounts four routers: auth, chat, conversations, and documents. routers/auth.py is the backend side of the login flow from Steps 3-4: it verifies credentials and mints a JWT via security.py, which also exposes the get_current_user OAuth2 dependency that every protected route (including routers/chat.py and routers/documents.py) uses to guard itself. routers/chat.py is the server side of Step 5's useChat hook — it validates the target document, persists conversation/message rows, and streams the agentic RAG answer as server-sent events.",
+    "nodeIds": ["file:backend/app/main.py", "file:backend/app/routers/auth.py", "file:backend/app/routers/chat.py", "file:backend/app/routers/documents.py", "file:backend/app/security.py"],
+    "languageLesson": "FastAPI's APIRouter + Depends() pattern lets each router declare its own auth requirement (Depends(get_current_user)) without duplicating token-checking logic — the dependency injection system runs it before the route handler and raises 401 automatically on failure."
+  },
+  {
+    "order": 7,
+    "title": "The Agentic RAG Pipeline: Graph & State",
+    "description": "When routers/chat.py needs an answer, it calls agentic_rag_stream — the public entry point re-exported from services/rag/__init__.py — which is implemented in graph.py as a LangGraph state machine. graph.py assembles the six-node pipeline previewed in Step 1's CLAUDE.md description, with conditional retry routing, while state.py defines the AgentState TypedDict that flows through every node plus the factory that builds the initial state for a new question. This graph/state split is the backbone the rest of the RAG pipeline builds on.",
+    "nodeIds": ["file:backend/app/services/rag/graph.py", "file:backend/app/services/rag/state.py", "file:backend/app/services/rag/__init__.py"],
+    "languageLesson": "LangGraph models an agent as nodes (functions that transform state) connected by edges — including conditional edges that pick the next node based on state. It's a state machine, not a linear pipeline, which is what allows the retry loop covered in the next step."
+  },
+  {
+    "order": 8,
+    "title": "Six Nodes: Rewrite, Grade, Generate, Verify",
+    "description": "nodes.py implements the six functions wired together by graph.py: rewrite_query normalizes the user's question, retrieve_and_rerank fetches candidate chunks (Step 9), grade_chunks scores their relevance, rewrite_and_retry loops back with a reformulated query if grading fails, generate_answer produces the response, and faithfulness_check verifies the answer is actually grounded in the retrieved chunks before it's returned. prompts.py holds the prompt templates each of these LLM-calling nodes uses. This CRAG-lite design (corrective RAG with a bounded retry budget) is exactly what the linked design spec describes as the architecture CLAUDE.md now treats as production.",
+    "nodeIds": ["file:backend/app/services/rag/nodes.py", "file:backend/app/services/rag/prompts.py", "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md"]
+  },
+  {
+    "order": 9,
+    "title": "Hybrid Retrieval & Reranking",
+    "description": "retrieval.py is what retrieve_and_rerank (Step 8) actually calls: it runs a pgvector similarity search and a Postgres full-text search in parallel, fuses the two ranked lists with Reciprocal Rank Fusion (RRF), reranks the fused results, applies metadata boosts, and returns parent chunks (~1500 tokens of context) even though the vectors that matched were smaller child chunks (~300 tokens) — a parent/child split that keeps retrieval precise while giving the LLM enough surrounding context. reranker.py is the cross-encoder client behind that rerank step, scoring chunks against the query via OpenRouter's /v1/rerank endpoint and falling back to the original order if the API call fails.",
+    "nodeIds": ["file:backend/app/services/rag/retrieval.py", "file:backend/app/services/rag/reranker.py"],
+    "languageLesson": "Reciprocal Rank Fusion (RRF) combines two independently-ranked lists (vector similarity and keyword/FTS) by summing 1/(k+rank) for each item's position in each list — it needs no score normalization between the two very different scoring systems, which is why it's a common choice for hybrid search."
+  },
+  {
+    "order": 10,
+    "title": "Data Layer: Models, Schemas & Migrations",
+    "description": "models.py and schemas.py are the two most depended-upon files in the whole backend — nearly every router and service from Steps 6-9 imports one or both. models.py defines the SQLAlchemy ORM tables (documents, parent/child chunks, users, conversations, messages) while schemas.py defines the matching Pydantic request/response shapes that validate API traffic; database.py wires up the engine and the get_db session dependency both layers rely on. The Alembic migrations under backend/alembic/versions/ record how this schema evolved — migration 0004 is the pivotal one, introducing the parent-child chunk tables that Step 9's retrieval logic depends on — while create_users_table.sql is a raw-SQL bootstrap alternative for the users table backing Steps 3-4's JWT auth.",
+    "nodeIds": ["file:backend/app/models.py", "file:backend/app/schemas.py", "file:backend/app/database.py", "file:backend/alembic/versions/0004_parent_child_chunks.py", "table:backend/scripts/create_users_table.sql:users"],
+    "languageLesson": "Alembic migrations should be additive and ordered (0001 through 0008 here) so the database schema evolves in lockstep with the ORM models — each file's upgrade()/downgrade() pair makes a schema change reversible."
+  },
+  {
+    "order": 11,
+    "title": "Background Jobs: Ingestion & Celery",
+    "description": "Before any document can be retrieved (Step 9), it has to be ingested: ingestion.py parses PDFs, DOCX, and images (falling back to OCR for scanned pages), splits the text into the parent/child chunks introduced in Step 10, embeds the child chunks via OpenRouter, and persists everything. That work is too slow to run inside an HTTP request, so routers/documents.py (Step 6) dispatches it to a Celery task defined in workers/tasks.py, configured by celery_app.py (broker/backend wiring plus logging signal handlers) — the task updates the document's status to 'done' or 'failed' with automatic retry on error.",
+    "nodeIds": ["file:backend/app/services/ingestion.py", "file:backend/app/workers/tasks.py", "file:backend/app/workers/celery_app.py"],
+    "languageLesson": "Celery decouples slow work from the request/response cycle: the API enqueues a task and returns immediately, a separate worker process executes it against a broker (Redis here), and the client polls or streams status separately — this is why docker-compose (Step 14) runs 'worker' as its own container distinct from 'backend'."
+  },
+  {
+    "order": 12,
+    "title": "The OCR Microservice",
+    "description": "When ingestion.py (Step 11) hits a scanned page it can't extract text from directly, it calls ocr_client.py, an HTTP client that ships image bytes to a completely separate service and returns joined text with an averaged confidence score. That service is ocr-service/app.py, a standalone FastAPI app running PaddleOCR/RapidOCR (ONNXRuntime) with its own /ocr endpoint and health check — deployed and scaled independently via its own Dockerfile, which pre-warms the ONNX models at build time so the container starts ready to serve.",
+    "nodeIds": ["file:backend/app/services/ocr_client.py", "file:ocr-service/app.py", "service:ocr-service/Dockerfile"],
+    "languageLesson": "Splitting OCR into its own microservice keeps a heavy, compute-intensive ML dependency (ONNXRuntime + PP-OCR models) out of the main backend image, so the backend and the OCR workload can scale and deploy independently."
+  },
+  {
+    "order": 13,
+    "title": "Evaluating the RAG Pipeline",
+    "description": "Because the RAG pipeline (Steps 7-9) has many tunable knobs — chunk sizes, RRF weights, rerank model choice — the project ships a golden-set evaluation harness. run_eval.py runs every question in golden_set.yaml through agentic_rag_stream, scores the answers with RAGAS-style metrics (faithfulness, relevancy, context precision/recall), and saves timestamped snapshots so two configurations can be compared with --compare. CLAUDE.md instructs running this harness before changing any retrieval or agent code, which is why it carries a dedicated pytest 'eval' marker excluded from normal test runs.",
+    "nodeIds": ["file:backend/evals/run_eval.py", "config:backend/evals/golden_set.yaml"]
+  },
+  {
+    "order": 14,
+    "title": "Infrastructure & Deployment",
+    "description": "docker-compose.yml ties every service this tour has covered into one stack: the nginx-served frontend (Step 2's build), the FastAPI backend (Step 6), the Celery worker (Step 11), the PaddleOCR microservice (Step 12), Redis, and a pgvector-enabled Postgres database (Step 10) — wired together with healthchecks and depends_on ordering so, for example, the worker won't start until OCR and the database report healthy. The root Dockerfile multi-stage-builds the frontend (compile in node:22-alpine, serve from nginx:alpine) while backend/Dockerfile runs Alembic migrations before launching Uvicorn; nginx.conf actually serves the built SPA and proxies /api/ to the backend with buffering disabled so Step 5's SSE streaming isn't buffered away.",
+    "nodeIds": ["service:docker-compose.yml", "service:Dockerfile", "service:backend/Dockerfile", "file:nginx.conf"],
+    "languageLesson": "Multi-stage Docker builds (FROM node:22-alpine AS builder ... FROM nginx:alpine) keep build-time tooling (npm, the full node_modules tree) out of the final runtime image — only the compiled dist/ output is copied into the last stage, which is why the production image stays small."
+  }
+]

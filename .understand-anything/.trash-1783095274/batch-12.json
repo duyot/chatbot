@@ -1,0 +1,239 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "type": "document",
+      "name": "2026-04-20-file-upload-rag-ingestion.md",
+      "filePath": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "summary": "Task-by-task implementation plan for the original file upload and RAG ingestion pipeline: a Celery-backed chunk/embed/store flow behind a document upload endpoint, an SSE status endpoint for progress polling, and the docker-compose service topology (frontend, backend, worker, redis, pgvector db) needed to run it, spanning 12 tasks from infrastructure setup through an end-to-end smoke test.",
+      "tags": ["documentation", "implementation-plan", "file-upload", "rag-ingestion", "celery"],
+      "complexity": "complex",
+      "languageNotes": "Structured as a superpowers subagent-driven-development plan: a File Map table followed by numbered tasks with checkbox tracking, intended to be executed task-by-task by an agentic worker rather than read narratively."
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "type": "document",
+      "name": "2026-05-05-agentic-rag-chat.md",
+      "filePath": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "summary": "Historical implementation plan (superseded 2026-06-28 when the stack moved off self-hosted Ollama to OpenRouter) for the original 'chat with document' feature: a ReAct-style agent that calls a pgvector search tool with a local qwen3 model and streams tokens/citations over SSE, covering the chat endpoint, DocumentSelector UI, and useChat hook across 11 tasks.",
+      "tags": ["documentation", "implementation-plan", "rag", "chat", "historical"],
+      "complexity": "complex",
+      "languageNotes": "Retains a 'Historical note' banner explaining the plan is kept for context only after the described Ollama/qwen3 stack was replaced by OpenRouter-hosted models."
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "type": "document",
+      "name": "2026-05-15-agentic-rag-enhancement.md",
+      "filePath": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "summary": "Historical, phased implementation plan (superseded 2026-06-28) for rebuilding the RAG pipeline as a LangGraph CRAG-lite state machine — baseline RAGAS evaluation, parent-child chunking, RRF hybrid retrieval with FlashRank reranking, and a six-node agent graph (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check) — replacing the original regex-preprocessor and tool-loop agent in `rag.py`.",
+      "tags": ["documentation", "implementation-plan", "rag", "langgraph", "historical"],
+      "complexity": "complex",
+      "languageNotes": "Largest of the three plans (2925 lines, 38 sections) organized into five phases (0-4); explicitly supersedes rag.py and directs Phase 4 to update CLAUDE.md and features/chat_with_doc/rag_enhancement.md to reflect the new backend/app/services/rag/ package layout."
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:docker-compose.yml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/config.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/models.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/schemas.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/main.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/routers/documents.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:backend/app/services/ingestion.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:src/hooks/useUpload.js",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "file:src/pages/ChatPage.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:backend/app/config.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:backend/app/schemas.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:backend/app/routers/chat.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:backend/app/routers/documents.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:backend/app/main.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:src/components/DocumentSelector.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:src/hooks/useChat.js",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:src/components/ChatMessage.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:src/components/ChatThread.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "file:src/pages/ChatPage.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "file:backend/app/models.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "file:backend/app/config.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "file:backend/requirements.txt",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "file:backend/tests/conftest.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "file:backend/app/services/ingestion.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "document:features_planning/chat_with_doc/rag_enhancement.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "target": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "target": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "target": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

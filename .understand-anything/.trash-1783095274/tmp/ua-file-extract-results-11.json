@@ -1,0 +1,31 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "backend/alembic.ini",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 38,
+      "nonEmptyLines": 30,
+      "metrics": {}
+    },
+    {
+      "path": "backend/pytest.ini",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 4,
+      "nonEmptyLines": 4,
+      "metrics": {}
+    },
+    {
+      "path": "backend/requirements.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 32,
+      "nonEmptyLines": 31,
+      "metrics": {}
+    }
+  ]
+}

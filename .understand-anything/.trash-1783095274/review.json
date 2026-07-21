@@ -1,0 +1,52 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node 'document:DESIGN.md' has no edges (orphan)",
+    "Node 'document:prompt.md' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/architecture-options.html' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/composer-ui.html' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/waiting.html' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/waiting-2.html' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/content/waiting-3.html' has no edges (orphan)",
+    "Node 'config:.claude/settings.local.json' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/state/server-stopped' has no edges (orphan)",
+    "Node 'file:.superpowers/brainstorm/37604-1776700392/state/server.pid' has no edges (orphan)",
+    "Node 'file:backend/app/__init__.py' has no edges (orphan)",
+    "Node 'file:backend/app/services/__init__.py' has no edges (orphan)",
+    "Node 'file:backend/app/workers/__init__.py' has no edges (orphan)",
+    "Node 'file:backend/evals/__init__.py' has no edges (orphan)",
+    "Node 'file:backend/scripts/__init__.py' has no edges (orphan)",
+    "Node 'file:backend/tests/__init__.py' has no edges (orphan)",
+    "Node 'file:src/App.css' has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 289,
+    "totalEdges": 611,
+    "totalLayers": 10,
+    "tourSteps": 14,
+    "nodeTypes": {
+      "file": 106,
+      "class": 12,
+      "function": 132,
+      "service": 14,
+      "config": 7,
+      "document": 17,
+      "table": 1
+    },
+    "edgeTypes": {
+      "imports": 111,
+      "contains": 166,
+      "exports": 93,
+      "calls": 41,
+      "depends_on": 26,
+      "tested_by": 23,
+      "configures": 13,
+      "deploys": 3,
+      "documents": 101,
+      "related": 32,
+      "migrates": 1,
+      "routes": 1
+    }
+  }
+}

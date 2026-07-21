@@ -1,0 +1,2210 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 137,
+  "totalBatches": 17,
+  "exportsByPath": {
+    ".superpowers/brainstorm/37604-1776700392/state/server-stopped": [],
+    ".superpowers/brainstorm/37604-1776700392/state/server.pid": [],
+    ".understand-anything/.understandignore": [],
+    "backend/alembic/env.py": [
+      "run_migrations_offline",
+      "run_migrations_online"
+    ],
+    "backend/alembic/script.py.mako": [],
+    "backend/alembic/versions/0001_initial.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0002_fix_embedding_dim.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0003_add_fts_gin_index.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0004_parent_child_chunks.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0005_embedding_to_1536.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0006_document_metadata.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0007_create_users.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/alembic/versions/0008_create_conversations_messages.py": [
+      "upgrade",
+      "downgrade"
+    ],
+    "backend/app/__init__.py": [],
+    "backend/app/config.py": [
+      "Settings"
+    ],
+    "backend/app/database.py": [
+      "Base",
+      "get_db"
+    ],
+    "backend/app/main.py": [
+      "log_requests",
+      "health"
+    ],
+    "backend/app/models.py": [
+      "Document",
+      "DocumentParentChunk",
+      "DocumentChunk",
+      "User",
+      "Conversation",
+      "Message"
+    ],
+    "backend/app/routers/__init__.py": [],
+    "backend/app/routers/auth.py": [
+      "login",
+      "me"
+    ],
+    "backend/app/routers/chat.py": [
+      "_make_title",
+      "chat_stream"
+    ],
+    "backend/app/routers/conversations.py": [
+      "list_conversations",
+      "get_conversation",
+      "delete_conversation",
+      "clear_conversations"
+    ],
+    "backend/app/routers/documents.py": [
+      "list_documents",
+      "upload_document",
+      "stream_status"
+    ],
+    "backend/app/schemas.py": [
+      "DocumentResponse",
+      "DocumentListItem",
+      "ChatRequest",
+      "LoginRequest",
+      "TokenResponse",
+      "UserResponse",
+      "ConversationListItem",
+      "MessageResponse",
+      "ConversationDetail"
+    ],
+    "backend/app/security.py": [
+      "hash_password",
+      "verify_password",
+      "create_access_token",
+      "get_current_user"
+    ],
+    "backend/app/services/__init__.py": [],
+    "backend/app/services/ingestion.py": [
+      "PageContent",
+      "ParsedDocument",
+      "ParentChunk",
+      "ChildChunk",
+      "_ocr_page_image",
+      "_parse_pdf",
+      "_parse_docx",
+      "_parse_image",
+      "parse_document",
+      "_parent_splitter",
+      "_child_splitter",
+      "chunk_text",
+      "chunk_document",
+      "_openai_client",
+      "embed_text",
+      "embed_chunks",
+      "store_chunks"
+    ],
+    "backend/app/services/ocr_client.py": [
+      "OCRError",
+      "ocr_image"
+    ],
+    "backend/app/services/rag/__init__.py": [],
+    "backend/app/services/rag/graph.py": [
+      "route_after_grade",
+      "build_graph",
+      "_build_citations",
+      "agentic_rag_stream"
+    ],
+    "backend/app/services/rag/nodes.py": [
+      "_chat_llm",
+      "QueryRewrite",
+      "rewrite_query",
+      "retrieve_and_rerank",
+      "grade_chunks",
+      "rewrite_and_retry",
+      "_format_context",
+      "generate_answer",
+      "faithfulness_check"
+    ],
+    "backend/app/services/rag/prompts.py": [],
+    "backend/app/services/rag/reranker.py": [
+      "get_reranker",
+      "rerank"
+    ],
+    "backend/app/services/rag/retrieval.py": [
+      "hybrid_search",
+      "rrf_fuse",
+      "fetch_chunks_by_ids",
+      "fetch_parents",
+      "apply_metadata_boost",
+      "retrieve"
+    ],
+    "backend/app/services/rag/state.py": [
+      "AgentState",
+      "initial_state"
+    ],
+    "backend/app/workers/__init__.py": [],
+    "backend/app/workers/celery_app.py": [
+      "add_file_handler",
+      "on_worker_ready"
+    ],
+    "backend/app/workers/tasks.py": [
+      "ingest_document"
+    ],
+    "backend/evals/__init__.py": [],
+    "backend/evals/metrics.py": [
+      "_build_judge",
+      "_build_embeddings",
+      "run_ragas_metrics",
+      "expected_substring_match",
+      "answered",
+      "summarize"
+    ],
+    "backend/evals/results/.gitkeep": [],
+    "backend/evals/run_eval.py": [
+      "_git_sha",
+      "_load_golden",
+      "_resolve_document_id",
+      "_run_one",
+      "run_eval",
+      "_save",
+      "_compare",
+      "main"
+    ],
+    "backend/scripts/__init__.py": [],
+    "backend/scripts/create_user.py": [
+      "main"
+    ],
+    "backend/scripts/reingest_all.py": [
+      "reingest_one",
+      "main"
+    ],
+    "backend/tests/__init__.py": [],
+    "backend/tests/conftest.py": [
+      "setup_tables",
+      "db",
+      "client"
+    ],
+    "backend/tests/test_auth.py": [
+      "_make_user",
+      "test_login_success_returns_token",
+      "test_login_wrong_password_401",
+      "test_login_unknown_user_401",
+      "test_me_requires_token",
+      "test_me_with_token_returns_user",
+      "test_protected_chat_requires_token",
+      "test_protected_documents_list_requires_token"
+    ],
+    "backend/tests/test_chat.py": [
+      "test_chat_stream_404_for_unknown_document",
+      "test_chat_stream_400_for_processing_document",
+      "test_chat_stream_returns_event_stream_for_done_document"
+    ],
+    "backend/tests/test_eval_golden.py": [
+      "test_golden_set_runs_and_summary_meets_thresholds"
+    ],
+    "backend/tests/test_graph.py": [
+      "test_build_citations_includes_page_and_source_and_dedups",
+      "test_format_context_prefixes_page_number"
+    ],
+    "backend/tests/test_ingestion.py": [
+      "test_chunk_text_splits_long_content",
+      "test_chunk_text_short_content_stays_one_chunk",
+      "test_parse_document_docx_returns_native_page",
+      "test_parse_document_image_uses_ocr",
+      "test_parse_document_pdf_native_text_skips_ocr",
+      "test_parse_document_pdf_scanned_triggers_ocr",
+      "test_embed_chunks_calls_openai_and_returns_vectors",
+      "test_store_chunks_inserts_rows",
+      "test_embed_text_calls_openai_and_returns_vector",
+      "test_document_parent_chunk_model_round_trips",
+      "test_chunk_document_carries_page_and_source",
+      "test_chunk_document_skips_blank_pages",
+      "test_chunk_metadata_columns_round_trip",
+      "test_chunk_text_produces_parents_and_children"
+    ],
+    "backend/tests/test_ocr_client.py": [
+      "_mock_httpx_client",
+      "test_ocr_image_joins_lines_and_averages_confidence",
+      "test_ocr_image_empty_lines_returns_empty_and_none",
+      "test_ocr_image_raises_ocr_error_on_http_failure"
+    ],
+    "backend/tests/test_rag_graph.py": [
+      "test_route_after_grade_generate_when_useful",
+      "test_route_after_grade_retry_when_not_useful_under_budget",
+      "test_route_after_grade_give_up_when_budget_exhausted"
+    ],
+    "backend/tests/test_rag_nodes.py": [
+      "test_rewrite_query_strips_framing_and_sets_intent",
+      "test_retrieve_and_rerank_writes_children_parents_scores",
+      "test_grade_chunks_fast_path_useful_when_chunks_present",
+      "test_grade_chunks_fast_path_not_useful_when_no_chunks",
+      "test_grade_chunks_fast_path_honors_explicit_floor",
+      "test_rewrite_and_retry_produces_new_query",
+      "test_faithfulness_check_yes_emits_no_warning",
+      "test_faithfulness_check_no_appends_warning"
+    ],
+    "backend/tests/test_rag.py": [
+      "test_agentic_rag_stream_emits_token_citation_done_in_order"
+    ],
+    "backend/tests/test_retrieval.py": [
+      "test_get_reranker_returns_configured_model_name",
+      "_mock_rerank_response",
+      "test_rerank_sorts_by_score",
+      "test_rerank_handles_bare_list_response",
+      "test_rerank_skips_out_of_range_index",
+      "test_rerank_truncates_to_top_n",
+      "test_rerank_falls_back_to_input_order_on_api_error",
+      "test_rerank_empty_chunks_returns_empty",
+      "test_rrf_fuse_combines_two_ranked_lists",
+      "test_rrf_fuse_empty_legs",
+      "test_fetch_parents_dedups_and_preserves_first_appearance",
+      "test_apply_metadata_boost_noop_by_default",
+      "test_apply_metadata_boost_promotes_native",
+      "test_apply_metadata_boost_penalizes_lowconf_ocr",
+      "test_hybrid_search_page_filter_restricts_results"
+    ],
+    "backend/tests/test_tasks.py": [
+      "make_doc",
+      "test_ingest_document_sets_done_on_success",
+      "test_ingest_document_sets_failed_on_exception",
+      "test_ingest_document_fails_on_empty_extraction"
+    ],
+    "backend/tests/test_upload.py": [
+      "test_upload_pdf_returns_pending",
+      "test_upload_rejects_unsupported_type",
+      "test_upload_rejects_oversized_file",
+      "test_status_stream_returns_done",
+      "test_status_stream_404_for_unknown_id",
+      "test_list_documents_returns_only_done",
+      "test_list_documents_returns_empty_when_none_done"
+    ],
+    "eslint.config.js": [],
+    "nginx.conf": [],
+    "ocr-service/app.py": [
+      "health",
+      "ocr"
+    ],
+    "src/api/client.js": [
+      "TOKEN_KEY",
+      "getToken",
+      "setToken",
+      "authHeaders",
+      "apiFetch"
+    ],
+    "src/App.jsx": [
+      "App"
+    ],
+    "src/auth/AuthContext.jsx": [
+      "AuthProvider",
+      "useAuth"
+    ],
+    "src/components/ChatMessage.jsx": [
+      "ChatMessage"
+    ],
+    "src/components/ChatThread.jsx": [
+      "ChatThread"
+    ],
+    "src/components/Composer.jsx": [
+      "Composer"
+    ],
+    "src/components/DocumentSelector.jsx": [
+      "DocumentSelector"
+    ],
+    "src/components/ProtectedRoute.jsx": [
+      "ProtectedRoute"
+    ],
+    "src/components/Sidebar.jsx": [
+      "Sidebar"
+    ],
+    "src/components/ThinkingIndicator.jsx": [
+      "ThinkingIndicator"
+    ],
+    "src/components/UpgradeTab.jsx": [
+      "UpgradeTab"
+    ],
+    "src/components/UploadToast.jsx": [
+      "UploadToast"
+    ],
+    "src/hooks/useChat.js": [
+      "useChat"
+    ],
+    "src/hooks/useConversations.js": [
+      "useConversations"
+    ],
+    "src/hooks/useUpload.js": [
+      "useUpload"
+    ],
+    "src/main.jsx": [],
+    "src/pages/ChatPage.jsx": [
+      "ChatPage"
+    ],
+    "src/pages/HomePage.jsx": [
+      "HomePage"
+    ],
+    "src/pages/LoginPage.jsx": [
+      "LoginPage"
+    ],
+    "src/repositories/authRepository.js": [
+      "login",
+      "getMe"
+    ],
+    "src/repositories/conversationRepository.js": [
+      "listConversations",
+      "getConversation",
+      "deleteConversation",
+      "clearConversations"
+    ],
+    "vite.config.js": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": "backend/alembic/env.py",
+          "language": "python",
+          "sizeLines": 36,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/database.py",
+          "language": "python",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/main.py",
+          "language": "python",
+          "sizeLines": 48,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/models.py",
+          "language": "python",
+          "sizeLines": 128,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/routers/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/routers/auth.py",
+          "language": "python",
+          "sizeLines": 36,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/routers/chat.py",
+          "language": "python",
+          "sizeLines": 127,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/routers/conversations.py",
+          "language": "python",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/routers/documents.py",
+          "language": "python",
+          "sizeLines": 103,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/schemas.py",
+          "language": "python",
+          "sizeLines": 71,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/security.py",
+          "language": "python",
+          "sizeLines": 61,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/scripts/create_user.py",
+          "language": "python",
+          "sizeLines": 56,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/scripts/reingest_all.py",
+          "language": "python",
+          "sizeLines": 99,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/conftest.py",
+          "language": "python",
+          "sizeLines": 56,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_auth.py",
+          "language": "python",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "backend/alembic/env.py": [
+          "backend/app/config.py",
+          "backend/app/database.py",
+          "backend/app/models.py"
+        ],
+        "backend/app/database.py": [
+          "backend/app/config.py"
+        ],
+        "backend/app/main.py": [
+          "backend/app/config.py",
+          "backend/app/routers/__init__.py",
+          "backend/app/routers/auth.py",
+          "backend/app/routers/chat.py",
+          "backend/app/routers/conversations.py",
+          "backend/app/routers/documents.py"
+        ],
+        "backend/app/models.py": [
+          "backend/app/database.py"
+        ],
+        "backend/app/routers/__init__.py": [],
+        "backend/app/routers/auth.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/schemas.py",
+          "backend/app/security.py"
+        ],
+        "backend/app/routers/chat.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/schemas.py",
+          "backend/app/security.py",
+          "backend/app/services/rag/__init__.py"
+        ],
+        "backend/app/routers/conversations.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/schemas.py",
+          "backend/app/security.py"
+        ],
+        "backend/app/routers/documents.py": [
+          "backend/app/config.py",
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/schemas.py",
+          "backend/app/security.py"
+        ],
+        "backend/app/schemas.py": [],
+        "backend/app/security.py": [
+          "backend/app/config.py",
+          "backend/app/database.py",
+          "backend/app/models.py"
+        ],
+        "backend/scripts/create_user.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/security.py"
+        ],
+        "backend/scripts/reingest_all.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/services/ingestion.py"
+        ],
+        "backend/tests/conftest.py": [
+          "backend/app/database.py",
+          "backend/app/main.py"
+        ],
+        "backend/tests/test_auth.py": [
+          "backend/app/models.py",
+          "backend/app/security.py"
+        ]
+      },
+      "neighborMap": {
+        "backend/alembic/env.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          }
+        ],
+        "backend/app/database.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          },
+          {
+            "path": "backend/app/workers/tasks.py",
+            "batchIndex": 3,
+            "symbols": [
+              "ingest_document"
+            ]
+          },
+          {
+            "path": "backend/evals/run_eval.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_git_sha",
+              "_load_golden",
+              "_resolve_document_id",
+              "_run_one",
+              "run_eval",
+              "_save",
+              "_compare",
+              "main"
+            ]
+          }
+        ],
+        "backend/app/main.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          }
+        ],
+        "backend/app/models.py": [
+          {
+            "path": "backend/app/services/ingestion.py",
+            "batchIndex": 3,
+            "symbols": [
+              "PageContent",
+              "ParsedDocument",
+              "ParentChunk",
+              "ChildChunk",
+              "_ocr_page_image",
+              "_parse_pdf",
+              "_parse_docx",
+              "_parse_image",
+              "parse_document",
+              "_parent_splitter",
+              "_child_splitter",
+              "chunk_text",
+              "chunk_document",
+              "_openai_client",
+              "embed_text",
+              "embed_chunks",
+              "store_chunks"
+            ]
+          },
+          {
+            "path": "backend/app/services/rag/retrieval.py",
+            "batchIndex": 3,
+            "symbols": [
+              "hybrid_search",
+              "rrf_fuse",
+              "fetch_chunks_by_ids",
+              "fetch_parents",
+              "apply_metadata_boost",
+              "retrieve"
+            ]
+          },
+          {
+            "path": "backend/app/workers/tasks.py",
+            "batchIndex": 3,
+            "symbols": [
+              "ingest_document"
+            ]
+          },
+          {
+            "path": "backend/evals/run_eval.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_git_sha",
+              "_load_golden",
+              "_resolve_document_id",
+              "_run_one",
+              "run_eval",
+              "_save",
+              "_compare",
+              "main"
+            ]
+          }
+        ],
+        "backend/app/routers/chat.py": [
+          {
+            "path": "backend/app/services/rag/__init__.py",
+            "batchIndex": 5,
+            "symbols": []
+          }
+        ],
+        "backend/app/routers/documents.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          }
+        ],
+        "backend/app/security.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          }
+        ],
+        "backend/scripts/reingest_all.py": [
+          {
+            "path": "backend/app/services/ingestion.py",
+            "batchIndex": 3,
+            "symbols": [
+              "PageContent",
+              "ParsedDocument",
+              "ParentChunk",
+              "ChildChunk",
+              "_ocr_page_image",
+              "_parse_pdf",
+              "_parse_docx",
+              "_parse_image",
+              "parse_document",
+              "_parent_splitter",
+              "_child_splitter",
+              "chunk_text",
+              "chunk_document",
+              "_openai_client",
+              "embed_text",
+              "embed_chunks",
+              "store_chunks"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "src/api/client.js",
+          "language": "javascript",
+          "sizeLines": 31,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ChatMessage.jsx",
+          "language": "javascript",
+          "sizeLines": 149,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ChatThread.jsx",
+          "language": "javascript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/Composer.jsx",
+          "language": "javascript",
+          "sizeLines": 130,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/DocumentSelector.jsx",
+          "language": "javascript",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ThinkingIndicator.jsx",
+          "language": "javascript",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/UpgradeTab.jsx",
+          "language": "javascript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/UploadToast.jsx",
+          "language": "javascript",
+          "sizeLines": 39,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/hooks/useChat.js",
+          "language": "javascript",
+          "sizeLines": 149,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/hooks/useConversations.js",
+          "language": "javascript",
+          "sizeLines": 39,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/hooks/useUpload.js",
+          "language": "javascript",
+          "sizeLines": 61,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/pages/ChatPage.jsx",
+          "language": "javascript",
+          "sizeLines": 120,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/repositories/conversationRepository.js",
+          "language": "javascript",
+          "sizeLines": 25,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/api/client.js": [],
+        "src/components/ChatMessage.jsx": [
+          "src/components/ChatMessage.css",
+          "src/components/ThinkingIndicator.jsx"
+        ],
+        "src/components/ChatThread.jsx": [
+          "src/components/ChatMessage.jsx",
+          "src/components/ChatThread.css"
+        ],
+        "src/components/Composer.jsx": [
+          "src/components/Composer.css"
+        ],
+        "src/components/DocumentSelector.jsx": [
+          "src/api/client.js",
+          "src/components/DocumentSelector.css"
+        ],
+        "src/components/ThinkingIndicator.jsx": [
+          "src/components/ThinkingIndicator.css"
+        ],
+        "src/components/UpgradeTab.jsx": [
+          "src/components/UpgradeTab.css"
+        ],
+        "src/components/UploadToast.jsx": [
+          "src/components/UploadToast.css"
+        ],
+        "src/hooks/useChat.js": [
+          "src/api/client.js"
+        ],
+        "src/hooks/useConversations.js": [
+          "src/repositories/conversationRepository.js"
+        ],
+        "src/hooks/useUpload.js": [
+          "src/api/client.js"
+        ],
+        "src/pages/ChatPage.jsx": [
+          "src/components/ChatThread.jsx",
+          "src/components/Composer.jsx",
+          "src/components/DocumentSelector.jsx",
+          "src/components/Sidebar.jsx",
+          "src/components/UpgradeTab.jsx",
+          "src/components/UploadToast.jsx",
+          "src/hooks/useChat.js",
+          "src/hooks/useConversations.js",
+          "src/hooks/useUpload.js",
+          "src/pages/ChatPage.css",
+          "src/repositories/conversationRepository.js"
+        ],
+        "src/repositories/conversationRepository.js": [
+          "src/api/client.js"
+        ]
+      },
+      "neighborMap": {
+        "src/api/client.js": [
+          {
+            "path": "src/auth/AuthContext.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "AuthProvider",
+              "useAuth"
+            ]
+          }
+        ],
+        "src/components/ChatMessage.jsx": [
+          {
+            "path": "src/components/ChatMessage.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/ChatThread.jsx": [
+          {
+            "path": "src/components/ChatThread.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/Composer.jsx": [
+          {
+            "path": "src/components/Composer.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/DocumentSelector.jsx": [
+          {
+            "path": "src/components/DocumentSelector.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/ThinkingIndicator.jsx": [
+          {
+            "path": "src/components/ThinkingIndicator.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/UpgradeTab.jsx": [
+          {
+            "path": "src/components/UpgradeTab.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/components/UploadToast.jsx": [
+          {
+            "path": "src/components/UploadToast.css",
+            "batchIndex": 14,
+            "symbols": []
+          }
+        ],
+        "src/pages/ChatPage.jsx": [
+          {
+            "path": "src/components/Sidebar.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "Sidebar"
+            ]
+          },
+          {
+            "path": "src/pages/ChatPage.css",
+            "batchIndex": 15,
+            "symbols": []
+          },
+          {
+            "path": "src/App.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "App"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "backend/app/config.py",
+          "language": "python",
+          "sizeLines": 69,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/ingestion.py",
+          "language": "python",
+          "sizeLines": 303,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/ocr_client.py",
+          "language": "python",
+          "sizeLines": 61,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/graph.py",
+          "language": "python",
+          "sizeLines": 122,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/nodes.py",
+          "language": "python",
+          "sizeLines": 184,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/prompts.py",
+          "language": "python",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/reranker.py",
+          "language": "python",
+          "sizeLines": 96,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/retrieval.py",
+          "language": "python",
+          "sizeLines": 161,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/rag/state.py",
+          "language": "python",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/workers/celery_app.py",
+          "language": "python",
+          "sizeLines": 35,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/workers/tasks.py",
+          "language": "python",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_rag_graph.py",
+          "language": "python",
+          "sizeLines": 24,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "backend/app/config.py": [],
+        "backend/app/services/ingestion.py": [
+          "backend/app/config.py",
+          "backend/app/models.py",
+          "backend/app/services/ocr_client.py"
+        ],
+        "backend/app/services/ocr_client.py": [
+          "backend/app/config.py"
+        ],
+        "backend/app/services/rag/graph.py": [
+          "backend/app/config.py",
+          "backend/app/services/rag/nodes.py",
+          "backend/app/services/rag/state.py"
+        ],
+        "backend/app/services/rag/nodes.py": [
+          "backend/app/config.py",
+          "backend/app/services/rag/prompts.py",
+          "backend/app/services/rag/retrieval.py",
+          "backend/app/services/rag/state.py"
+        ],
+        "backend/app/services/rag/prompts.py": [],
+        "backend/app/services/rag/reranker.py": [
+          "backend/app/config.py"
+        ],
+        "backend/app/services/rag/retrieval.py": [
+          "backend/app/config.py",
+          "backend/app/models.py",
+          "backend/app/services/ingestion.py",
+          "backend/app/services/rag/reranker.py"
+        ],
+        "backend/app/services/rag/state.py": [],
+        "backend/app/workers/celery_app.py": [
+          "backend/app/config.py"
+        ],
+        "backend/app/workers/tasks.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/services/ingestion.py",
+          "backend/app/workers/celery_app.py"
+        ],
+        "backend/tests/test_rag_graph.py": [
+          "backend/app/services/rag/state.py"
+        ]
+      },
+      "neighborMap": {
+        "backend/app/config.py": [
+          {
+            "path": "backend/alembic/env.py",
+            "batchIndex": 1,
+            "symbols": [
+              "run_migrations_offline",
+              "run_migrations_online"
+            ]
+          },
+          {
+            "path": "backend/app/database.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Base",
+              "get_db"
+            ]
+          },
+          {
+            "path": "backend/app/main.py",
+            "batchIndex": 1,
+            "symbols": [
+              "log_requests",
+              "health"
+            ]
+          },
+          {
+            "path": "backend/app/routers/documents.py",
+            "batchIndex": 1,
+            "symbols": [
+              "list_documents",
+              "upload_document",
+              "stream_status"
+            ]
+          },
+          {
+            "path": "backend/app/security.py",
+            "batchIndex": 1,
+            "symbols": [
+              "hash_password",
+              "verify_password",
+              "create_access_token",
+              "get_current_user"
+            ]
+          },
+          {
+            "path": "backend/evals/metrics.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_build_judge",
+              "_build_embeddings",
+              "run_ragas_metrics",
+              "expected_substring_match",
+              "answered",
+              "summarize"
+            ]
+          }
+        ],
+        "backend/app/services/ingestion.py": [
+          {
+            "path": "backend/app/models.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Document",
+              "DocumentParentChunk",
+              "DocumentChunk",
+              "User",
+              "Conversation",
+              "Message"
+            ]
+          },
+          {
+            "path": "backend/scripts/reingest_all.py",
+            "batchIndex": 1,
+            "symbols": [
+              "reingest_one",
+              "main"
+            ]
+          }
+        ],
+        "backend/app/services/rag/graph.py": [
+          {
+            "path": "backend/app/services/rag/__init__.py",
+            "batchIndex": 5,
+            "symbols": []
+          }
+        ],
+        "backend/app/services/rag/retrieval.py": [
+          {
+            "path": "backend/app/models.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Document",
+              "DocumentParentChunk",
+              "DocumentChunk",
+              "User",
+              "Conversation",
+              "Message"
+            ]
+          }
+        ],
+        "backend/app/workers/tasks.py": [
+          {
+            "path": "backend/app/database.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Base",
+              "get_db"
+            ]
+          },
+          {
+            "path": "backend/app/models.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Document",
+              "DocumentParentChunk",
+              "DocumentChunk",
+              "User",
+              "Conversation",
+              "Message"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "src/App.jsx",
+          "language": "javascript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/auth/AuthContext.jsx",
+          "language": "javascript",
+          "sizeLines": 80,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ProtectedRoute.jsx",
+          "language": "javascript",
+          "sizeLines": 17,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/Sidebar.jsx",
+          "language": "javascript",
+          "sizeLines": 128,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/main.jsx",
+          "language": "javascript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/pages/HomePage.jsx",
+          "language": "javascript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/pages/LoginPage.jsx",
+          "language": "javascript",
+          "sizeLines": 70,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/repositories/authRepository.js",
+          "language": "javascript",
+          "sizeLines": 30,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/App.jsx": [
+          "src/auth/AuthContext.jsx",
+          "src/components/ProtectedRoute.jsx",
+          "src/pages/ChatPage.jsx",
+          "src/pages/HomePage.jsx",
+          "src/pages/LoginPage.jsx"
+        ],
+        "src/auth/AuthContext.jsx": [
+          "src/api/client.js",
+          "src/repositories/authRepository.js"
+        ],
+        "src/components/ProtectedRoute.jsx": [
+          "src/auth/AuthContext.jsx"
+        ],
+        "src/components/Sidebar.jsx": [
+          "src/auth/AuthContext.jsx",
+          "src/components/Sidebar.css"
+        ],
+        "src/main.jsx": [
+          "src/App.jsx",
+          "src/index.css"
+        ],
+        "src/pages/HomePage.jsx": [
+          "src/pages/HomePage.css"
+        ],
+        "src/pages/LoginPage.jsx": [
+          "src/auth/AuthContext.jsx",
+          "src/pages/LoginPage.css"
+        ],
+        "src/repositories/authRepository.js": []
+      },
+      "neighborMap": {
+        "src/App.jsx": [
+          {
+            "path": "src/pages/ChatPage.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ChatPage"
+            ]
+          }
+        ],
+        "src/auth/AuthContext.jsx": [
+          {
+            "path": "src/api/client.js",
+            "batchIndex": 2,
+            "symbols": [
+              "TOKEN_KEY",
+              "getToken",
+              "setToken",
+              "authHeaders",
+              "apiFetch"
+            ]
+          }
+        ],
+        "src/components/Sidebar.jsx": [
+          {
+            "path": "src/components/Sidebar.css",
+            "batchIndex": 14,
+            "symbols": []
+          },
+          {
+            "path": "src/pages/ChatPage.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ChatPage"
+            ]
+          }
+        ],
+        "src/main.jsx": [
+          {
+            "path": "src/index.css",
+            "batchIndex": 17,
+            "symbols": []
+          }
+        ],
+        "src/pages/HomePage.jsx": [
+          {
+            "path": "src/pages/HomePage.css",
+            "batchIndex": 15,
+            "symbols": []
+          }
+        ],
+        "src/pages/LoginPage.jsx": [
+          {
+            "path": "src/pages/LoginPage.css",
+            "batchIndex": 15,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "backend/app/services/rag/__init__.py",
+          "language": "python",
+          "sizeLines": 2,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/evals/metrics.py",
+          "language": "python",
+          "sizeLines": 110,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/evals/run_eval.py",
+          "language": "python",
+          "sizeLines": 178,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_eval_golden.py",
+          "language": "python",
+          "sizeLines": 18,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "backend/app/services/rag/__init__.py": [
+          "backend/app/services/rag/graph.py"
+        ],
+        "backend/evals/metrics.py": [
+          "backend/app/config.py"
+        ],
+        "backend/evals/run_eval.py": [
+          "backend/app/database.py",
+          "backend/app/models.py",
+          "backend/app/services/rag/__init__.py",
+          "backend/evals/metrics.py"
+        ],
+        "backend/tests/test_eval_golden.py": [
+          "backend/evals/run_eval.py"
+        ]
+      },
+      "neighborMap": {
+        "backend/app/services/rag/__init__.py": [
+          {
+            "path": "backend/app/services/rag/graph.py",
+            "batchIndex": 3,
+            "symbols": [
+              "route_after_grade",
+              "build_graph",
+              "_build_citations",
+              "agentic_rag_stream"
+            ]
+          },
+          {
+            "path": "backend/app/routers/chat.py",
+            "batchIndex": 1,
+            "symbols": [
+              "_make_title",
+              "chat_stream"
+            ]
+          }
+        ],
+        "backend/evals/metrics.py": [
+          {
+            "path": "backend/app/config.py",
+            "batchIndex": 3,
+            "symbols": [
+              "Settings"
+            ]
+          }
+        ],
+        "backend/evals/run_eval.py": [
+          {
+            "path": "backend/app/database.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Base",
+              "get_db"
+            ]
+          },
+          {
+            "path": "backend/app/models.py",
+            "batchIndex": 1,
+            "symbols": [
+              "Document",
+              "DocumentParentChunk",
+              "DocumentChunk",
+              "User",
+              "Conversation",
+              "Message"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": ".dockerignore",
+          "language": "unknown",
+          "sizeLines": 8,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "docker-compose.yml",
+          "language": "yaml",
+          "sizeLines": 98,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "Dockerfile",
+          "language": "dockerfile",
+          "sizeLines": 12,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".dockerignore": [],
+        "docker-compose.yml": [],
+        "Dockerfile": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "backend/.dockerignore",
+          "language": "unknown",
+          "sizeLines": 6,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "backend/Dockerfile",
+          "language": "dockerfile",
+          "sizeLines": 10,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        "backend/.dockerignore": [],
+        "backend/Dockerfile": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": "ocr-service/Dockerfile",
+          "language": "dockerfile",
+          "sizeLines": 20,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        "ocr-service/Dockerfile": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": ".env.example",
+          "language": "config",
+          "sizeLines": 51,
+          "fileCategory": "config"
+        },
+        {
+          "path": "CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 81,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "DESIGN.md",
+          "language": "markdown",
+          "sizeLines": 313,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 16,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "index.html",
+          "language": "html",
+          "sizeLines": 13,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "package.json",
+          "language": "json",
+          "sizeLines": 28,
+          "fileCategory": "config"
+        },
+        {
+          "path": "prompt.md",
+          "language": "markdown",
+          "sizeLines": 3,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        ".env.example": [],
+        "CLAUDE.md": [],
+        "DESIGN.md": [],
+        "README.md": [],
+        "index.html": [],
+        "package.json": [],
+        "prompt.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+          "language": "html",
+          "sizeLines": 114,
+          "fileCategory": "markup"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+          "language": "html",
+          "sizeLines": 49,
+          "fileCategory": "markup"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+          "language": "html",
+          "sizeLines": 88,
+          "fileCategory": "markup"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+          "language": "html",
+          "sizeLines": 3,
+          "fileCategory": "markup"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+          "language": "html",
+          "sizeLines": 3,
+          "fileCategory": "markup"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+          "language": "html",
+          "sizeLines": 3,
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html": [],
+        ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html": [],
+        ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html": [],
+        ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html": [],
+        ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html": [],
+        ".superpowers/brainstorm/37604-1776700392/content/waiting.html": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "backend/alembic.ini",
+          "language": "config",
+          "sizeLines": 38,
+          "fileCategory": "config"
+        },
+        {
+          "path": "backend/pytest.ini",
+          "language": "config",
+          "sizeLines": 4,
+          "fileCategory": "config"
+        },
+        {
+          "path": "backend/requirements.txt",
+          "language": "txt",
+          "sizeLines": 32,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "backend/alembic.ini": [],
+        "backend/pytest.ini": [],
+        "backend/requirements.txt": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+          "language": "markdown",
+          "sizeLines": 1896,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+          "language": "markdown",
+          "sizeLines": 1521,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+          "language": "markdown",
+          "sizeLines": 2925,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md": [],
+        "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md": [],
+        "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+          "language": "markdown",
+          "sizeLines": 204,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+          "language": "markdown",
+          "sizeLines": 287,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+          "language": "markdown",
+          "sizeLines": 436,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md": [],
+        "docs/superpowers/specs/2026-05-04-agentic-rag-design.md": [],
+        "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 14,
+      "files": [
+        {
+          "path": "src/components/ChatMessage.css",
+          "language": "css",
+          "sizeLines": 265,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/ChatThread.css",
+          "language": "css",
+          "sizeLines": 15,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/Composer.css",
+          "language": "css",
+          "sizeLines": 153,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/DocumentSelector.css",
+          "language": "css",
+          "sizeLines": 40,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/Sidebar.css",
+          "language": "css",
+          "sizeLines": 274,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/ThinkingIndicator.css",
+          "language": "css",
+          "sizeLines": 70,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/UpgradeTab.css",
+          "language": "css",
+          "sizeLines": 34,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/components/UploadToast.css",
+          "language": "css",
+          "sizeLines": 65,
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        "src/components/ChatMessage.css": [],
+        "src/components/ChatThread.css": [],
+        "src/components/Composer.css": [],
+        "src/components/DocumentSelector.css": [],
+        "src/components/Sidebar.css": [],
+        "src/components/ThinkingIndicator.css": [],
+        "src/components/UpgradeTab.css": [],
+        "src/components/UploadToast.css": []
+      },
+      "neighborMap": {
+        "src/components/ChatMessage.css": [
+          {
+            "path": "src/components/ChatMessage.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ChatMessage"
+            ]
+          }
+        ],
+        "src/components/ChatThread.css": [
+          {
+            "path": "src/components/ChatThread.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ChatThread"
+            ]
+          }
+        ],
+        "src/components/Composer.css": [
+          {
+            "path": "src/components/Composer.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "Composer"
+            ]
+          }
+        ],
+        "src/components/DocumentSelector.css": [
+          {
+            "path": "src/components/DocumentSelector.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "DocumentSelector"
+            ]
+          }
+        ],
+        "src/components/Sidebar.css": [
+          {
+            "path": "src/components/Sidebar.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "Sidebar"
+            ]
+          }
+        ],
+        "src/components/ThinkingIndicator.css": [
+          {
+            "path": "src/components/ThinkingIndicator.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ThinkingIndicator"
+            ]
+          }
+        ],
+        "src/components/UpgradeTab.css": [
+          {
+            "path": "src/components/UpgradeTab.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "UpgradeTab"
+            ]
+          }
+        ],
+        "src/components/UploadToast.css": [
+          {
+            "path": "src/components/UploadToast.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "UploadToast"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 15,
+      "files": [
+        {
+          "path": "src/pages/ChatPage.css",
+          "language": "css",
+          "sizeLines": 41,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/pages/HomePage.css",
+          "language": "css",
+          "sizeLines": 115,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/pages/LoginPage.css",
+          "language": "css",
+          "sizeLines": 95,
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        "src/pages/ChatPage.css": [],
+        "src/pages/HomePage.css": [],
+        "src/pages/LoginPage.css": []
+      },
+      "neighborMap": {
+        "src/pages/ChatPage.css": [
+          {
+            "path": "src/pages/ChatPage.jsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ChatPage"
+            ]
+          }
+        ],
+        "src/pages/HomePage.css": [
+          {
+            "path": "src/pages/HomePage.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "HomePage"
+            ]
+          }
+        ],
+        "src/pages/LoginPage.css": [
+          {
+            "path": "src/pages/LoginPage.jsx",
+            "batchIndex": 4,
+            "symbols": [
+              "LoginPage"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 16,
+      "files": [
+        {
+          "path": ".claude/settings.local.json",
+          "language": "json",
+          "sizeLines": 62,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/state/server-stopped",
+          "language": "unknown",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".superpowers/brainstorm/37604-1776700392/state/server.pid",
+          "language": "pid",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".understand-anything/.understandignore",
+          "language": "unknown",
+          "sizeLines": 40,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".understand-anything/config.json",
+          "language": "json",
+          "sizeLines": 3,
+          "fileCategory": "config"
+        },
+        {
+          "path": "backend/alembic/script.py.mako",
+          "language": "mako",
+          "sizeLines": 21,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0001_initial.py",
+          "language": "python",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0002_fix_embedding_dim.py",
+          "language": "python",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0003_add_fts_gin_index.py",
+          "language": "python",
+          "sizeLines": 25,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0004_parent_child_chunks.py",
+          "language": "python",
+          "sizeLines": 54,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0005_embedding_to_1536.py",
+          "language": "python",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0006_document_metadata.py",
+          "language": "python",
+          "sizeLines": 57,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0007_create_users.py",
+          "language": "python",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/alembic/versions/0008_create_conversations_messages.py",
+          "language": "python",
+          "sizeLines": 89,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/services/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/app/workers/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/evals/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/evals/golden_set.yaml",
+          "language": "yaml",
+          "sizeLines": 18,
+          "fileCategory": "config"
+        },
+        {
+          "path": "backend/evals/results/.gitkeep",
+          "language": "unknown",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/scripts/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/scripts/create_users_table.sql",
+          "language": "sql",
+          "sizeLines": 18,
+          "fileCategory": "data"
+        },
+        {
+          "path": "backend/tests/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_chat.py",
+          "language": "python",
+          "sizeLines": 53,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_graph.py",
+          "language": "python",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".claude/settings.local.json": [],
+        ".superpowers/brainstorm/37604-1776700392/state/server-stopped": [],
+        ".superpowers/brainstorm/37604-1776700392/state/server.pid": [],
+        ".understand-anything/.understandignore": [],
+        ".understand-anything/config.json": [],
+        "backend/alembic/script.py.mako": [],
+        "backend/alembic/versions/0001_initial.py": [],
+        "backend/alembic/versions/0002_fix_embedding_dim.py": [],
+        "backend/alembic/versions/0003_add_fts_gin_index.py": [],
+        "backend/alembic/versions/0004_parent_child_chunks.py": [],
+        "backend/alembic/versions/0005_embedding_to_1536.py": [],
+        "backend/alembic/versions/0006_document_metadata.py": [],
+        "backend/alembic/versions/0007_create_users.py": [],
+        "backend/alembic/versions/0008_create_conversations_messages.py": [],
+        "backend/app/__init__.py": [],
+        "backend/app/services/__init__.py": [],
+        "backend/app/workers/__init__.py": [],
+        "backend/evals/__init__.py": [],
+        "backend/evals/golden_set.yaml": [],
+        "backend/evals/results/.gitkeep": [],
+        "backend/scripts/__init__.py": [],
+        "backend/scripts/create_users_table.sql": [],
+        "backend/tests/__init__.py": [],
+        "backend/tests/test_chat.py": [],
+        "backend/tests/test_graph.py": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 17,
+      "files": [
+        {
+          "path": "backend/tests/test_ingestion.py",
+          "language": "python",
+          "sizeLines": 280,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_ocr_client.py",
+          "language": "python",
+          "sizeLines": 53,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_rag_nodes.py",
+          "language": "python",
+          "sizeLines": 142,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_rag.py",
+          "language": "python",
+          "sizeLines": 53,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_retrieval.py",
+          "language": "python",
+          "sizeLines": 234,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_tasks.py",
+          "language": "python",
+          "sizeLines": 73,
+          "fileCategory": "code"
+        },
+        {
+          "path": "backend/tests/test_upload.py",
+          "language": "python",
+          "sizeLines": 79,
+          "fileCategory": "code"
+        },
+        {
+          "path": "eslint.config.js",
+          "language": "javascript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "features_planning/account_login/plan.md",
+          "language": "markdown",
+          "sizeLines": 48,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "features_planning/chat_history/plan.md",
+          "language": "markdown",
+          "sizeLines": 217,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "features_planning/chat_with_doc/planning.md",
+          "language": "markdown",
+          "sizeLines": 11,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "features_planning/chat_with_doc/rag_enhancement.md",
+          "language": "markdown",
+          "sizeLines": 69,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "features_planning/file_processing/planing.md",
+          "language": "markdown",
+          "sizeLines": 5,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "nginx.conf",
+          "language": "conf",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "ocr-service/app.py",
+          "language": "python",
+          "sizeLines": 51,
+          "fileCategory": "code"
+        },
+        {
+          "path": "ocr-service/requirements.txt",
+          "language": "txt",
+          "sizeLines": 6,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "src/App.css",
+          "language": "css",
+          "sizeLines": 184,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/index.css",
+          "language": "css",
+          "sizeLines": 1,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/styles/global.css",
+          "language": "css",
+          "sizeLines": 36,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "src/styles/tokens.css",
+          "language": "css",
+          "sizeLines": 63,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "vite.config.js",
+          "language": "javascript",
+          "sizeLines": 11,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "backend/tests/test_ingestion.py": [],
+        "backend/tests/test_ocr_client.py": [],
+        "backend/tests/test_rag_nodes.py": [],
+        "backend/tests/test_rag.py": [],
+        "backend/tests/test_retrieval.py": [],
+        "backend/tests/test_tasks.py": [],
+        "backend/tests/test_upload.py": [],
+        "eslint.config.js": [],
+        "features_planning/account_login/plan.md": [],
+        "features_planning/chat_history/plan.md": [],
+        "features_planning/chat_with_doc/planning.md": [],
+        "features_planning/chat_with_doc/rag_enhancement.md": [],
+        "features_planning/file_processing/planing.md": [],
+        "nginx.conf": [],
+        "ocr-service/app.py": [],
+        "ocr-service/requirements.txt": [],
+        "src/App.css": [],
+        "src/index.css": [],
+        "src/styles/global.css": [],
+        "src/styles/tokens.css": [],
+        "vite.config.js": []
+      },
+      "neighborMap": {
+        "src/index.css": [
+          {
+            "path": "src/main.jsx",
+            "batchIndex": 4,
+            "symbols": []
+          }
+        ]
+      }
+    }
+  ]
+}

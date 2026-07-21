@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "src/pages/ChatPage.css", "language": "css", "sizeLines": 41, "fileCategory": "markup"},
+    {"path": "src/pages/HomePage.css", "language": "css", "sizeLines": 115, "fileCategory": "markup"},
+    {"path": "src/pages/LoginPage.css", "language": "css", "sizeLines": 95, "fileCategory": "markup"}
+  ],
+  "batchImportData": {
+    "src/pages/ChatPage.css": [],
+    "src/pages/HomePage.css": [],
+    "src/pages/LoginPage.css": []
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "nodes": [
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "type": "file",
+      "name": "architecture-diagram.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "summary": "Static HTML content fragment rendering a five-service system architecture diagram (React frontend, FastAPI backend, Redis queue, Celery worker, PostgreSQL+pgvector) for the document upload/RAG ingestion pipeline, including an SSE notification flow walkthrough and a docker-compose service breakdown. Produced as a visual mockup during a superpowers brainstorming session.",
+      "tags": ["markup", "diagram", "architecture", "brainstorm", "mockup"],
+      "complexity": "moderate",
+      "languageNotes": "Pure inline-styled HTML with no scripting; used as a rendered artifact rather than an application view."
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "type": "file",
+      "name": "architecture-options.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "summary": "Static HTML content fragment presenting three candidate backend architectures for the RAG document upload pipeline — FastAPI+asyncio BackgroundTasks with Postgres job tracking (recommended), FastAPI+Celery+Redis, and FastAPI+Postgres LISTEN/NOTIFY — each with pros/cons and a service diagram, used in an interactive brainstorming decision UI.",
+      "tags": ["markup", "brainstorm", "architecture-options", "mockup", "decision"],
+      "complexity": "simple",
+      "languageNotes": "Includes an inline onclick handler (toggleSelect) for selectable option cards, but no accompanying script is defined in this fragment."
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "type": "file",
+      "name": "composer-ui.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "summary": "Static HTML mockup of the chat Composer UI showing the proposed upload button placement, a selected-file chip, and a bottom-right toast notification for completed document ingestion, plus a summary list of new frontend/backend files needed to implement the upload feature.",
+      "tags": ["markup", "ui-mockup", "brainstorm", "composer", "upload"],
+      "complexity": "moderate",
+      "languageNotes": "Purely presentational mockup markup (inline SVG icons and styles) mirroring the intended Composer.jsx layout, not the actual component implementation."
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "type": "file",
+      "name": "waiting.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Writing spec document...\" loading message shown while the brainstorming session transitions to spec authoring.",
+      "tags": ["markup", "placeholder", "brainstorm", "loading-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "type": "file",
+      "name": "waiting-2.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Continuing in terminal...\" loading message shown between steps of the brainstorming session.",
+      "tags": ["markup", "placeholder", "brainstorm", "loading-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "type": "file",
+      "name": "waiting-3.html",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "summary": "Minimal placeholder HTML fragment displaying a \"Continuing in terminal...\" loading message shown between steps of the brainstorming session, functionally identical to waiting-2.html.",
+      "tags": ["markup", "placeholder", "brainstorm", "loading-state", "duplicate"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

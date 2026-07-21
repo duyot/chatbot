@@ -1,0 +1,435 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 204,
+      "nonEmptyLines": 154,
+      "sections": [
+        {
+          "heading": "File Upload & RAG Ingestion Pipeline — Design Spec",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "1. Architecture",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "2. Database Schema",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "3. API Design",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "POST `/api/documents/upload`",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "GET `/api/documents/{id}/status`",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "4. Ingestion Pipeline (Celery Task)",
+          "level": 2,
+          "line": 95
+        },
+        {
+          "heading": "5. Frontend Changes",
+          "level": 2,
+          "line": 115
+        },
+        {
+          "heading": "Modified: `src/components/Composer.jsx`",
+          "level": 3,
+          "line": 117
+        },
+        {
+          "heading": "New: `src/hooks/useUpload.js`",
+          "level": 3,
+          "line": 125
+        },
+        {
+          "heading": "New: `src/components/UploadToast.jsx`",
+          "level": 3,
+          "line": 133
+        },
+        {
+          "heading": "6. Backend File Structure",
+          "level": 2,
+          "line": 142
+        },
+        {
+          "heading": "7. Configuration (Environment Variables)",
+          "level": 2,
+          "line": 169
+        },
+        {
+          "heading": "8. Error Handling",
+          "level": 2,
+          "line": 184
+        },
+        {
+          "heading": "9. Out of Scope (v1)",
+          "level": 2,
+          "line": 197
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 287,
+      "nonEmptyLines": 217,
+      "sections": [
+        {
+          "heading": "Agentic RAG Chat Feature — Design Spec",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Overview",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "2. Goals",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "3. Architecture",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "4. Backend",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "4.1 New Config Key",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "4.2 New Dependencies",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "4.3 `GET /api/documents`",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "4.4 `POST /api/chat/stream`",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "4.5 Agentic RAG Service — `backend/app/services/rag.py`",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "5. Frontend",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "5.1 `DocumentSelector` component",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "5.2 `useChat` hook",
+          "level": 3,
+          "line": 199
+        },
+        {
+          "heading": "5.3 `ChatMessage` changes",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "5.4 `ChatPage` changes",
+          "level": 3,
+          "line": 236
+        },
+        {
+          "heading": "6. Error Handling",
+          "level": 2,
+          "line": 246
+        },
+        {
+          "heading": "7. Files Changed",
+          "level": 2,
+          "line": 262
+        },
+        {
+          "heading": "8. Out of Scope",
+          "level": 2,
+          "line": 281
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 436,
+      "nonEmptyLines": 323,
+      "sections": [
+        {
+          "heading": "Agentic RAG Enhancement — Design Spec",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Problem statement",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "2. Goals",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "3. Non-goals",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "4. Architecture",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "4.1 Module layout",
+          "level": 3,
+          "line": 41
+        },
+        {
+          "heading": "4.2 LangGraph state machine",
+          "level": 3,
+          "line": 57
+        },
+        {
+          "heading": "4.3 Agent state",
+          "level": 3,
+          "line": 82
+        },
+        {
+          "heading": "5. Data model changes",
+          "level": 2,
+          "line": 98
+        },
+        {
+          "heading": "5.1 Schema",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "5.2 Chunking strategy",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "5.3 Re-ingestion",
+          "level": 3,
+          "line": 134
+        },
+        {
+          "heading": "6. Retrieval pipeline (`retrieval.py`)",
+          "level": 2,
+          "line": 140
+        },
+        {
+          "heading": "6.1 Hybrid search",
+          "level": 3,
+          "line": 144
+        },
+        {
+          "heading": "6.2 RRF fusion",
+          "level": 3,
+          "line": 148
+        },
+        {
+          "heading": "6.3 Cross-encoder rerank",
+          "level": 3,
+          "line": 162
+        },
+        {
+          "heading": "6.4 Fetch parents",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "6.5 Tunable constants (in `config.py`)",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "7. Agent nodes (`nodes.py`)",
+          "level": 2,
+          "line": 194
+        },
+        {
+          "heading": "7.1 `rewrite_query`",
+          "level": 3,
+          "line": 196
+        },
+        {
+          "heading": "7.2 `retrieve_and_rerank`",
+          "level": 3,
+          "line": 210
+        },
+        {
+          "heading": "7.3 `grade_chunks`",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "7.4 `rewrite_and_retry`",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "7.5 `generate_answer`",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "7.6 `faithfulness_check`",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "7.7 Graph wiring (`graph.py`)",
+          "level": 3,
+          "line": 252
+        },
+        {
+          "heading": "8. Evaluation harness",
+          "level": 2,
+          "line": 277
+        },
+        {
+          "heading": "8.1 Layout",
+          "level": 3,
+          "line": 279
+        },
+        {
+          "heading": "8.2 Golden set",
+          "level": 3,
+          "line": 291
+        },
+        {
+          "heading": "8.3 Metrics",
+          "level": 3,
+          "line": 312
+        },
+        {
+          "heading": "8.4 Runner",
+          "level": 3,
+          "line": 328
+        },
+        {
+          "heading": "8.5 Test integration",
+          "level": 3,
+          "line": 351
+        },
+        {
+          "heading": "9. Dependencies",
+          "level": 2,
+          "line": 357
+        },
+        {
+          "heading": "10. Rollout — four phases",
+          "level": 2,
+          "line": 370
+        },
+        {
+          "heading": "Phase 0 — Baseline (½ day)",
+          "level": 3,
+          "line": 374
+        },
+        {
+          "heading": "Phase 1 — Parent-child chunking + reingest (1-2 days)",
+          "level": 3,
+          "line": 379
+        },
+        {
+          "heading": "Phase 2 — Retrieval upgrade: RRF + reranker (1 day)",
+          "level": 3,
+          "line": 386
+        },
+        {
+          "heading": "Phase 3 — LangGraph CRAG-lite + LLM query rewriter (2-3 days)",
+          "level": 3,
+          "line": 392
+        },
+        {
+          "heading": "Phase 4 — Polish & observability (½ day)",
+          "level": 3,
+          "line": 401
+        },
+        {
+          "heading": "11. Risks & mitigations",
+          "level": 2,
+          "line": 408
+        },
+        {
+          "heading": "12. Out of scope (explicit)",
+          "level": 2,
+          "line": 418
+        },
+        {
+          "heading": "13. References",
+          "level": 2,
+          "line": 428
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 42
+      }
+    }
+  ]
+}

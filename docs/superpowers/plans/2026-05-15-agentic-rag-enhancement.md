@@ -2838,7 +2838,7 @@ All in `backend/app/config.py`: `vector_top_k`, `fts_top_k`, `rrf_k`,
 - [ ] **Step 2: Commit**
 
 ```bash
-git add features/chat_with_doc/rag_enhancement.md
+git add features_planning/chat_with_doc/rag_enhancement.md
 git commit -m "docs(rag): update feature note with final architecture summary"
 ```
 

@@ -1,0 +1,63 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {
+      "path": "src/components/ChatMessage.css",
+      "language": "css",
+      "sizeLines": 265,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ChatThread.css",
+      "language": "css",
+      "sizeLines": 15,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Composer.css",
+      "language": "css",
+      "sizeLines": 153,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/DocumentSelector.css",
+      "language": "css",
+      "sizeLines": 40,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Sidebar.css",
+      "language": "css",
+      "sizeLines": 274,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ThinkingIndicator.css",
+      "language": "css",
+      "sizeLines": 70,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UpgradeTab.css",
+      "language": "css",
+      "sizeLines": 34,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UploadToast.css",
+      "language": "css",
+      "sizeLines": 65,
+      "fileCategory": "markup"
+    }
+  ],
+  "batchImportData": {
+    "src/components/ChatMessage.css": [],
+    "src/components/ChatThread.css": [],
+    "src/components/Composer.css": [],
+    "src/components/DocumentSelector.css": [],
+    "src/components/Sidebar.css": [],
+    "src/components/ThinkingIndicator.css": [],
+    "src/components/UpgradeTab.css": [],
+    "src/components/UploadToast.css": []
+  }
+}

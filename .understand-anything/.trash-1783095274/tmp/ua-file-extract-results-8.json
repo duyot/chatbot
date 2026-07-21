@@ -1,0 +1,80 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "ocr-service/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 20,
+      "nonEmptyLines": 14,
+      "services": [
+        {
+          "name": "python",
+          "image": "python:3.10-slim",
+          "ports": [
+            8080
+          ],
+          "startLine": 1,
+          "endLine": 21
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM python:3.10-slim",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "RUN apt-get update && apt-get install -y --no-install-recommends",
+          "startLine": 4,
+          "endLine": 4
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "COPY requirements.txt .",
+          "startLine": 10,
+          "endLine": 10
+        },
+        {
+          "name": "RUN pip install --no-cache-dir -r requirements.txt",
+          "startLine": 11,
+          "endLine": 11
+        },
+        {
+          "name": "COPY app.py .",
+          "startLine": 13,
+          "endLine": 13
+        },
+        {
+          "name": "RUN python -c \"from rapidocr_onnxruntime import RapidOCR; RapidO",
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "EXPOSE 8080",
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "CMD [\"uvicorn\", \"app:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8080\"",
+          "startLine": 20,
+          "endLine": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 1,
+        "stepCount": 9
+      }
+    }
+  ]
+}

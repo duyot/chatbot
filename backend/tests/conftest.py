@@ -8,6 +8,7 @@ os.environ.setdefault("DATABASE_URL", "postgresql+psycopg2://chatbot:chatbot@loc
 os.environ.setdefault("REDIS_URL", "redis://localhost:6379/1")
 os.environ.setdefault("OPENAI_API_KEY", "test-key")
 os.environ.setdefault("UPLOAD_DIR", "/tmp/test-uploads")
+os.environ.setdefault("JWT_SECRET_KEY", "test-secret")
 
 from app.main import app
 from app.database import Base, get_db

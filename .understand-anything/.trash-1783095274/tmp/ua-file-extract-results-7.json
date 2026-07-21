@@ -1,0 +1,71 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "backend/.dockerignore",
+      "language": "unknown",
+      "fileCategory": "infra",
+      "totalLines": 6,
+      "nonEmptyLines": 6,
+      "metrics": {}
+    },
+    {
+      "path": "backend/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 10,
+      "nonEmptyLines": 6,
+      "services": [
+        {
+          "name": "python",
+          "image": "python:3.12-slim",
+          "ports": [],
+          "startLine": 1,
+          "endLine": 11
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM python:3.12-slim",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "COPY requirements.txt .",
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "RUN pip install --no-cache-dir -r requirements.txt",
+          "startLine": 6,
+          "endLine": 6
+        },
+        {
+          "name": "COPY . .",
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "CMD [\"sh\", \"-c\", \"alembic upgrade head && uvicorn app.main:app -",
+          "startLine": 10,
+          "endLine": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 1,
+        "stepCount": 6
+      }
+    }
+  ]
+}

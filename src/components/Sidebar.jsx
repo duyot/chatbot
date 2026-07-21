@@ -1,21 +1,6 @@
 import { useState } from 'react'
+import { useAuth } from '../auth/AuthContext'
 import './Sidebar.css'
-
-const CONVERSATIONS = [
-  { id: 'c1', title: 'Create Html Game Environment...' },
-  { id: 'c2', title: 'Apply To Leave For Emergency' },
-  { id: 'c3', title: 'What Is UI UX Design?' },
-  { id: 'c4', title: 'Create POS System' },
-  { id: 'c5', title: 'What Is UX Audit?' },
-  { id: 'c6', title: 'Create Chatbot GPT...' },
-  { id: 'c7', title: 'How Chat GPT Work?' },
-]
-
-const LAST_7_DAYS = [
-  { id: 'c8', title: 'Crypto Lending App Name' },
-  { id: 'c9', title: 'Operator Grammar Types' },
-  { id: 'c10', title: 'Min States For Binary DFA', disabled: true },
-]
 
 function ChatIcon({ active }) {
   return (
@@ -30,22 +15,42 @@ function ChatIcon({ active }) {
   )
 }
 
-export default function Sidebar({ activeTitle }) {
-  const [activeId, setActiveId] = useState(
-    CONVERSATIONS.find(c => c.title.startsWith(activeTitle?.slice(0, 10)))?.id || 'c6'
-  )
+function initials(name) {
+  if (!name) return '?'
+  const parts = name.trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase()
+}
+
+export default function Sidebar({
+  conversations = [],
+  activeId,
+  onSelect,
+  onNewChat,
+  onDelete,
+  onClearAll,
+  onToggle,
+}) {
+  const { user, logout } = useAuth()
   const [hoveredId, setHoveredId] = useState(null)
+  const userName = user?.username || 'User'
 
   return (
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
         <span className="sidebar-logo-text">CHAT A.I+</span>
+        <button className="sidebar-collapse-btn" title="Collapse sidebar" onClick={onToggle}>
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <rect x="1.5" y="2" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M5.5 2v11" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        </button>
       </div>
 
       {/* New chat + Search */}
       <div className="sidebar-actions">
-        <button className="sidebar-new-chat">
+        <button className="sidebar-new-chat" onClick={onNewChat}>
           <span className="sidebar-new-chat-plus">+</span>
           New chat
         </button>
@@ -60,11 +65,19 @@ export default function Sidebar({ activeTitle }) {
       {/* Conversations list */}
       <div className="sidebar-section-header">
         <span>Your conversations</span>
-        <button className="sidebar-clear-all">Clear All</button>
+        {conversations.length > 0 && (
+          <button className="sidebar-clear-all" onClick={onClearAll}>Clear All</button>
+        )}
       </div>
 
       <nav className="sidebar-nav">
-        {CONVERSATIONS.map(item => {
+        {conversations.length === 0 && (
+          <p style={{ padding: '0 18px', color: '#9aa0a6', fontSize: 13 }}>
+            No conversations yet.
+          </p>
+        )}
+
+        {conversations.map((item) => {
           const isActive = item.id === activeId
           const isHovered = item.id === hoveredId
 
@@ -72,44 +85,28 @@ export default function Sidebar({ activeTitle }) {
             <button
               key={item.id}
               className={`sidebar-item ${isActive ? 'is-active' : ''}`}
-              onClick={() => setActiveId(item.id)}
+              onClick={() => onSelect?.(item.id)}
               onMouseEnter={() => setHoveredId(item.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
               <ChatIcon active={isActive} />
               <span className="sidebar-item-title">{item.title}</span>
               {(isActive || isHovered) && (
-                <span className="sidebar-item-actions" onClick={e => e.stopPropagation()}>
-                  <button className="sidebar-action-btn" title="Delete">
+                <span className="sidebar-item-actions" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    className="sidebar-action-btn"
+                    title="Delete"
+                    onClick={() => onDelete?.(item.id)}
+                  >
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                       <path d="M2 3.5h9M4.5 3.5V2.5h4v1M5.5 6v3.5M7.5 6v3.5M3 3.5l.5 7h6l.5-7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
-                  <button className="sidebar-action-btn" title="Edit">
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                      <path d="M9 2l2 2-7 7H2V9L9 2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                  {isActive && <span className="sidebar-active-dot" />}
                 </span>
               )}
             </button>
           )
         })}
-
-        <div className="sidebar-group-label">Last 7 Days</div>
-
-        {LAST_7_DAYS.map(item => (
-          <button
-            key={item.id}
-            className={`sidebar-item ${item.disabled ? 'is-disabled' : ''} ${item.id === activeId ? 'is-active' : ''}`}
-            onClick={() => !item.disabled && setActiveId(item.id)}
-            disabled={item.disabled}
-          >
-            <ChatIcon active={item.id === activeId} />
-            <span className="sidebar-item-title">{item.title}</span>
-          </button>
-        ))}
       </nav>
 
       {/* Footer */}
@@ -121,9 +118,16 @@ export default function Sidebar({ activeTitle }) {
           </svg>
           <span>Settings</span>
         </button>
+        <button className="sidebar-footer-item sidebar-footer-item--logout" onClick={logout}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M6 2.5H3.5a1 1 0 00-1 1v9a1 1 0 001 1H6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10 11l3-3-3-3M13 8H6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span>Log out</span>
+        </button>
         <div className="sidebar-user">
-          <div className="sidebar-user-avatar">AN</div>
-          <span className="sidebar-user-name">Andrew Neilson</span>
+          <div className="sidebar-user-avatar">{initials(userName)}</div>
+          <span className="sidebar-user-name">{userName}</span>
         </div>
       </div>
     </aside>

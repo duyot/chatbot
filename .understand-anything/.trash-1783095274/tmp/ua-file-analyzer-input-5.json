@@ -1,0 +1,15 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "backend/app/services/rag/__init__.py", "language": "python", "sizeLines": 2, "fileCategory": "code"},
+    {"path": "backend/evals/metrics.py", "language": "python", "sizeLines": 110, "fileCategory": "code"},
+    {"path": "backend/evals/run_eval.py", "language": "python", "sizeLines": 178, "fileCategory": "code"},
+    {"path": "backend/tests/test_eval_golden.py", "language": "python", "sizeLines": 18, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "backend/app/services/rag/__init__.py": ["backend/app/services/rag/graph.py"],
+    "backend/evals/metrics.py": ["backend/app/config.py"],
+    "backend/evals/run_eval.py": ["backend/app/database.py", "backend/app/models.py", "backend/app/services/rag/__init__.py", "backend/evals/metrics.py"],
+    "backend/tests/test_eval_golden.py": ["backend/evals/run_eval.py"]
+  }
+}

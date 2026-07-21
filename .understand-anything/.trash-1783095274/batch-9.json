@@ -1,0 +1,125 @@
+{
+  "nodes": [
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "Template environment file enumerating backend configuration variables: Postgres/Redis connection strings, OpenRouter API key and model slugs for chat/embedding/reranking, JWT signing secret, PaddleOCR microservice settings, and rerank scoring knobs.",
+      "tags": ["configuration", "environment-variables", "secrets-template", "openrouter", "backend-config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "Guidance file for Claude Code covering the project's stack, npm/lint commands, ESLint rules, frontend architecture, and the agentic LangGraph RAG backend pipeline (entry point, status-field convention, eval harness, and reingestion workflow).",
+      "tags": ["documentation", "project-guide", "conventions", "rag-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:DESIGN.md",
+      "type": "document",
+      "name": "DESIGN.md",
+      "filePath": "DESIGN.md",
+      "summary": "Apple-inspired visual design system specification covering color palette, typography scale, component styling, spacing, elevation, and responsive rules, including an agent prompt guide for generating UI components consistent with the style.",
+      "tags": ["documentation", "design-system", "ui-guidelines", "style-guide"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Default create-vite README describing the React + Vite scaffold, the available official Vite React plugins, and pointers for enabling the React Compiler or TypeScript/type-aware ESLint.",
+      "tags": ["documentation", "scaffold", "vite", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "index.html",
+      "summary": "HTML shell for the Vite single-page app; defines the root mount div and loads the React entry module via a module script tag.",
+      "tags": ["entry-point", "markup", "vite", "spa-shell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "npm manifest for the frontend defining Vite dev/build/lint/preview scripts and pinning React 19.2, react-router-dom 7, and the ESLint 9 flat-config toolchain as dependencies.",
+      "tags": ["configuration", "build-system", "npm", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:prompt.md",
+      "type": "document",
+      "name": "prompt.md",
+      "filePath": "prompt.md",
+      "summary": "Short scratch note instructing implementation of a Figma-designed chat UI reachable from the home page.",
+      "tags": ["documentation", "design-spec", "planning-note"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:.env.example",
+      "target": "file:backend/app/config.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "service:docker-compose.yml",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:src/App.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:src/main.jsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:backend/app/routers/documents.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "config:package.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "config:package.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:index.html",
+      "target": "file:src/main.jsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

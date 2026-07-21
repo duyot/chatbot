@@ -1,0 +1,138 @@
+{
+  "nodes": [
+    {
+      "id": "service:.dockerignore",
+      "type": "service",
+      "name": ".dockerignore",
+      "filePath": ".dockerignore",
+      "summary": "Excludes node_modules, dist, git metadata, IDE files, and markdown/docs from the Docker build context so root-context image builds stay fast and don't leak source-control or documentation artifacts.",
+      "tags": ["containerization", "infrastructure", "build-system", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "type": "service",
+      "name": "docker-compose.yml",
+      "filePath": "docker-compose.yml",
+      "summary": "Orchestrates the full application stack — nginx-served React frontend, FastAPI backend, Celery worker, PaddleOCR microservice, Redis, and a pgvector-enabled Postgres database — wiring build contexts, healthchecks, volumes, and startup ordering via depends_on conditions.",
+      "tags": ["orchestration", "infrastructure", "containerization", "deployment", "docker-compose"],
+      "complexity": "moderate",
+      "languageNotes": "Uses depends_on with service_healthy/service_started conditions to sequence startup across six interdependent containers rather than relying on fixed sleep delays."
+    },
+    {
+      "id": "service:docker-compose.yml:frontend",
+      "type": "service",
+      "name": "frontend",
+      "filePath": "docker-compose.yml",
+      "summary": "Builds and runs the React/Vite frontend from the root Dockerfile, mapping host port 3000 to nginx's port 80, and waits for the backend to report healthy before starting.",
+      "tags": ["frontend", "containerization", "service", "nginx"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker-compose.yml:backend",
+      "type": "service",
+      "name": "backend",
+      "filePath": "docker-compose.yml",
+      "summary": "Builds and runs the FastAPI backend from backend/Dockerfile on port 8000, mounts uploads/logs volumes, loads secrets from .env, and gates startup on the database, Redis, and worker being healthy or started.",
+      "tags": ["backend", "api", "containerization", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:docker-compose.yml:worker",
+      "type": "service",
+      "name": "worker",
+      "filePath": "docker-compose.yml",
+      "summary": "Runs the Celery worker (celery -A app.workers.celery_app.celery_app worker) built from the backend image, sharing the uploads/logs volumes and waiting on the database, Redis, and OCR service to be healthy.",
+      "tags": ["celery", "background-jobs", "containerization", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:docker-compose.yml:ocr",
+      "type": "service",
+      "name": "ocr",
+      "filePath": "docker-compose.yml",
+      "summary": "Builds and runs the PaddleOCR microservice from ocr-service/Dockerfile, exposing port 8080 internally with a health check that the worker's startup gate depends on.",
+      "tags": ["ocr", "microservice", "containerization", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker-compose.yml:redis",
+      "type": "service",
+      "name": "redis",
+      "filePath": "docker-compose.yml",
+      "summary": "Runs the official redis:7-alpine image used as the Celery broker/result backend, with a redis-cli ping healthcheck gating dependent services.",
+      "tags": ["redis", "cache", "containerization", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker-compose.yml:db",
+      "type": "service",
+      "name": "db",
+      "filePath": "docker-compose.yml",
+      "summary": "Runs the pgvector/pgvector:pg16 Postgres image as the primary datastore for the chatbot database, with a persistent named volume, seeded credentials, a pg_isready healthcheck, and host port 5434 exposed for local access.",
+      "tags": ["postgresql", "pgvector", "database", "containerization", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Dockerfile",
+      "summary": "Multi-stage Docker build that compiles the Vite/React frontend (npm ci + npm run build) in a node:22-alpine stage, then serves the resulting static bundle from an nginx:alpine runtime image with a wget-based health check on port 80.",
+      "tags": ["containerization", "infrastructure", "deployment", "frontend", "multi-stage-build"],
+      "complexity": "simple",
+      "languageNotes": "Multi-stage build discards the Node.js toolchain in the final image, shipping only the compiled static assets behind nginx to keep the runtime image minimal."
+    },
+    {
+      "id": "service:Dockerfile:builder",
+      "type": "service",
+      "name": "builder",
+      "filePath": "Dockerfile",
+      "summary": "First build stage (node:22-alpine) that installs npm dependencies via npm ci and runs the production Vite build, producing the /app/dist output consumed by the runner stage.",
+      "tags": ["build-stage", "frontend", "npm", "vite"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:Dockerfile:runner",
+      "type": "service",
+      "name": "runner",
+      "filePath": "Dockerfile",
+      "summary": "Final runtime stage (nginx:alpine) that copies the built frontend assets and nginx.conf into place, exposes port 80, and defines a container healthcheck against the served site.",
+      "tags": ["build-stage", "nginx", "runtime", "healthcheck"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:frontend", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:backend", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:worker", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:ocr", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:redis", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:docker-compose.yml", "target": "service:docker-compose.yml:db", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:Dockerfile", "target": "service:Dockerfile:builder", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "service:Dockerfile", "target": "service:Dockerfile:runner", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "service:docker-compose.yml:frontend", "target": "service:Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:frontend", "target": "service:docker-compose.yml:backend", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:backend", "target": "service:backend/Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:backend", "target": "service:docker-compose.yml:db", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:backend", "target": "service:docker-compose.yml:redis", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:backend", "target": "service:docker-compose.yml:worker", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:worker", "target": "service:backend/Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:worker", "target": "service:docker-compose.yml:db", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:worker", "target": "service:docker-compose.yml:redis", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:worker", "target": "service:docker-compose.yml:ocr", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml:ocr", "target": "service:ocr-service/Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "service:docker-compose.yml", "target": "service:Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml", "target": "service:backend/Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:docker-compose.yml", "target": "service:ocr-service/Dockerfile", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "service:.dockerignore", "target": "service:Dockerfile", "type": "configures", "direction": "forward", "weight": 0.6 },
+    { "source": "service:.dockerignore", "target": "service:docker-compose.yml:frontend", "type": "configures", "direction": "forward", "weight": 0.6 },
+
+    { "source": "service:Dockerfile:builder", "target": "config:package.json", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:Dockerfile:runner", "target": "config:nginx.conf", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "service:Dockerfile", "target": "file:src/main.jsx", "type": "deploys", "direction": "forward", "weight": 0.7 }
+  ]
+}

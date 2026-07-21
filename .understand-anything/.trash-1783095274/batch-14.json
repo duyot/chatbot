@@ -1,0 +1,136 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/ChatMessage.css",
+      "type": "file",
+      "name": "ChatMessage.css",
+      "filePath": "src/components/ChatMessage.css",
+      "summary": "Styles individual chat message bubbles for both user and assistant turns, including avatars, markdown-rendered paragraphs and lists, hover action buttons, a blinking streaming cursor, error states, and a collapsible citation list.",
+      "tags": ["styling", "chat-ui", "css", "component-styles", "animation"],
+      "complexity": "complex",
+      "languageNotes": "Relies on CSS custom properties (design tokens like --color-primary, --font-body) for consistent theming, and uses a CSS keyframe animation for the streaming text cursor."
+    },
+    {
+      "id": "file:src/components/ChatThread.css",
+      "type": "file",
+      "name": "ChatThread.css",
+      "filePath": "src/components/ChatThread.css",
+      "summary": "Minimal styles for the scrollable chat thread container, defining a thin custom scrollbar for the message list.",
+      "tags": ["styling", "css", "scrollbar", "component-styles", "chat-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/Composer.css",
+      "type": "file",
+      "name": "Composer.css",
+      "filePath": "src/components/Composer.css",
+      "summary": "Styles the message composer input bar, including the auto-resizing textarea, send button active/hover states, file upload button with a loading spinner, and attached-file chip tags.",
+      "tags": ["styling", "css", "component-styles", "chat-ui", "forms"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/DocumentSelector.css",
+      "type": "file",
+      "name": "DocumentSelector.css",
+      "filePath": "src/components/DocumentSelector.css",
+      "summary": "Styles the document selector dropdown row used to pick which document a conversation is scoped to, including focus and disabled select states.",
+      "tags": ["styling", "css", "component-styles", "dropdown", "forms"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/Sidebar.css",
+      "type": "file",
+      "name": "Sidebar.css",
+      "filePath": "src/components/Sidebar.css",
+      "summary": "Styles the dark-themed application sidebar: logo, new-chat and search actions, scrollable conversation list with active/hover/disabled item states, and a footer with user avatar and logout affordance.",
+      "tags": ["styling", "css", "component-styles", "navigation", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/ThinkingIndicator.css",
+      "type": "file",
+      "name": "ThinkingIndicator.css",
+      "filePath": "src/components/ThinkingIndicator.css",
+      "summary": "Styles the animated 'thinking' status row shown while the assistant is generating a response, including a spinning glyph and a shimmering gradient-text sweep, with a reduced-motion fallback for accessibility.",
+      "tags": ["styling", "css", "animation", "component-styles", "accessibility"],
+      "complexity": "moderate",
+      "languageNotes": "Uses `background-clip: text` with an animated gradient `background-position` to create a shimmer text effect, paired with a `prefers-reduced-motion` media query override — a solid accessibility pattern for decorative animation."
+    },
+    {
+      "id": "file:src/components/UpgradeTab.css",
+      "type": "file",
+      "name": "UpgradeTab.css",
+      "filePath": "src/components/UpgradeTab.css",
+      "summary": "Styles a fixed, vertically-rotated 'upgrade' call-to-action tab anchored to the screen edge.",
+      "tags": ["styling", "css", "component-styles", "cta", "upsell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/UploadToast.css",
+      "type": "file",
+      "name": "UploadToast.css",
+      "filePath": "src/components/UploadToast.css",
+      "summary": "Styles a fixed-position toast notification that reports document upload success or failure, with a slide-in animation and a dismiss button.",
+      "tags": ["styling", "css", "component-styles", "notification", "animation"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/components/ChatMessage.css",
+      "target": "file:src/components/ChatMessage.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/ChatThread.css",
+      "target": "file:src/components/ChatThread.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/Composer.css",
+      "target": "file:src/components/Composer.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/DocumentSelector.css",
+      "target": "file:src/components/DocumentSelector.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/Sidebar.css",
+      "target": "file:src/components/Sidebar.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/ThinkingIndicator.css",
+      "target": "file:src/components/ThinkingIndicator.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/UpgradeTab.css",
+      "target": "file:src/components/UpgradeTab.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/UploadToast.css",
+      "target": "file:src/components/UploadToast.jsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

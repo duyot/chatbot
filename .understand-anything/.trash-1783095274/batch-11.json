@@ -1,0 +1,83 @@
+{
+  "nodes": [
+    {
+      "id": "config:backend/alembic.ini",
+      "type": "config",
+      "name": "alembic.ini",
+      "filePath": "backend/alembic.ini",
+      "summary": "Alembic configuration file pointing migrations to the backend/alembic script directory, leaving the SQLAlchemy connection URL blank for runtime injection, and configuring root/sqlalchemy/alembic loggers.",
+      "tags": ["configuration", "database", "migration", "alembic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:backend/pytest.ini",
+      "type": "config",
+      "name": "pytest.ini",
+      "filePath": "backend/pytest.ini",
+      "summary": "Pytest configuration that registers the custom 'eval' marker for slow golden-set evaluation tests and excludes them from default test runs via addopts.",
+      "tags": ["configuration", "testing", "pytest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:backend/requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "backend/requirements.txt",
+      "summary": "Pinned Python dependency manifest for the FastAPI backend, covering the web/task-queue stack (fastapi, uvicorn, celery, redis), the database layer (sqlalchemy, psycopg2, alembic, pgvector), the LangChain/LangGraph agentic RAG stack plus OpenAI-compatible client and evaluation tooling (ragas, datasets), and JWT/bcrypt authentication (PyJWT, passlib, bcrypt pinned to 4.0.x to avoid a passlib compatibility warning).",
+      "tags": ["dependencies", "python", "build-system", "documentation"],
+      "complexity": "simple",
+      "languageNotes": "bcrypt is deliberately pinned below 4.1 to avoid a passlib<->bcrypt attribute-compatibility warning at import time, per the inline comment."
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:backend/alembic.ini",
+      "target": "file:backend/alembic/versions/0007_create_users.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:backend/alembic.ini",
+      "target": "file:backend/alembic/versions/0008_create_conversations_messages.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:backend/pytest.ini",
+      "target": "file:backend/tests/conftest.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:backend/pytest.ini",
+      "target": "file:backend/tests/test_auth.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:backend/requirements.txt",
+      "target": "file:backend/app/main.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:backend/requirements.txt",
+      "target": "file:backend/app/security.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:backend/requirements.txt",
+      "target": "file:backend/app/routers/auth.py",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

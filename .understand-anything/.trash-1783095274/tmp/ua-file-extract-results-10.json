@@ -1,0 +1,55 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 114,
+      "nonEmptyLines": 101,
+      "metrics": {}
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 49,
+      "nonEmptyLines": 46,
+      "metrics": {}
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 88,
+      "nonEmptyLines": 84,
+      "metrics": {}
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 3,
+      "nonEmptyLines": 3,
+      "metrics": {}
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 3,
+      "nonEmptyLines": 3,
+      "metrics": {}
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 3,
+      "nonEmptyLines": 3,
+      "metrics": {}
+    }
+  ]
+}

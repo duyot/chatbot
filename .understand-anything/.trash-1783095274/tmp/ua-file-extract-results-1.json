@@ -1,0 +1,2279 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 15,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "backend/alembic/env.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 30,
+      "functions": [
+        {
+          "name": "run_migrations_offline",
+          "startLine": 16,
+          "endLine": 20,
+          "params": []
+        },
+        {
+          "name": "run_migrations_online",
+          "startLine": 22,
+          "endLine": 31,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "run_migrations_offline",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "run_migrations_online",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "run_migrations_offline",
+          "callee": "config.get_main_option",
+          "lineNumber": 17
+        },
+        {
+          "caller": "run_migrations_offline",
+          "callee": "context.configure",
+          "lineNumber": 18
+        },
+        {
+          "caller": "run_migrations_offline",
+          "callee": "context.begin_transaction",
+          "lineNumber": 19
+        },
+        {
+          "caller": "run_migrations_offline",
+          "callee": "context.run_migrations",
+          "lineNumber": 20
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "engine_from_config",
+          "lineNumber": 23
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "config.get_section",
+          "lineNumber": 24
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "connectable.connect",
+          "lineNumber": 28
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "context.configure",
+          "lineNumber": 29
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "context.begin_transaction",
+          "lineNumber": 30
+        },
+        {
+          "caller": "run_migrations_online",
+          "callee": "context.run_migrations",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/database.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 16,
+      "functions": [
+        {
+          "name": "get_db",
+          "startLine": 11,
+          "endLine": 19,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Base",
+          "startLine": 8,
+          "endLine": 9,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Base",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "get_db",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_db",
+          "callee": "SessionLocal",
+          "lineNumber": 12
+        },
+        {
+          "caller": "get_db",
+          "callee": "db.rollback",
+          "lineNumber": 16
+        },
+        {
+          "caller": "get_db",
+          "callee": "db.close",
+          "lineNumber": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "backend/app/main.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "log_requests",
+          "startLine": 28,
+          "endLine": 31,
+          "params": [
+            "request",
+            "call_next"
+          ]
+        },
+        {
+          "name": "health",
+          "startLine": 47,
+          "endLine": 48,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "log_requests",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "health",
+          "line": 46,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "log_requests",
+          "callee": "call_next",
+          "lineNumber": 29
+        },
+        {
+          "caller": "log_requests",
+          "callee": "logger.info",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/models.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 128,
+      "nonEmptyLines": 107,
+      "classes": [
+        {
+          "name": "Document",
+          "startLine": 8,
+          "endLine": 21,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DocumentParentChunk",
+          "startLine": 24,
+          "endLine": 42,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DocumentChunk",
+          "startLine": 45,
+          "endLine": 69,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "User",
+          "startLine": 72,
+          "endLine": 79,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Conversation",
+          "startLine": 82,
+          "endLine": 102,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Message",
+          "startLine": 105,
+          "endLine": 128,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Document",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "DocumentParentChunk",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "DocumentChunk",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "User",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "Conversation",
+          "line": 82,
+          "isDefault": false
+        },
+        {
+          "name": "Message",
+          "line": 105,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "backend/app/routers/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/routers/auth.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "login",
+          "startLine": 17,
+          "endLine": 31,
+          "params": [
+            "payload",
+            "db"
+          ]
+        },
+        {
+          "name": "me",
+          "startLine": 35,
+          "endLine": 36,
+          "params": [
+            "user"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "login",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "me",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "login",
+          "callee": "Depends",
+          "lineNumber": 17
+        },
+        {
+          "caller": "login",
+          "callee": "db.query(User).filter(User.username == payload.username).first",
+          "lineNumber": 18
+        },
+        {
+          "caller": "login",
+          "callee": "db.query(User).filter",
+          "lineNumber": 18
+        },
+        {
+          "caller": "login",
+          "callee": "db.query",
+          "lineNumber": 18
+        },
+        {
+          "caller": "login",
+          "callee": "verify_password",
+          "lineNumber": 19
+        },
+        {
+          "caller": "login",
+          "callee": "logger.info",
+          "lineNumber": 20
+        },
+        {
+          "caller": "login",
+          "callee": "HTTPException",
+          "lineNumber": 21
+        },
+        {
+          "caller": "login",
+          "callee": "HTTPException",
+          "lineNumber": 26
+        },
+        {
+          "caller": "login",
+          "callee": "create_access_token",
+          "lineNumber": 29
+        },
+        {
+          "caller": "login",
+          "callee": "logger.info",
+          "lineNumber": 30
+        },
+        {
+          "caller": "login",
+          "callee": "TokenResponse",
+          "lineNumber": 31
+        },
+        {
+          "caller": "me",
+          "callee": "Depends",
+          "lineNumber": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/routers/chat.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 127,
+      "nonEmptyLines": 111,
+      "functions": [
+        {
+          "name": "_make_title",
+          "startLine": 21,
+          "endLine": 26,
+          "params": [
+            "message",
+            "limit"
+          ]
+        },
+        {
+          "name": "chat_stream",
+          "startLine": 30,
+          "endLine": 127,
+          "params": [
+            "request",
+            "db",
+            "current_user"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_make_title",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "chat_stream",
+          "line": 29,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_make_title",
+          "callee": "\" \".join",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_make_title",
+          "callee": "message.split",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_make_title",
+          "callee": "len",
+          "lineNumber": 24
+        },
+        {
+          "caller": "_make_title",
+          "callee": "title[:limit].rstrip",
+          "lineNumber": 25
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "Depends",
+          "lineNumber": 32
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "Depends",
+          "lineNumber": 33
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "db.query(Document).filter(Document.id == request.document_id).first",
+          "lineNumber": 35
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "db.query(Document).filter",
+          "lineNumber": 35
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "db.query",
+          "lineNumber": 35
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "HTTPException",
+          "lineNumber": 37
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "HTTPException",
+          "lineNumber": 39
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "uuid.UUID",
+          "lineNumber": 44
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "logger.info",
+          "lineNumber": 48
+        },
+        {
+          "caller": "event_stream",
+          "callee": "SessionLocal",
+          "lineNumber": 53
+        },
+        {
+          "caller": "event_stream",
+          "callee": "uuid.UUID",
+          "lineNumber": 59
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 61
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.query(Conversation)\n                    .filter(\n                        Conversation.id == conv_uuid,\n                        Conversation.user_id == user_id,\n                    )\n                    .first",
+          "lineNumber": 64
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.query(Conversation)\n                    .filter",
+          "lineNumber": 64
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.query",
+          "lineNumber": 64
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 72
+        },
+        {
+          "caller": "event_stream",
+          "callee": "Conversation",
+          "lineNumber": 75
+        },
+        {
+          "caller": "event_stream",
+          "callee": "_make_title",
+          "lineNumber": 75
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.add",
+          "lineNumber": 76
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.commit",
+          "lineNumber": 77
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.refresh",
+          "lineNumber": 78
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 80
+        },
+        {
+          "caller": "event_stream",
+          "callee": "str",
+          "lineNumber": 80
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.add",
+          "lineNumber": 83
+        },
+        {
+          "caller": "event_stream",
+          "callee": "Message",
+          "lineNumber": 84
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.commit",
+          "lineNumber": 91
+        },
+        {
+          "caller": "event_stream",
+          "callee": "agentic_rag_stream",
+          "lineNumber": 96
+        },
+        {
+          "caller": "event_stream",
+          "callee": "event.get",
+          "lineNumber": 99
+        },
+        {
+          "caller": "event_stream",
+          "callee": "answer_parts.append",
+          "lineNumber": 100
+        },
+        {
+          "caller": "event_stream",
+          "callee": "event.get",
+          "lineNumber": 100
+        },
+        {
+          "caller": "event_stream",
+          "callee": "event.get",
+          "lineNumber": 101
+        },
+        {
+          "caller": "event_stream",
+          "callee": "event.get",
+          "lineNumber": 102
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 103
+        },
+        {
+          "caller": "event_stream",
+          "callee": "logger.info",
+          "lineNumber": 104
+        },
+        {
+          "caller": "event_stream",
+          "callee": "logger.exception",
+          "lineNumber": 106
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 107
+        },
+        {
+          "caller": "event_stream",
+          "callee": "str",
+          "lineNumber": 107
+        },
+        {
+          "caller": "event_stream",
+          "callee": "\"\".join",
+          "lineNumber": 111
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.add",
+          "lineNumber": 113
+        },
+        {
+          "caller": "event_stream",
+          "callee": "Message",
+          "lineNumber": 114
+        },
+        {
+          "caller": "event_stream",
+          "callee": "datetime.now",
+          "lineNumber": 122
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.commit",
+          "lineNumber": 123
+        },
+        {
+          "caller": "event_stream",
+          "callee": "stream_db.close",
+          "lineNumber": 125
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "StreamingResponse",
+          "lineNumber": 127
+        },
+        {
+          "caller": "chat_stream",
+          "callee": "event_stream",
+          "lineNumber": 127
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/routers/conversations.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "list_conversations",
+          "startLine": 18,
+          "endLine": 27,
+          "params": [
+            "db",
+            "current_user"
+          ]
+        },
+        {
+          "name": "get_conversation",
+          "startLine": 31,
+          "endLine": 58,
+          "params": [
+            "conversation_id",
+            "db",
+            "current_user"
+          ]
+        },
+        {
+          "name": "delete_conversation",
+          "startLine": 62,
+          "endLine": 82,
+          "params": [
+            "conversation_id",
+            "db",
+            "current_user"
+          ]
+        },
+        {
+          "name": "clear_conversations",
+          "startLine": 86,
+          "endLine": 98,
+          "params": [
+            "db",
+            "current_user"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "list_conversations",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "get_conversation",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "delete_conversation",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "clear_conversations",
+          "line": 85,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "list_conversations",
+          "callee": "Depends",
+          "lineNumber": 19
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "Depends",
+          "lineNumber": 20
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "db.query(Conversation)\n        .filter(Conversation.user_id == current_user.id)\n        .order_by(Conversation.updated_at.desc())\n        .all",
+          "lineNumber": 23
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "db.query(Conversation)\n        .filter(Conversation.user_id == current_user.id)\n        .order_by",
+          "lineNumber": 23
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "db.query(Conversation)\n        .filter",
+          "lineNumber": 23
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "db.query",
+          "lineNumber": 23
+        },
+        {
+          "caller": "list_conversations",
+          "callee": "Conversation.updated_at.desc",
+          "lineNumber": 25
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "Depends",
+          "lineNumber": 33
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "Depends",
+          "lineNumber": 34
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query(Conversation)\n        .filter(\n            Conversation.id == conversation_id,\n            Conversation.user_id == current_user.id,\n        )\n        .first",
+          "lineNumber": 37
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query(Conversation)\n        .filter",
+          "lineNumber": 37
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query",
+          "lineNumber": 37
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "HTTPException",
+          "lineNumber": 45
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query(Message)\n        .filter(Message.conversation_id == conv.id)\n        .order_by(Message.created_at.asc())\n        .all",
+          "lineNumber": 48
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query(Message)\n        .filter(Message.conversation_id == conv.id)\n        .order_by",
+          "lineNumber": 48
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query(Message)\n        .filter",
+          "lineNumber": 48
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "db.query",
+          "lineNumber": 48
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "Message.created_at.asc",
+          "lineNumber": 50
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "ConversationDetail",
+          "lineNumber": 53
+        },
+        {
+          "caller": "get_conversation",
+          "callee": "MessageResponse.model_validate",
+          "lineNumber": 57
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "Depends",
+          "lineNumber": 64
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "Depends",
+          "lineNumber": 65
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "db.query(Conversation)\n        .filter(\n            Conversation.id == conversation_id,\n            Conversation.user_id == current_user.id,\n        )\n        .first",
+          "lineNumber": 68
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "db.query(Conversation)\n        .filter",
+          "lineNumber": 68
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "db.query",
+          "lineNumber": 68
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "HTTPException",
+          "lineNumber": 76
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "db.delete",
+          "lineNumber": 78
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "db.commit",
+          "lineNumber": 79
+        },
+        {
+          "caller": "delete_conversation",
+          "callee": "logger.info",
+          "lineNumber": 80
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "Depends",
+          "lineNumber": 87
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "Depends",
+          "lineNumber": 88
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "db.query(Conversation)\n        .filter(Conversation.user_id == current_user.id)\n        .delete",
+          "lineNumber": 91
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "db.query(Conversation)\n        .filter",
+          "lineNumber": 91
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "db.query",
+          "lineNumber": 91
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "db.commit",
+          "lineNumber": 95
+        },
+        {
+          "caller": "clear_conversations",
+          "callee": "logger.info",
+          "lineNumber": 96
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/routers/documents.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 103,
+      "nonEmptyLines": 86,
+      "functions": [
+        {
+          "name": "list_documents",
+          "startLine": 21,
+          "endLine": 25,
+          "params": [
+            "db",
+            "current_user"
+          ]
+        },
+        {
+          "name": "upload_document",
+          "startLine": 36,
+          "endLine": 70,
+          "params": [
+            "file",
+            "db",
+            "current_user"
+          ]
+        },
+        {
+          "name": "stream_status",
+          "startLine": 74,
+          "endLine": 103,
+          "params": [
+            "document_id",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "list_documents",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "upload_document",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "stream_status",
+          "line": 73,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "list_documents",
+          "callee": "Depends",
+          "lineNumber": 22
+        },
+        {
+          "caller": "list_documents",
+          "callee": "Depends",
+          "lineNumber": 23
+        },
+        {
+          "caller": "list_documents",
+          "callee": "db.query(Document).filter(Document.status == \"done\").all",
+          "lineNumber": 25
+        },
+        {
+          "caller": "list_documents",
+          "callee": "db.query(Document).filter",
+          "lineNumber": 25
+        },
+        {
+          "caller": "list_documents",
+          "callee": "db.query",
+          "lineNumber": 25
+        },
+        {
+          "caller": "upload_document",
+          "callee": "File",
+          "lineNumber": 37
+        },
+        {
+          "caller": "upload_document",
+          "callee": "Depends",
+          "lineNumber": 38
+        },
+        {
+          "caller": "upload_document",
+          "callee": "Depends",
+          "lineNumber": 39
+        },
+        {
+          "caller": "upload_document",
+          "callee": "HTTPException",
+          "lineNumber": 42
+        },
+        {
+          "caller": "upload_document",
+          "callee": "file.read",
+          "lineNumber": 44
+        },
+        {
+          "caller": "upload_document",
+          "callee": "len",
+          "lineNumber": 46
+        },
+        {
+          "caller": "upload_document",
+          "callee": "HTTPException",
+          "lineNumber": 47
+        },
+        {
+          "caller": "upload_document",
+          "callee": "os.makedirs",
+          "lineNumber": 49
+        },
+        {
+          "caller": "upload_document",
+          "callee": "str",
+          "lineNumber": 50
+        },
+        {
+          "caller": "upload_document",
+          "callee": "uuid.uuid4",
+          "lineNumber": 50
+        },
+        {
+          "caller": "upload_document",
+          "callee": "os.path.join",
+          "lineNumber": 52
+        },
+        {
+          "caller": "upload_document",
+          "callee": "open",
+          "lineNumber": 55
+        },
+        {
+          "caller": "upload_document",
+          "callee": "f.write",
+          "lineNumber": 56
+        },
+        {
+          "caller": "upload_document",
+          "callee": "Document",
+          "lineNumber": 57
+        },
+        {
+          "caller": "upload_document",
+          "callee": "db.add",
+          "lineNumber": 58
+        },
+        {
+          "caller": "upload_document",
+          "callee": "db.commit",
+          "lineNumber": 59
+        },
+        {
+          "caller": "upload_document",
+          "callee": "db.refresh",
+          "lineNumber": 60
+        },
+        {
+          "caller": "upload_document",
+          "callee": "os.path.exists",
+          "lineNumber": 62
+        },
+        {
+          "caller": "upload_document",
+          "callee": "os.unlink",
+          "lineNumber": 63
+        },
+        {
+          "caller": "upload_document",
+          "callee": "logger.info",
+          "lineNumber": 66
+        },
+        {
+          "caller": "upload_document",
+          "callee": "len",
+          "lineNumber": 66
+        },
+        {
+          "caller": "upload_document",
+          "callee": "ingest_document.delay",
+          "lineNumber": 68
+        },
+        {
+          "caller": "upload_document",
+          "callee": "str",
+          "lineNumber": 68
+        },
+        {
+          "caller": "stream_status",
+          "callee": "Depends",
+          "lineNumber": 74
+        },
+        {
+          "caller": "stream_status",
+          "callee": "db.query(Document).filter(Document.id == document_id).first",
+          "lineNumber": 75
+        },
+        {
+          "caller": "stream_status",
+          "callee": "db.query(Document).filter",
+          "lineNumber": 75
+        },
+        {
+          "caller": "stream_status",
+          "callee": "db.query",
+          "lineNumber": 75
+        },
+        {
+          "caller": "stream_status",
+          "callee": "HTTPException",
+          "lineNumber": 77
+        },
+        {
+          "caller": "stream_status",
+          "callee": "logger.info",
+          "lineNumber": 79
+        },
+        {
+          "caller": "event_stream",
+          "callee": "SessionLocal",
+          "lineNumber": 83
+        },
+        {
+          "caller": "event_stream",
+          "callee": "inner_db.query(Document).filter(Document.id == document_id).first",
+          "lineNumber": 85
+        },
+        {
+          "caller": "event_stream",
+          "callee": "inner_db.query(Document).filter",
+          "lineNumber": 85
+        },
+        {
+          "caller": "event_stream",
+          "callee": "inner_db.query",
+          "lineNumber": 85
+        },
+        {
+          "caller": "event_stream",
+          "callee": "inner_db.close",
+          "lineNumber": 89
+        },
+        {
+          "caller": "event_stream",
+          "callee": "logger.info",
+          "lineNumber": 92
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 93
+        },
+        {
+          "caller": "event_stream",
+          "callee": "logger.warning",
+          "lineNumber": 96
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 97
+        },
+        {
+          "caller": "event_stream",
+          "callee": "json.dumps",
+          "lineNumber": 100
+        },
+        {
+          "caller": "event_stream",
+          "callee": "time.sleep",
+          "lineNumber": 101
+        },
+        {
+          "caller": "stream_status",
+          "callee": "StreamingResponse",
+          "lineNumber": 103
+        },
+        {
+          "caller": "stream_status",
+          "callee": "event_stream",
+          "lineNumber": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 71,
+      "nonEmptyLines": 47,
+      "classes": [
+        {
+          "name": "DocumentResponse",
+          "startLine": 6,
+          "endLine": 11,
+          "methods": [],
+          "properties": [
+            "id",
+            "file_name",
+            "status"
+          ]
+        },
+        {
+          "name": "DocumentListItem",
+          "startLine": 14,
+          "endLine": 19,
+          "methods": [],
+          "properties": [
+            "id",
+            "file_name",
+            "uploaded_at"
+          ]
+        },
+        {
+          "name": "ChatRequest",
+          "startLine": 22,
+          "endLine": 25,
+          "methods": [],
+          "properties": [
+            "document_id",
+            "message",
+            "conversation_id"
+          ]
+        },
+        {
+          "name": "LoginRequest",
+          "startLine": 28,
+          "endLine": 30,
+          "methods": [],
+          "properties": [
+            "username",
+            "password"
+          ]
+        },
+        {
+          "name": "TokenResponse",
+          "startLine": 33,
+          "endLine": 35,
+          "methods": [],
+          "properties": [
+            "access_token",
+            "token_type"
+          ]
+        },
+        {
+          "name": "UserResponse",
+          "startLine": 38,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "id",
+            "username"
+          ]
+        },
+        {
+          "name": "ConversationListItem",
+          "startLine": 45,
+          "endLine": 51,
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "created_at",
+            "updated_at"
+          ]
+        },
+        {
+          "name": "MessageResponse",
+          "startLine": 54,
+          "endLine": 62,
+          "methods": [],
+          "properties": [
+            "id",
+            "role",
+            "content",
+            "citations",
+            "document_id",
+            "created_at"
+          ]
+        },
+        {
+          "name": "ConversationDetail",
+          "startLine": 65,
+          "endLine": 71,
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "created_at",
+            "messages"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DocumentResponse",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "DocumentListItem",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "ChatRequest",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "LoginRequest",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "TokenResponse",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "UserResponse",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "ConversationListItem",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "MessageResponse",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "ConversationDetail",
+          "line": 65,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 0,
+        "classCount": 9
+      }
+    },
+    {
+      "path": "backend/app/security.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 61,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "hash_password",
+          "startLine": 23,
+          "endLine": 24,
+          "params": [
+            "password"
+          ]
+        },
+        {
+          "name": "verify_password",
+          "startLine": 27,
+          "endLine": 28,
+          "params": [
+            "plain",
+            "hashed"
+          ]
+        },
+        {
+          "name": "create_access_token",
+          "startLine": 31,
+          "endLine": 36,
+          "params": [
+            "subject",
+            "expires_minutes"
+          ]
+        },
+        {
+          "name": "get_current_user",
+          "startLine": 39,
+          "endLine": 61,
+          "params": [
+            "token",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "hash_password",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "verify_password",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "create_access_token",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "get_current_user",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "hash_password",
+          "callee": "pwd_context.hash",
+          "lineNumber": 24
+        },
+        {
+          "caller": "verify_password",
+          "callee": "pwd_context.verify",
+          "lineNumber": 28
+        },
+        {
+          "caller": "create_access_token",
+          "callee": "datetime.now",
+          "lineNumber": 32
+        },
+        {
+          "caller": "create_access_token",
+          "callee": "timedelta",
+          "lineNumber": 32
+        },
+        {
+          "caller": "create_access_token",
+          "callee": "jwt.encode",
+          "lineNumber": 36
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "Depends",
+          "lineNumber": 40
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "Depends",
+          "lineNumber": 41
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "HTTPException",
+          "lineNumber": 43
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "jwt.decode",
+          "lineNumber": 49
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "payload.get",
+          "lineNumber": 52
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "db.query(User).filter(User.username == username).first",
+          "lineNumber": 58
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "db.query(User).filter",
+          "lineNumber": 58
+        },
+        {
+          "caller": "get_current_user",
+          "callee": "db.query",
+          "lineNumber": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/scripts/create_user.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 18,
+          "endLine": 52,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "main",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 19
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 21
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "parser.parse_args",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "SessionLocal",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "db.query(User).filter(User.username == args.username).first",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "db.query(User).filter",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "db.query",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "hash_password",
+          "lineNumber": 39
+        },
+        {
+          "caller": "main",
+          "callee": "db.commit",
+          "lineNumber": 40
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 41
+        },
+        {
+          "caller": "main",
+          "callee": "User",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "hash_password",
+          "lineNumber": 45
+        },
+        {
+          "caller": "main",
+          "callee": "db.add",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "db.commit",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "db.close",
+          "lineNumber": 52
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/scripts/reingest_all.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "reingest_one",
+          "startLine": 31,
+          "endLine": 69,
+          "params": [
+            "doc_id"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 72,
+          "endLine": 95,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "reingest_one",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 72,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "reingest_one",
+          "callee": "SessionLocal",
+          "lineNumber": 32
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.get",
+          "lineNumber": 34
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "logger.error",
+          "lineNumber": 36
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "logger.info",
+          "lineNumber": 38
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.execute",
+          "lineNumber": 41
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "delete(DocumentChunk).where",
+          "lineNumber": 41
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "delete",
+          "lineNumber": 41
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.execute",
+          "lineNumber": 42
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "delete(DocumentParentChunk).where",
+          "lineNumber": 42
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "delete",
+          "lineNumber": 42
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.commit",
+          "lineNumber": 43
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "parse_document",
+          "lineNumber": 45
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "chunk_document",
+          "lineNumber": 46
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "ValueError",
+          "lineNumber": 48
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "embed_chunks",
+          "lineNumber": 50
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "store_chunks",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "str",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "parsed.metadata.get",
+          "lineNumber": 55
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "parsed.metadata.get",
+          "lineNumber": 56
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.commit",
+          "lineNumber": 58
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "logger.info",
+          "lineNumber": 59
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.rollback",
+          "lineNumber": 61
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.get",
+          "lineNumber": 62
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.commit",
+          "lineNumber": 66
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "logger.exception",
+          "lineNumber": 67
+        },
+        {
+          "caller": "reingest_one",
+          "callee": "db.close",
+          "lineNumber": 69
+        },
+        {
+          "caller": "main",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 74
+        },
+        {
+          "caller": "main",
+          "callee": "parser.add_argument",
+          "lineNumber": 75
+        },
+        {
+          "caller": "main",
+          "callee": "parser.parse_args",
+          "lineNumber": 77
+        },
+        {
+          "caller": "main",
+          "callee": "SessionLocal",
+          "lineNumber": 79
+        },
+        {
+          "caller": "main",
+          "callee": "UUID",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "db.execute(\n                select(Document.id).where(Document.status.in_(statuses))\n            ).scalars().all",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "db.execute(\n                select(Document.id).where(Document.status.in_(statuses))\n            ).scalars",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "db.execute",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "select(Document.id).where",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "select",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "Document.status.in_",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "list",
+          "lineNumber": 88
+        },
+        {
+          "caller": "main",
+          "callee": "db.close",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "logger.info",
+          "lineNumber": 92
+        },
+        {
+          "caller": "main",
+          "callee": "len",
+          "lineNumber": 92
+        },
+        {
+          "caller": "main",
+          "callee": "reingest_one",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "logger.info",
+          "lineNumber": 95
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 48,
+      "functions": [
+        {
+          "name": "setup_tables",
+          "startLine": 34,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "db",
+          "startLine": 40,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "client",
+          "startLine": 50,
+          "endLine": 56,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "setup_tables",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "db",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "client",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "setup_tables",
+          "callee": "Base.metadata.create_all",
+          "lineNumber": 35
+        },
+        {
+          "caller": "setup_tables",
+          "callee": "Base.metadata.drop_all",
+          "lineNumber": 37
+        },
+        {
+          "caller": "db",
+          "callee": "engine.connect",
+          "lineNumber": 41
+        },
+        {
+          "caller": "db",
+          "callee": "conn.begin",
+          "lineNumber": 42
+        },
+        {
+          "caller": "db",
+          "callee": "TestingSession",
+          "lineNumber": 43
+        },
+        {
+          "caller": "db",
+          "callee": "session.close",
+          "lineNumber": 45
+        },
+        {
+          "caller": "db",
+          "callee": "trans.rollback",
+          "lineNumber": 46
+        },
+        {
+          "caller": "db",
+          "callee": "conn.close",
+          "lineNumber": 47
+        },
+        {
+          "caller": "client",
+          "callee": "TestClient",
+          "lineNumber": 54
+        },
+        {
+          "caller": "client",
+          "callee": "app.dependency_overrides.clear",
+          "lineNumber": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "backend/tests/test_auth.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "_make_user",
+          "startLine": 5,
+          "endLine": 13,
+          "params": [
+            "db",
+            "username",
+            "password",
+            "is_active"
+          ]
+        },
+        {
+          "name": "test_login_success_returns_token",
+          "startLine": 16,
+          "endLine": 24,
+          "params": [
+            "client",
+            "db"
+          ]
+        },
+        {
+          "name": "test_login_wrong_password_401",
+          "startLine": 27,
+          "endLine": 32,
+          "params": [
+            "client",
+            "db"
+          ]
+        },
+        {
+          "name": "test_login_unknown_user_401",
+          "startLine": 35,
+          "endLine": 39,
+          "params": [
+            "client"
+          ]
+        },
+        {
+          "name": "test_me_requires_token",
+          "startLine": 42,
+          "endLine": 44,
+          "params": [
+            "client"
+          ]
+        },
+        {
+          "name": "test_me_with_token_returns_user",
+          "startLine": 47,
+          "endLine": 55,
+          "params": [
+            "client",
+            "db"
+          ]
+        },
+        {
+          "name": "test_protected_chat_requires_token",
+          "startLine": 58,
+          "endLine": 62,
+          "params": [
+            "client"
+          ]
+        },
+        {
+          "name": "test_protected_documents_list_requires_token",
+          "startLine": 65,
+          "endLine": 67,
+          "params": [
+            "client"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_make_user",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "test_login_success_returns_token",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "test_login_wrong_password_401",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "test_login_unknown_user_401",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "test_me_requires_token",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "test_me_with_token_returns_user",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "test_protected_chat_requires_token",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "test_protected_documents_list_requires_token",
+          "line": 65,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_make_user",
+          "callee": "User",
+          "lineNumber": 6
+        },
+        {
+          "caller": "_make_user",
+          "callee": "hash_password",
+          "lineNumber": 8
+        },
+        {
+          "caller": "_make_user",
+          "callee": "db.add",
+          "lineNumber": 11
+        },
+        {
+          "caller": "_make_user",
+          "callee": "db.commit",
+          "lineNumber": 12
+        },
+        {
+          "caller": "test_login_success_returns_token",
+          "callee": "_make_user",
+          "lineNumber": 17
+        },
+        {
+          "caller": "test_login_success_returns_token",
+          "callee": "client.post",
+          "lineNumber": 18
+        },
+        {
+          "caller": "test_login_success_returns_token",
+          "callee": "res.json",
+          "lineNumber": 22
+        },
+        {
+          "caller": "test_login_wrong_password_401",
+          "callee": "_make_user",
+          "lineNumber": 28
+        },
+        {
+          "caller": "test_login_wrong_password_401",
+          "callee": "client.post",
+          "lineNumber": 29
+        },
+        {
+          "caller": "test_login_unknown_user_401",
+          "callee": "client.post",
+          "lineNumber": 36
+        },
+        {
+          "caller": "test_me_requires_token",
+          "callee": "client.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "test_me_with_token_returns_user",
+          "callee": "_make_user",
+          "lineNumber": 48
+        },
+        {
+          "caller": "test_me_with_token_returns_user",
+          "callee": "client.post",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_me_with_token_returns_user",
+          "callee": "login.json",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_me_with_token_returns_user",
+          "callee": "client.get",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_me_with_token_returns_user",
+          "callee": "res.json",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_protected_chat_requires_token",
+          "callee": "client.post",
+          "lineNumber": 59
+        },
+        {
+          "caller": "test_protected_documents_list_requires_token",
+          "callee": "client.get",
+          "lineNumber": 66
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    }
+  ]
+}

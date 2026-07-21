@@ -1,0 +1,1367 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/api/client.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "getToken",
+          "startLine": 10,
+          "endLine": 12,
+          "params": []
+        },
+        {
+          "name": "setToken",
+          "startLine": 14,
+          "endLine": 17,
+          "params": [
+            "token"
+          ]
+        },
+        {
+          "name": "authHeaders",
+          "startLine": 19,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "apiFetch",
+          "startLine": 24,
+          "endLine": 31,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TOKEN_KEY",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "getToken",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "setToken",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "authHeaders",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "apiFetch",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getToken",
+          "callee": "localStorage.getItem",
+          "lineNumber": 11
+        },
+        {
+          "caller": "setToken",
+          "callee": "localStorage.setItem",
+          "lineNumber": 15
+        },
+        {
+          "caller": "setToken",
+          "callee": "localStorage.removeItem",
+          "lineNumber": 16
+        },
+        {
+          "caller": "authHeaders",
+          "callee": "getToken",
+          "lineNumber": 20
+        },
+        {
+          "caller": "apiFetch",
+          "callee": "fetch",
+          "lineNumber": 25
+        },
+        {
+          "caller": "apiFetch",
+          "callee": "authHeaders",
+          "lineNumber": 25
+        },
+        {
+          "caller": "apiFetch",
+          "callee": "setToken",
+          "lineNumber": 27
+        },
+        {
+          "caller": "apiFetch",
+          "callee": "window.dispatchEvent",
+          "lineNumber": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ChatMessage.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 149,
+      "nonEmptyLines": 140,
+      "functions": [
+        {
+          "name": "renderContent",
+          "startLine": 5,
+          "endLine": 46,
+          "params": [
+            "content"
+          ]
+        },
+        {
+          "name": "ChatMessage",
+          "startLine": 48,
+          "endLine": 149,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ChatMessage",
+          "line": 48,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "renderContent",
+          "callee": "content.split",
+          "lineNumber": 7
+        },
+        {
+          "caller": "flushList",
+          "callee": "elements.push",
+          "lineNumber": 14
+        },
+        {
+          "caller": "flushList",
+          "callee": "listItems.map",
+          "lineNumber": 16
+        },
+        {
+          "caller": "renderContent",
+          "callee": "line.trim",
+          "lineNumber": 29
+        },
+        {
+          "caller": "renderContent",
+          "callee": "line.match",
+          "lineNumber": 31
+        },
+        {
+          "caller": "renderContent",
+          "callee": "listItems.push",
+          "lineNumber": 33
+        },
+        {
+          "caller": "renderContent",
+          "callee": "flushList",
+          "lineNumber": 37
+        },
+        {
+          "caller": "renderContent",
+          "callee": "line.replace",
+          "lineNumber": 40
+        },
+        {
+          "caller": "renderContent",
+          "callee": "elements.push",
+          "lineNumber": 41
+        },
+        {
+          "caller": "renderContent",
+          "callee": "flushList",
+          "lineNumber": 44
+        },
+        {
+          "caller": "ChatMessage",
+          "callee": "useState",
+          "lineNumber": 49
+        },
+        {
+          "caller": "ChatMessage",
+          "callee": "renderContent",
+          "lineNumber": 82
+        },
+        {
+          "caller": "ChatMessage",
+          "callee": "setCitationsOpen",
+          "lineNumber": 90
+        },
+        {
+          "caller": "ChatMessage",
+          "callee": "citations.map",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ChatThread.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 24,
+      "functions": [
+        {
+          "name": "ChatThread",
+          "startLine": 5,
+          "endLine": 27,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ChatThread",
+          "line": 5,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ChatThread",
+          "callee": "useRef",
+          "lineNumber": 6
+        },
+        {
+          "caller": "ChatThread",
+          "callee": "useEffect",
+          "lineNumber": 8
+        },
+        {
+          "caller": "ChatThread",
+          "callee": "bottomRef.current?.scrollIntoView",
+          "lineNumber": 9
+        },
+        {
+          "caller": "ChatThread",
+          "callee": "messages.map",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/Composer.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 130,
+      "nonEmptyLines": 122,
+      "functions": [
+        {
+          "name": "Composer",
+          "startLine": 4,
+          "endLine": 130,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Composer",
+          "line": 4,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Composer",
+          "callee": "useState",
+          "lineNumber": 5
+        },
+        {
+          "caller": "Composer",
+          "callee": "useState",
+          "lineNumber": 6
+        },
+        {
+          "caller": "Composer",
+          "callee": "useRef",
+          "lineNumber": 7
+        },
+        {
+          "caller": "Composer",
+          "callee": "useRef",
+          "lineNumber": 8
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 11
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "value.trim",
+          "lineNumber": 12
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "onSend",
+          "lineNumber": 14
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setValue",
+          "lineNumber": 15
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "textareaRef.current.focus",
+          "lineNumber": 18
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "handleSubmit",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleChange",
+          "callee": "setValue",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleChange",
+          "callee": "Math.min",
+          "lineNumber": 33
+        },
+        {
+          "caller": "handleFileChange",
+          "callee": "setSelectedFile",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleFileChange",
+          "callee": "onFileSelect",
+          "lineNumber": 41
+        },
+        {
+          "caller": "handleRemoveFile",
+          "callee": "setSelectedFile",
+          "lineNumber": 46
+        },
+        {
+          "caller": "Composer",
+          "callee": "value.trim",
+          "lineNumber": 50
+        },
+        {
+          "caller": "Composer",
+          "callee": "fileInputRef.current?.click",
+          "lineNumber": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/DocumentSelector.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "DocumentSelector",
+          "startLine": 5,
+          "endLine": 43,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DocumentSelector",
+          "line": 5,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "DocumentSelector",
+          "callee": "useState",
+          "lineNumber": 6
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "useCallback",
+          "lineNumber": 8
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "apiFetch",
+          "lineNumber": 10
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "setDocuments",
+          "lineNumber": 11
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "res.json",
+          "lineNumber": 11
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "useEffect",
+          "lineNumber": 15
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "fetchDocs",
+          "lineNumber": 18
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "window.addEventListener",
+          "lineNumber": 19
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "window.removeEventListener",
+          "lineNumber": 20
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "onChange",
+          "lineNumber": 32
+        },
+        {
+          "caller": "DocumentSelector",
+          "callee": "documents.map",
+          "lineNumber": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ThinkingIndicator.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "ThinkingIndicator",
+          "startLine": 9,
+          "endLine": 37,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ThinkingIndicator",
+          "line": 9,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "useEffect",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "setInterval",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "setWordIndex",
+          "lineNumber": 15
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "setTimeout",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "setLongWait",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "clearInterval",
+          "lineNumber": 19
+        },
+        {
+          "caller": "ThinkingIndicator",
+          "callee": "clearTimeout",
+          "lineNumber": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/UpgradeTab.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "UpgradeTab",
+          "startLine": 3,
+          "endLine": 10,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UpgradeTab",
+          "line": 3,
+          "isDefault": true
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/UploadToast.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 35,
+      "functions": [
+        {
+          "name": "UploadToast",
+          "startLine": 4,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UploadToast",
+          "line": 4,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "UploadToast",
+          "callee": "useEffect",
+          "lineNumber": 5
+        },
+        {
+          "caller": "UploadToast",
+          "callee": "setTimeout",
+          "lineNumber": 7
+        },
+        {
+          "caller": "UploadToast",
+          "callee": "clearTimeout",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useChat.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 149,
+      "nonEmptyLines": 136,
+      "functions": [
+        {
+          "name": "makeId",
+          "startLine": 5,
+          "endLine": 5,
+          "params": []
+        },
+        {
+          "name": "reducer",
+          "startLine": 7,
+          "endLine": 61,
+          "params": [
+            "state",
+            "action"
+          ]
+        },
+        {
+          "name": "useChat",
+          "startLine": 63,
+          "endLine": 149,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useChat",
+          "line": 63,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "reducer",
+          "callee": "state.messages.map",
+          "lineNumber": 26
+        },
+        {
+          "caller": "reducer",
+          "callee": "state.messages.map",
+          "lineNumber": 34
+        },
+        {
+          "caller": "reducer",
+          "callee": "state.messages.map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "reducer",
+          "callee": "state.messages.map",
+          "lineNumber": 50
+        },
+        {
+          "caller": "useChat",
+          "callee": "useReducer",
+          "lineNumber": 64
+        },
+        {
+          "caller": "useChat",
+          "callee": "useRef",
+          "lineNumber": 65
+        },
+        {
+          "caller": "useChat",
+          "callee": "useCallback",
+          "lineNumber": 67
+        },
+        {
+          "caller": "useChat",
+          "callee": "message.trim",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 70
+        },
+        {
+          "caller": "useChat",
+          "callee": "makeId",
+          "lineNumber": 70
+        },
+        {
+          "caller": "useChat",
+          "callee": "makeId",
+          "lineNumber": 71
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 72
+        },
+        {
+          "caller": "useChat",
+          "callee": "apiFetch",
+          "lineNumber": 78
+        },
+        {
+          "caller": "useChat",
+          "callee": "JSON.stringify",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 90
+        },
+        {
+          "caller": "useChat",
+          "callee": "res.body.getReader",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useChat",
+          "callee": "reader.read",
+          "lineNumber": 99
+        },
+        {
+          "caller": "useChat",
+          "callee": "decoder.decode",
+          "lineNumber": 101
+        },
+        {
+          "caller": "useChat",
+          "callee": "buffer.split",
+          "lineNumber": 102
+        },
+        {
+          "caller": "useChat",
+          "callee": "lines.pop",
+          "lineNumber": 103
+        },
+        {
+          "caller": "useChat",
+          "callee": "line.startsWith",
+          "lineNumber": 105
+        },
+        {
+          "caller": "useChat",
+          "callee": "line.slice(6).trim",
+          "lineNumber": 106
+        },
+        {
+          "caller": "useChat",
+          "callee": "line.slice",
+          "lineNumber": 106
+        },
+        {
+          "caller": "useChat",
+          "callee": "JSON.parse",
+          "lineNumber": 109
+        },
+        {
+          "caller": "useChat",
+          "callee": "onConversation",
+          "lineNumber": 111
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 113
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 115
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 117
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 119
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 125
+        },
+        {
+          "caller": "useChat",
+          "callee": "useCallback",
+          "lineNumber": 131
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 132
+        },
+        {
+          "caller": "useChat",
+          "callee": "messages.map",
+          "lineNumber": 134
+        },
+        {
+          "caller": "useChat",
+          "callee": "useCallback",
+          "lineNumber": 146
+        },
+        {
+          "caller": "useChat",
+          "callee": "dispatch",
+          "lineNumber": 146
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useConversations.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "useConversations",
+          "startLine": 8,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useConversations",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useConversations",
+          "callee": "useState",
+          "lineNumber": 9
+        },
+        {
+          "caller": "useConversations",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "useConversations",
+          "callee": "useCallback",
+          "lineNumber": 12
+        },
+        {
+          "caller": "useConversations",
+          "callee": "setConversations",
+          "lineNumber": 14
+        },
+        {
+          "caller": "useConversations",
+          "callee": "listConversations",
+          "lineNumber": 14
+        },
+        {
+          "caller": "useConversations",
+          "callee": "setLoading",
+          "lineNumber": 18
+        },
+        {
+          "caller": "useConversations",
+          "callee": "useEffect",
+          "lineNumber": 22
+        },
+        {
+          "caller": "useConversations",
+          "callee": "refresh",
+          "lineNumber": 25
+        },
+        {
+          "caller": "useConversations",
+          "callee": "useCallback",
+          "lineNumber": 28
+        },
+        {
+          "caller": "useConversations",
+          "callee": "deleteConversation",
+          "lineNumber": 29
+        },
+        {
+          "caller": "useConversations",
+          "callee": "setConversations",
+          "lineNumber": 30
+        },
+        {
+          "caller": "useConversations",
+          "callee": "cs.filter",
+          "lineNumber": 30
+        },
+        {
+          "caller": "useConversations",
+          "callee": "useCallback",
+          "lineNumber": 33
+        },
+        {
+          "caller": "useConversations",
+          "callee": "clearConversations",
+          "lineNumber": 34
+        },
+        {
+          "caller": "useConversations",
+          "callee": "setConversations",
+          "lineNumber": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useUpload.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 61,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "useUpload",
+          "startLine": 4,
+          "endLine": 61,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useUpload",
+          "line": 4,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useUpload",
+          "callee": "useState",
+          "lineNumber": 5
+        },
+        {
+          "caller": "useUpload",
+          "callee": "useRef",
+          "lineNumber": 10
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "formData.append",
+          "lineNumber": 16
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "apiFetch",
+          "lineNumber": 20
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "res.json().catch",
+          "lineNumber": 22
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "res.json",
+          "lineNumber": 22
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "res.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 28
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 32
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "JSON.parse",
+          "lineNumber": 38
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "es.close",
+          "lineNumber": 40
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 41
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "onComplete",
+          "lineNumber": 42
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "es.close",
+          "lineNumber": 44
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 45
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "es.close",
+          "lineNumber": 50
+        },
+        {
+          "caller": "uploadFile",
+          "callee": "setState",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reset",
+          "callee": "eventSourceRef.current?.close",
+          "lineNumber": 56
+        },
+        {
+          "caller": "reset",
+          "callee": "setState",
+          "lineNumber": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/pages/ChatPage.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 120,
+      "nonEmptyLines": 111,
+      "functions": [
+        {
+          "name": "ChatPage",
+          "startLine": 14,
+          "endLine": 120,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ChatPage",
+          "line": 14,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ChatPage",
+          "callee": "useChat",
+          "lineNumber": 15
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useConversations",
+          "lineNumber": 16
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useState",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useState",
+          "lineNumber": 18
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useState",
+          "lineNumber": 19
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useUpload",
+          "lineNumber": 21
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setShowToast",
+          "lineNumber": 22
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 26
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setActiveConversationId",
+          "lineNumber": 27
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "refresh",
+          "lineNumber": 28
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 31
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "handleSend",
+          "lineNumber": 32
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 35
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "reset",
+          "lineNumber": 36
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setActiveConversationId",
+          "lineNumber": 37
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 40
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setActiveConversationId",
+          "lineNumber": 41
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "getConversation",
+          "lineNumber": 43
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "loadMessages",
+          "lineNumber": 44
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "[...conv.messages].reverse().find",
+          "lineNumber": 46
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "[...conv.messages].reverse",
+          "lineNumber": 46
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setSelectedDocumentId",
+          "lineNumber": 47
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 53
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "remove",
+          "lineNumber": 55
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "reset",
+          "lineNumber": 57
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setActiveConversationId",
+          "lineNumber": 58
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "useCallback",
+          "lineNumber": 65
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "clearAll",
+          "lineNumber": 67
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "reset",
+          "lineNumber": 68
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setActiveConversationId",
+          "lineNumber": 69
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "setShowToast",
+          "lineNumber": 113
+        },
+        {
+          "caller": "ChatPage",
+          "callee": "upload.reset",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/repositories/conversationRepository.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "listConversations",
+          "startLine": 5,
+          "endLine": 9,
+          "params": []
+        },
+        {
+          "name": "getConversation",
+          "startLine": 11,
+          "endLine": 15,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "deleteConversation",
+          "startLine": 17,
+          "endLine": 20,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "clearConversations",
+          "startLine": 22,
+          "endLine": 25,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "listConversations",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "getConversation",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "deleteConversation",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "clearConversations",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "listConversations",
+          "callee": "apiFetch",
+          "lineNumber": 6
+        },
+        {
+          "caller": "listConversations",
+          "callee": "res.json",
+          "lineNumber": 8
+        },
+        {
+          "caller": "getConversation",
+          "callee": "apiFetch",
+          "lineNumber": 12
+        },
+        {
+          "caller": "getConversation",
+          "callee": "res.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "deleteConversation",
+          "callee": "apiFetch",
+          "lineNumber": 18
+        },
+        {
+          "caller": "clearConversations",
+          "callee": "apiFetch",
+          "lineNumber": 23
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    }
+  ]
+}

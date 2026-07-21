@@ -1,0 +1,1155 @@
+{
+  "name": "chatbot",
+  "description": "A full-stack Retrieval-Augmented Generation (RAG) chatbot pairing a React 19 + Vite frontend with a FastAPI backend that implements an agentic RAG pipeline on LangGraph, backed by PostgreSQL/pgvector, Celery/Redis, SQLAlchemy/Alembic, and a separate PaddleOCR microservice. Supports JWT authentication with login, conversation/message history, and hybrid retrieval (pgvector + Postgres FTS) fused with RRF and reranked via OpenRouter cross-encoders. Note: this project has over 100 source files; consider scoping analysis to a subdirectory for faster results.",
+  "languages": [
+    "conf",
+    "css",
+    "dockerfile",
+    "html",
+    "javascript",
+    "json",
+    "mako",
+    "markdown",
+    "python",
+    "sql",
+    "yaml"
+  ],
+  "frameworks": [
+    "Alembic",
+    "Celery",
+    "Docker",
+    "Docker Compose",
+    "FastAPI",
+    "LangChain",
+    "LangGraph",
+    "Pydantic",
+    "React",
+    "SQLAlchemy",
+    "Vite",
+    "pgvector",
+    "pytest",
+    "uvicorn"
+  ],
+  "files": [
+    {
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "sizeLines": 62,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "sizeLines": 8,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".env.example",
+      "language": "config",
+      "sizeLines": 51,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "language": "html",
+      "sizeLines": 114,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "language": "html",
+      "sizeLines": 49,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "language": "html",
+      "sizeLines": 88,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "language": "html",
+      "sizeLines": 3,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "language": "html",
+      "sizeLines": 3,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "language": "html",
+      "sizeLines": 3,
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "language": "unknown",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/state/server.pid",
+      "language": "pid",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "sizeLines": 3,
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/.dockerignore",
+      "language": "unknown",
+      "sizeLines": 6,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "backend/alembic.ini",
+      "language": "config",
+      "sizeLines": 38,
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/alembic/env.py",
+      "language": "python",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/script.py.mako",
+      "language": "mako",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0001_initial.py",
+      "language": "python",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0002_fix_embedding_dim.py",
+      "language": "python",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0003_add_fts_gin_index.py",
+      "language": "python",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0004_parent_child_chunks.py",
+      "language": "python",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0005_embedding_to_1536.py",
+      "language": "python",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0006_document_metadata.py",
+      "language": "python",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0007_create_users.py",
+      "language": "python",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0008_create_conversations_messages.py",
+      "language": "python",
+      "sizeLines": 89,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/config.py",
+      "language": "python",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/database.py",
+      "language": "python",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/main.py",
+      "language": "python",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/models.py",
+      "language": "python",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/auth.py",
+      "language": "python",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/chat.py",
+      "language": "python",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/conversations.py",
+      "language": "python",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/documents.py",
+      "language": "python",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "language": "python",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/security.py",
+      "language": "python",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/ingestion.py",
+      "language": "python",
+      "sizeLines": 303,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/ocr_client.py",
+      "language": "python",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/__init__.py",
+      "language": "python",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/graph.py",
+      "language": "python",
+      "sizeLines": 122,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/nodes.py",
+      "language": "python",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/prompts.py",
+      "language": "python",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/reranker.py",
+      "language": "python",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/retrieval.py",
+      "language": "python",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/state.py",
+      "language": "python",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/celery_app.py",
+      "language": "python",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/tasks.py",
+      "language": "python",
+      "sizeLines": 64,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 10,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "backend/evals/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/golden_set.yaml",
+      "language": "yaml",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/evals/metrics.py",
+      "language": "python",
+      "sizeLines": 110,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/results/.gitkeep",
+      "language": "unknown",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/run_eval.py",
+      "language": "python",
+      "sizeLines": 178,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/pytest.ini",
+      "language": "config",
+      "sizeLines": 4,
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/requirements.txt",
+      "language": "txt",
+      "sizeLines": 32,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "backend/scripts/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/scripts/create_user.py",
+      "language": "python",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/scripts/create_users_table.sql",
+      "language": "sql",
+      "sizeLines": 18,
+      "fileCategory": "data"
+    },
+    {
+      "path": "backend/scripts/reingest_all.py",
+      "language": "python",
+      "sizeLines": 99,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/__init__.py",
+      "language": "python",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "language": "python",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_auth.py",
+      "language": "python",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_chat.py",
+      "language": "python",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_eval_golden.py",
+      "language": "python",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_graph.py",
+      "language": "python",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_ingestion.py",
+      "language": "python",
+      "sizeLines": 280,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_ocr_client.py",
+      "language": "python",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag_graph.py",
+      "language": "python",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag_nodes.py",
+      "language": "python",
+      "sizeLines": 142,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag.py",
+      "language": "python",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_retrieval.py",
+      "language": "python",
+      "sizeLines": 234,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_tasks.py",
+      "language": "python",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_upload.py",
+      "language": "python",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "sizeLines": 81,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "DESIGN.md",
+      "language": "markdown",
+      "sizeLines": 313,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 98,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 12,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "language": "markdown",
+      "sizeLines": 1896,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "language": "markdown",
+      "sizeLines": 1521,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "language": "markdown",
+      "sizeLines": 2925,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "language": "markdown",
+      "sizeLines": 204,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "language": "markdown",
+      "sizeLines": 287,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "language": "markdown",
+      "sizeLines": 436,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "eslint.config.js",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "features_planning/account_login/plan.md",
+      "language": "markdown",
+      "sizeLines": 48,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_history/plan.md",
+      "language": "markdown",
+      "sizeLines": 217,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_with_doc/planning.md",
+      "language": "markdown",
+      "sizeLines": 11,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_with_doc/rag_enhancement.md",
+      "language": "markdown",
+      "sizeLines": 69,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/file_processing/planing.md",
+      "language": "markdown",
+      "sizeLines": 5,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "sizeLines": 13,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "nginx.conf",
+      "language": "conf",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ocr-service/app.py",
+      "language": "python",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "ocr-service/Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 20,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "ocr-service/requirements.txt",
+      "language": "txt",
+      "sizeLines": 6,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 28,
+      "fileCategory": "config"
+    },
+    {
+      "path": "prompt.md",
+      "language": "markdown",
+      "sizeLines": 3,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 16,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/api/client.js",
+      "language": "javascript",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/App.css",
+      "language": "css",
+      "sizeLines": 184,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/App.jsx",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/auth/AuthContext.jsx",
+      "language": "javascript",
+      "sizeLines": 80,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ChatMessage.css",
+      "language": "css",
+      "sizeLines": 265,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ChatMessage.jsx",
+      "language": "javascript",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ChatThread.css",
+      "language": "css",
+      "sizeLines": 15,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ChatThread.jsx",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/Composer.css",
+      "language": "css",
+      "sizeLines": 153,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Composer.jsx",
+      "language": "javascript",
+      "sizeLines": 130,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/DocumentSelector.css",
+      "language": "css",
+      "sizeLines": 40,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/DocumentSelector.jsx",
+      "language": "javascript",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ProtectedRoute.jsx",
+      "language": "javascript",
+      "sizeLines": 17,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/Sidebar.css",
+      "language": "css",
+      "sizeLines": 274,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Sidebar.jsx",
+      "language": "javascript",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ThinkingIndicator.css",
+      "language": "css",
+      "sizeLines": 70,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ThinkingIndicator.jsx",
+      "language": "javascript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/UpgradeTab.css",
+      "language": "css",
+      "sizeLines": 34,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UpgradeTab.jsx",
+      "language": "javascript",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/UploadToast.css",
+      "language": "css",
+      "sizeLines": 65,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UploadToast.jsx",
+      "language": "javascript",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useChat.js",
+      "language": "javascript",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useConversations.js",
+      "language": "javascript",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useUpload.js",
+      "language": "javascript",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/index.css",
+      "language": "css",
+      "sizeLines": 1,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/main.jsx",
+      "language": "javascript",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/ChatPage.css",
+      "language": "css",
+      "sizeLines": 41,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/ChatPage.jsx",
+      "language": "javascript",
+      "sizeLines": 120,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/HomePage.css",
+      "language": "css",
+      "sizeLines": 115,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/HomePage.jsx",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/LoginPage.css",
+      "language": "css",
+      "sizeLines": 95,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/LoginPage.jsx",
+      "language": "javascript",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/repositories/authRepository.js",
+      "language": "javascript",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/repositories/conversationRepository.js",
+      "language": "javascript",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/styles/global.css",
+      "language": "css",
+      "sizeLines": 36,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/styles/tokens.css",
+      "language": "css",
+      "sizeLines": 63,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "vite.config.js",
+      "language": "javascript",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 137,
+  "filteredByIgnore": 1,
+  "estimatedComplexity": "moderate",
+  "importMap": {
+    ".claude/settings.local.json": [],
+    ".dockerignore": [],
+    ".env.example": [],
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html": [],
+    ".superpowers/brainstorm/37604-1776700392/content/waiting.html": [],
+    ".superpowers/brainstorm/37604-1776700392/state/server-stopped": [],
+    ".superpowers/brainstorm/37604-1776700392/state/server.pid": [],
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    "backend/.dockerignore": [],
+    "backend/alembic.ini": [],
+    "backend/alembic/env.py": [
+      "backend/app/config.py",
+      "backend/app/database.py",
+      "backend/app/models.py"
+    ],
+    "backend/alembic/script.py.mako": [],
+    "backend/alembic/versions/0001_initial.py": [],
+    "backend/alembic/versions/0002_fix_embedding_dim.py": [],
+    "backend/alembic/versions/0003_add_fts_gin_index.py": [],
+    "backend/alembic/versions/0004_parent_child_chunks.py": [],
+    "backend/alembic/versions/0005_embedding_to_1536.py": [],
+    "backend/alembic/versions/0006_document_metadata.py": [],
+    "backend/alembic/versions/0007_create_users.py": [],
+    "backend/alembic/versions/0008_create_conversations_messages.py": [],
+    "backend/app/__init__.py": [],
+    "backend/app/config.py": [],
+    "backend/app/database.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/main.py": [
+      "backend/app/config.py",
+      "backend/app/routers/__init__.py",
+      "backend/app/routers/auth.py",
+      "backend/app/routers/chat.py",
+      "backend/app/routers/conversations.py",
+      "backend/app/routers/documents.py"
+    ],
+    "backend/app/models.py": [
+      "backend/app/database.py"
+    ],
+    "backend/app/routers/__init__.py": [],
+    "backend/app/routers/auth.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/schemas.py",
+      "backend/app/security.py"
+    ],
+    "backend/app/routers/chat.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/schemas.py",
+      "backend/app/security.py",
+      "backend/app/services/rag/__init__.py"
+    ],
+    "backend/app/routers/conversations.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/schemas.py",
+      "backend/app/security.py"
+    ],
+    "backend/app/routers/documents.py": [
+      "backend/app/config.py",
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/schemas.py",
+      "backend/app/security.py"
+    ],
+    "backend/app/schemas.py": [],
+    "backend/app/security.py": [
+      "backend/app/config.py",
+      "backend/app/database.py",
+      "backend/app/models.py"
+    ],
+    "backend/app/services/__init__.py": [],
+    "backend/app/services/ingestion.py": [
+      "backend/app/config.py",
+      "backend/app/models.py",
+      "backend/app/services/ocr_client.py"
+    ],
+    "backend/app/services/ocr_client.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/services/rag/__init__.py": [
+      "backend/app/services/rag/graph.py"
+    ],
+    "backend/app/services/rag/graph.py": [
+      "backend/app/config.py",
+      "backend/app/services/rag/nodes.py",
+      "backend/app/services/rag/state.py"
+    ],
+    "backend/app/services/rag/nodes.py": [
+      "backend/app/config.py",
+      "backend/app/services/rag/prompts.py",
+      "backend/app/services/rag/retrieval.py",
+      "backend/app/services/rag/state.py"
+    ],
+    "backend/app/services/rag/prompts.py": [],
+    "backend/app/services/rag/reranker.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/services/rag/retrieval.py": [
+      "backend/app/config.py",
+      "backend/app/models.py",
+      "backend/app/services/ingestion.py",
+      "backend/app/services/rag/reranker.py"
+    ],
+    "backend/app/services/rag/state.py": [],
+    "backend/app/workers/__init__.py": [],
+    "backend/app/workers/celery_app.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/workers/tasks.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/services/ingestion.py",
+      "backend/app/workers/celery_app.py"
+    ],
+    "backend/Dockerfile": [],
+    "backend/evals/__init__.py": [],
+    "backend/evals/golden_set.yaml": [],
+    "backend/evals/metrics.py": [
+      "backend/app/config.py"
+    ],
+    "backend/evals/results/.gitkeep": [],
+    "backend/evals/run_eval.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/services/rag/__init__.py",
+      "backend/evals/metrics.py"
+    ],
+    "backend/pytest.ini": [],
+    "backend/requirements.txt": [],
+    "backend/scripts/__init__.py": [],
+    "backend/scripts/create_user.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/security.py"
+    ],
+    "backend/scripts/create_users_table.sql": [],
+    "backend/scripts/reingest_all.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/services/ingestion.py"
+    ],
+    "backend/tests/__init__.py": [],
+    "backend/tests/conftest.py": [
+      "backend/app/database.py",
+      "backend/app/main.py"
+    ],
+    "backend/tests/test_auth.py": [
+      "backend/app/models.py",
+      "backend/app/security.py"
+    ],
+    "backend/tests/test_chat.py": [],
+    "backend/tests/test_eval_golden.py": [
+      "backend/evals/run_eval.py"
+    ],
+    "backend/tests/test_graph.py": [],
+    "backend/tests/test_ingestion.py": [],
+    "backend/tests/test_ocr_client.py": [],
+    "backend/tests/test_rag_graph.py": [
+      "backend/app/services/rag/state.py"
+    ],
+    "backend/tests/test_rag_nodes.py": [],
+    "backend/tests/test_rag.py": [],
+    "backend/tests/test_retrieval.py": [],
+    "backend/tests/test_tasks.py": [],
+    "backend/tests/test_upload.py": [],
+    "CLAUDE.md": [],
+    "DESIGN.md": [],
+    "docker-compose.yml": [],
+    "Dockerfile": [],
+    "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md": [],
+    "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md": [],
+    "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md": [],
+    "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md": [],
+    "docs/superpowers/specs/2026-05-04-agentic-rag-design.md": [],
+    "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md": [],
+    "eslint.config.js": [],
+    "features_planning/account_login/plan.md": [],
+    "features_planning/chat_history/plan.md": [],
+    "features_planning/chat_with_doc/planning.md": [],
+    "features_planning/chat_with_doc/rag_enhancement.md": [],
+    "features_planning/file_processing/planing.md": [],
+    "index.html": [],
+    "nginx.conf": [],
+    "ocr-service/app.py": [],
+    "ocr-service/Dockerfile": [],
+    "ocr-service/requirements.txt": [],
+    "package.json": [],
+    "prompt.md": [],
+    "README.md": [],
+    "src/api/client.js": [],
+    "src/App.css": [],
+    "src/App.jsx": [
+      "src/auth/AuthContext.jsx",
+      "src/components/ProtectedRoute.jsx",
+      "src/pages/ChatPage.jsx",
+      "src/pages/HomePage.jsx",
+      "src/pages/LoginPage.jsx"
+    ],
+    "src/auth/AuthContext.jsx": [
+      "src/api/client.js",
+      "src/repositories/authRepository.js"
+    ],
+    "src/components/ChatMessage.css": [],
+    "src/components/ChatMessage.jsx": [
+      "src/components/ChatMessage.css",
+      "src/components/ThinkingIndicator.jsx"
+    ],
+    "src/components/ChatThread.css": [],
+    "src/components/ChatThread.jsx": [
+      "src/components/ChatMessage.jsx",
+      "src/components/ChatThread.css"
+    ],
+    "src/components/Composer.css": [],
+    "src/components/Composer.jsx": [
+      "src/components/Composer.css"
+    ],
+    "src/components/DocumentSelector.css": [],
+    "src/components/DocumentSelector.jsx": [
+      "src/api/client.js",
+      "src/components/DocumentSelector.css"
+    ],
+    "src/components/ProtectedRoute.jsx": [
+      "src/auth/AuthContext.jsx"
+    ],
+    "src/components/Sidebar.css": [],
+    "src/components/Sidebar.jsx": [
+      "src/auth/AuthContext.jsx",
+      "src/components/Sidebar.css"
+    ],
+    "src/components/ThinkingIndicator.css": [],
+    "src/components/ThinkingIndicator.jsx": [
+      "src/components/ThinkingIndicator.css"
+    ],
+    "src/components/UpgradeTab.css": [],
+    "src/components/UpgradeTab.jsx": [
+      "src/components/UpgradeTab.css"
+    ],
+    "src/components/UploadToast.css": [],
+    "src/components/UploadToast.jsx": [
+      "src/components/UploadToast.css"
+    ],
+    "src/hooks/useChat.js": [
+      "src/api/client.js"
+    ],
+    "src/hooks/useConversations.js": [
+      "src/repositories/conversationRepository.js"
+    ],
+    "src/hooks/useUpload.js": [
+      "src/api/client.js"
+    ],
+    "src/index.css": [],
+    "src/main.jsx": [
+      "src/App.jsx",
+      "src/index.css"
+    ],
+    "src/pages/ChatPage.css": [],
+    "src/pages/ChatPage.jsx": [
+      "src/components/ChatThread.jsx",
+      "src/components/Composer.jsx",
+      "src/components/DocumentSelector.jsx",
+      "src/components/Sidebar.jsx",
+      "src/components/UpgradeTab.jsx",
+      "src/components/UploadToast.jsx",
+      "src/hooks/useChat.js",
+      "src/hooks/useConversations.js",
+      "src/hooks/useUpload.js",
+      "src/pages/ChatPage.css",
+      "src/repositories/conversationRepository.js"
+    ],
+    "src/pages/HomePage.css": [],
+    "src/pages/HomePage.jsx": [
+      "src/pages/HomePage.css"
+    ],
+    "src/pages/LoginPage.css": [],
+    "src/pages/LoginPage.jsx": [
+      "src/auth/AuthContext.jsx",
+      "src/pages/LoginPage.css"
+    ],
+    "src/repositories/authRepository.js": [],
+    "src/repositories/conversationRepository.js": [
+      "src/api/client.js"
+    ],
+    "src/styles/global.css": [],
+    "src/styles/tokens.css": [],
+    "vite.config.js": []
+  }
+}

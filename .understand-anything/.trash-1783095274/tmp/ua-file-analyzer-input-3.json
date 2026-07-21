@@ -1,0 +1,62 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "batchFiles": [
+    {"path": "backend/app/config.py", "language": "python", "sizeLines": 69, "fileCategory": "code"},
+    {"path": "backend/app/services/ingestion.py", "language": "python", "sizeLines": 303, "fileCategory": "code"},
+    {"path": "backend/app/services/ocr_client.py", "language": "python", "sizeLines": 61, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/graph.py", "language": "python", "sizeLines": 122, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/nodes.py", "language": "python", "sizeLines": 184, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/prompts.py", "language": "python", "sizeLines": 50, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/reranker.py", "language": "python", "sizeLines": 96, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/retrieval.py", "language": "python", "sizeLines": 161, "fileCategory": "code"},
+    {"path": "backend/app/services/rag/state.py", "language": "python", "sizeLines": 52, "fileCategory": "code"},
+    {"path": "backend/app/workers/celery_app.py", "language": "python", "sizeLines": 35, "fileCategory": "code"},
+    {"path": "backend/app/workers/tasks.py", "language": "python", "sizeLines": 64, "fileCategory": "code"},
+    {"path": "backend/tests/test_rag_graph.py", "language": "python", "sizeLines": 24, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "backend/app/config.py": [],
+    "backend/app/services/ingestion.py": [
+      "backend/app/config.py",
+      "backend/app/models.py",
+      "backend/app/services/ocr_client.py"
+    ],
+    "backend/app/services/ocr_client.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/services/rag/graph.py": [
+      "backend/app/config.py",
+      "backend/app/services/rag/nodes.py",
+      "backend/app/services/rag/state.py"
+    ],
+    "backend/app/services/rag/nodes.py": [
+      "backend/app/config.py",
+      "backend/app/services/rag/prompts.py",
+      "backend/app/services/rag/retrieval.py",
+      "backend/app/services/rag/state.py"
+    ],
+    "backend/app/services/rag/prompts.py": [],
+    "backend/app/services/rag/reranker.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/services/rag/retrieval.py": [
+      "backend/app/config.py",
+      "backend/app/models.py",
+      "backend/app/services/ingestion.py",
+      "backend/app/services/rag/reranker.py"
+    ],
+    "backend/app/services/rag/state.py": [],
+    "backend/app/workers/celery_app.py": [
+      "backend/app/config.py"
+    ],
+    "backend/app/workers/tasks.py": [
+      "backend/app/database.py",
+      "backend/app/models.py",
+      "backend/app/services/ingestion.py",
+      "backend/app/workers/celery_app.py"
+    ],
+    "backend/tests/test_rag_graph.py": [
+      "backend/app/services/rag/state.py"
+    ]
+  }
+}

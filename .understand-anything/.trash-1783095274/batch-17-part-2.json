@@ -1,0 +1,129 @@
+{
+  "nodes": [
+    {
+      "id": "document:features_planning/chat_with_doc/rag_enhancement.md",
+      "type": "document",
+      "name": "rag_enhancement.md",
+      "filePath": "features_planning/chat_with_doc/rag_enhancement.md",
+      "summary": "Describes the enhanced agentic RAG architecture as a LangGraph state machine with six nodes (rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check), documents the OpenRouter model cutover (Claude Haiku 4.5 chat/rerank, Qwen3 embeddings), the parent/child chunk data model, evaluation harness, and tunable config knobs.",
+      "tags": ["documentation", "rag", "architecture", "langgraph"],
+      "complexity": "moderate",
+      "languageNotes": "Includes an ASCII flow diagram of the LangGraph node transitions and a module-to-responsibility table used as the canonical reference for the RAG pipeline's file layout."
+    },
+    {
+      "id": "document:features_planning/file_processing/planing.md",
+      "type": "document",
+      "name": "planing.md",
+      "filePath": "features_planning/file_processing/planing.md",
+      "summary": "Initial feature request for document upload and background ingestion: an upload button in the chat UI, storing document metadata in Postgres, and a background job that chunks, embeds, and stores vectors in pgvector before notifying the user.",
+      "tags": ["documentation", "planning", "ingestion", "upload"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:nginx.conf",
+      "type": "file",
+      "name": "nginx.conf",
+      "filePath": "nginx.conf",
+      "summary": "Nginx reverse proxy configuration that serves the built frontend as an SPA, proxies /api/ requests to the FastAPI backend with buffering disabled for streaming responses, and sets long-lived caching headers for static assets.",
+      "tags": ["infrastructure", "reverse-proxy", "nginx", "deployment"],
+      "complexity": "simple",
+      "languageNotes": "Disables proxy_buffering for /api/ so server-sent-event streaming responses from the backend reach the client without being buffered."
+    },
+    {
+      "id": "file:ocr-service/app.py",
+      "type": "file",
+      "name": "app.py",
+      "filePath": "ocr-service/app.py",
+      "summary": "Standalone FastAPI OCR microservice exposing a health check and an /ocr endpoint that runs RapidOCR (ONNXRuntime) over an uploaded image and returns line-level text, bounding boxes, and confidence scores.",
+      "tags": ["ocr", "microservice", "fastapi", "entry-point"],
+      "complexity": "simple",
+      "languageNotes": "Loads the RapidOCR engine once at process start to avoid per-request model load latency; kept separate from the Celery worker so the worker calls it over HTTP instead of importing PaddleOCR directly."
+    },
+    {
+      "id": "function:ocr-service/app.py:ocr",
+      "type": "function",
+      "name": "ocr",
+      "filePath": "ocr-service/app.py",
+      "lineRange": [33, 51],
+      "summary": "Reads an uploaded image, runs it through RapidOCR, and returns recognized text lines with bounding boxes and confidence scores alongside the image dimensions.",
+      "tags": ["ocr", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:ocr-service/requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "ocr-service/requirements.txt",
+      "summary": "Pinned Python dependencies for the OCR microservice: FastAPI, Uvicorn, python-multipart, RapidOCR (ONNXRuntime), Pillow, and NumPy.",
+      "tags": ["dependencies", "ocr", "microservice"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/App.css",
+      "type": "file",
+      "name": "App.css",
+      "filePath": "src/App.css",
+      "summary": "Legacy create-vite scaffold styles (counter button, hero/logo layout, ticking animation) that appear to predate the chat UI rewrite and are no longer referenced from App.jsx.",
+      "tags": ["css", "styling", "legacy", "unused"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/index.css",
+      "type": "file",
+      "name": "index.css",
+      "filePath": "src/index.css",
+      "summary": "Global stylesheet entry point that imports src/styles/global.css, pulled in by main.jsx to bootstrap the app's base styles.",
+      "tags": ["css", "entry-point", "global-styles"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/styles/global.css",
+      "type": "file",
+      "name": "global.css",
+      "filePath": "src/styles/global.css",
+      "summary": "Base global stylesheet applying a CSS reset, body typography/background driven by design tokens, and default button/input/link resets; imports tokens.css.",
+      "tags": ["css", "global-styles", "reset"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/styles/tokens.css",
+      "type": "file",
+      "name": "tokens.css",
+      "filePath": "src/styles/tokens.css",
+      "summary": "CSS custom-property design tokens (Apple-Blue brand colors, backgrounds, text colors, radii, shadows, typography, and layout widths) shared across the app's stylesheets.",
+      "tags": ["css", "design-tokens", "theming"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:vite.config.js",
+      "type": "file",
+      "name": "vite.config.js",
+      "filePath": "vite.config.js",
+      "summary": "Vite build configuration registering the React plugin and proxying /api requests to the local FastAPI backend during development.",
+      "tags": ["configuration", "vite", "build-system", "frontend"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/graph.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/nodes.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/state.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/prompts.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/retrieval.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/services/rag/reranker.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "file:backend/app/config.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "document:docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/chat_with_doc/rag_enhancement.md", "target": "document:docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/file_processing/planing.md", "target": "file:backend/app/services/ingestion.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/file_processing/planing.md", "target": "file:backend/app/models.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/file_processing/planing.md", "target": "file:backend/app/workers/tasks.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/file_processing/planing.md", "target": "file:backend/app/routers/documents.py", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:features_planning/file_processing/planing.md", "target": "file:src/hooks/useUpload.js", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "file:nginx.conf", "target": "file:backend/app/main.py", "type": "routes", "direction": "forward", "weight": 0.6 },
+    { "source": "file:ocr-service/app.py", "target": "function:ocr-service/app.py:ocr", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:ocr-service/app.py", "target": "document:ocr-service/requirements.txt", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "file:vite.config.js", "target": "file:src/main.jsx", "type": "configures", "direction": "forward", "weight": 0.6 },
+    { "source": "file:src/index.css", "target": "file:src/styles/global.css", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "file:src/styles/global.css", "target": "file:src/styles/tokens.css", "type": "depends_on", "direction": "forward", "weight": 0.6 }
+  ]
+}

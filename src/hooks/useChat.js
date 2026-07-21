@@ -1,4 +1,5 @@
 import { useReducer, useCallback, useRef } from 'react'
+import { apiFetch } from '../api/client'
 
 let nextId = 1
 function makeId() { return nextId++ }
@@ -50,6 +51,10 @@ function reducer(state, action) {
           m.id === action.id ? { ...m, streaming: false, error: true } : m
         ),
       }
+    case 'SET_MESSAGES':
+      return { messages: action.messages, pending: false }
+    case 'RESET':
+      return { messages: [], pending: false }
     default:
       return state
   }
@@ -59,7 +64,7 @@ export function useChat() {
   const [state, dispatch] = useReducer(reducer, { messages: [], pending: false })
   const abortRef = useRef(null)
 
-  const handleSend = useCallback(async (message, documentId) => {
+  const handleSend = useCallback(async (message, documentId, conversationId, onConversation) => {
     if (!documentId || !message.trim()) return
 
     dispatch({ type: 'ADD_USER_MESSAGE', id: makeId(), content: message })
@@ -70,10 +75,14 @@ export function useChat() {
     abortRef.current = controller
 
     try {
-      const res = await fetch('/api/chat/stream', {
+      const res = await apiFetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document_id: documentId, message }),
+        body: JSON.stringify({
+          document_id: documentId,
+          message,
+          conversation_id: conversationId || null,
+        }),
         signal: controller.signal,
       })
 
@@ -98,7 +107,9 @@ export function useChat() {
           if (!raw) continue
           let event
           try { event = JSON.parse(raw) } catch { continue }
-          if (event.type === 'token') {
+          if (event.type === 'conversation') {
+            onConversation?.(event.conversation_id, event.title)
+          } else if (event.type === 'token') {
             dispatch({ type: 'APPEND_TOKEN', id: assistantId, content: event.content })
           } else if (event.type === 'citations') {
             dispatch({ type: 'SET_CITATIONS', id: assistantId, chunks: event.chunks })
@@ -116,5 +127,23 @@ export function useChat() {
     }
   }, [])
 
-  return { messages: state.messages, pending: state.pending, handleSend }
+  // Load a persisted conversation's messages into the thread.
+  const loadMessages = useCallback((messages) => {
+    dispatch({
+      type: 'SET_MESSAGES',
+      messages: messages.map((m) => ({
+        id: m.id,
+        role: m.role,
+        content: m.content,
+        streaming: false,
+        citations: m.citations || [],
+        error: false,
+      })),
+    })
+  }, [])
+
+  // Clear the thread for a fresh chat.
+  const reset = useCallback(() => dispatch({ type: 'RESET' }), [])
+
+  return { messages: state.messages, pending: state.pending, handleSend, loadMessages, reset }
 }

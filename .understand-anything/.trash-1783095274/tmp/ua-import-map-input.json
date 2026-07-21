@@ -1,0 +1,690 @@
+{
+  "projectRoot": "/Users/duyot/Development/Projects/chatbot",
+  "files": [
+    {
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "fileCategory": "config"
+    },
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".env.example",
+      "language": "config",
+      "fileCategory": "config"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-diagram.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/architecture-options.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/composer-ui.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-2.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting-3.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/content/waiting.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "language": "unknown",
+      "fileCategory": "code"
+    },
+    {
+      "path": ".superpowers/brainstorm/37604-1776700392/state/server.pid",
+      "language": "pid",
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/.dockerignore",
+      "language": "unknown",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "backend/alembic.ini",
+      "language": "config",
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/alembic/env.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/script.py.mako",
+      "language": "mako",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0001_initial.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0002_fix_embedding_dim.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0003_add_fts_gin_index.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0004_parent_child_chunks.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0005_embedding_to_1536.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0006_document_metadata.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0007_create_users.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/alembic/versions/0008_create_conversations_messages.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/config.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/database.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/main.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/models.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/auth.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/chat.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/conversations.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/routers/documents.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/security.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/ingestion.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/ocr_client.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/graph.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/nodes.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/prompts.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/reranker.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/retrieval.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/services/rag/state.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/celery_app.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/app/workers/tasks.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "backend/evals/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/golden_set.yaml",
+      "language": "yaml",
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/evals/metrics.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/results/.gitkeep",
+      "language": "unknown",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/evals/run_eval.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/pytest.ini",
+      "language": "config",
+      "fileCategory": "config"
+    },
+    {
+      "path": "backend/requirements.txt",
+      "language": "txt",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "backend/scripts/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/scripts/create_user.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/scripts/create_users_table.sql",
+      "language": "sql",
+      "fileCategory": "data"
+    },
+    {
+      "path": "backend/scripts/reingest_all.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/__init__.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_auth.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_chat.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_eval_golden.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_graph.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_ingestion.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_ocr_client.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag_graph.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag_nodes.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_rag.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_retrieval.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_tasks.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "backend/tests/test_upload.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "DESIGN.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-20-file-upload-rag-ingestion.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-05-agentic-rag-chat.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-15-agentic-rag-enhancement.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-20-file-upload-rag-ingestion-design.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-04-agentic-rag-design.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "eslint.config.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "features_planning/account_login/plan.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_history/plan.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_with_doc/planning.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/chat_with_doc/rag_enhancement.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "features_planning/file_processing/planing.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "nginx.conf",
+      "language": "conf",
+      "fileCategory": "code"
+    },
+    {
+      "path": "ocr-service/app.py",
+      "language": "python",
+      "fileCategory": "code"
+    },
+    {
+      "path": "ocr-service/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "ocr-service/requirements.txt",
+      "language": "txt",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "fileCategory": "config"
+    },
+    {
+      "path": "prompt.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/api/client.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/App.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/App.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/auth/AuthContext.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ChatMessage.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ChatMessage.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ChatThread.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ChatThread.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/Composer.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Composer.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/DocumentSelector.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/DocumentSelector.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ProtectedRoute.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/Sidebar.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/Sidebar.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ThinkingIndicator.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/ThinkingIndicator.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/UpgradeTab.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UpgradeTab.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/UploadToast.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/components/UploadToast.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useChat.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useConversations.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useUpload.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/index.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/main.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/ChatPage.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/ChatPage.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/HomePage.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/HomePage.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/LoginPage.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/LoginPage.jsx",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/repositories/authRepository.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/repositories/conversationRepository.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/styles/global.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/styles/tokens.css",
+      "language": "css",
+      "fileCategory": "markup"
+    },
+    {
+      "path": "vite.config.js",
+      "language": "javascript",
+      "fileCategory": "code"
+    }
+  ]
+}

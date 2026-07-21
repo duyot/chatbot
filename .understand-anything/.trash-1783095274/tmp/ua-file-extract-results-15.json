@@ -1,0 +1,31 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/pages/ChatPage.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 41,
+      "nonEmptyLines": 37,
+      "metrics": {}
+    },
+    {
+      "path": "src/pages/HomePage.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 115,
+      "nonEmptyLines": 102,
+      "metrics": {}
+    },
+    {
+      "path": "src/pages/LoginPage.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 95,
+      "nonEmptyLines": 84,
+      "metrics": {}
+    }
+  ]
+}

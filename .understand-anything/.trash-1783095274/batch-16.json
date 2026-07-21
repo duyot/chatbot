@@ -1,0 +1,363 @@
+{
+  "nodes": [
+    {
+      "id": "config:.claude/settings.local.json",
+      "type": "config",
+      "name": "settings.local.json",
+      "filePath": ".claude/settings.local.json",
+      "summary": "Local Claude Code settings file defining project-specific tool-permission rules that govern which commands and actions the coding agent may run automatically in this repository.",
+      "tags": ["configuration", "claude-code", "permissions", "local-settings"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "type": "file",
+      "name": "server-stopped",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/state/server-stopped",
+      "summary": "Runtime state marker created by the superpowers brainstorming skill to record that its background server process has stopped.",
+      "tags": ["state-file", "runtime-artifact", "superpowers", "process-marker"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.superpowers/brainstorm/37604-1776700392/state/server.pid",
+      "type": "file",
+      "name": "server.pid",
+      "filePath": ".superpowers/brainstorm/37604-1776700392/state/server.pid",
+      "summary": "Runtime PID file recorded by the superpowers brainstorming skill to track its background server process.",
+      "tags": ["pid-file", "runtime-artifact", "superpowers", "process-marker"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Ignore-pattern list for the Understand-Anything code-analysis plugin, excluding directories and files such as build output and dependencies from the project scan and knowledge-graph generation.",
+      "tags": ["configuration", "ignore-file", "tooling", "understand-anything"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "Minimal configuration for the Understand-Anything plugin, setting the output language used when generating knowledge-graph summaries and documentation.",
+      "tags": ["configuration", "tooling", "understand-anything", "output-language"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/alembic/script.py.mako",
+      "type": "file",
+      "name": "script.py.mako",
+      "filePath": "backend/alembic/script.py.mako",
+      "summary": "Mako template used by Alembic's `revision` command to scaffold new migration files with the standard `upgrade`/`downgrade` function stubs and revision metadata.",
+      "tags": ["template", "database", "alembic", "migration", "scaffolding"],
+      "complexity": "simple",
+      "languageNotes": "Mako is Alembic's default templating engine; `${...}` placeholders are substituted with the revision ID, down-revision, and message when `alembic revision` generates a new file."
+    },
+    {
+      "id": "file:backend/alembic/versions/0001_initial.py",
+      "type": "file",
+      "name": "0001_initial.py",
+      "filePath": "backend/alembic/versions/0001_initial.py",
+      "summary": "Initial Alembic migration that enables the pgvector extension and creates the core `documents` and `chunks` tables, including the chunk embedding vector column.",
+      "tags": ["database", "migration", "alembic", "pgvector", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/alembic/versions/0002_fix_embedding_dim.py",
+      "type": "file",
+      "name": "0002_fix_embedding_dim.py",
+      "filePath": "backend/alembic/versions/0002_fix_embedding_dim.py",
+      "summary": "Follow-up migration that drops and recreates the `chunks` table to fix an incorrect pgvector embedding column dimension introduced by the initial migration.",
+      "tags": ["database", "migration", "alembic", "pgvector", "bugfix"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/alembic/versions/0003_add_fts_gin_index.py",
+      "type": "file",
+      "name": "0003_add_fts_gin_index.py",
+      "filePath": "backend/alembic/versions/0003_add_fts_gin_index.py",
+      "summary": "Migration adding a PostgreSQL GIN index for full-text search over chunk content, enabling the FTS side of the hybrid (vector + keyword) retrieval pipeline.",
+      "tags": ["database", "migration", "full-text-search", "postgres", "indexing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/alembic/versions/0004_parent_child_chunks.py",
+      "type": "file",
+      "name": "0004_parent_child_chunks.py",
+      "filePath": "backend/alembic/versions/0004_parent_child_chunks.py",
+      "summary": "Migration introducing the parent-child chunk model: adds a parent-chunks table with constraints and indexes, and links existing chunks to their parent via a new foreign key column.",
+      "tags": ["database", "migration", "parent-child-chunks", "schema", "alembic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/alembic/versions/0005_embedding_to_1536.py",
+      "type": "file",
+      "name": "0005_embedding_to_1536.py",
+      "filePath": "backend/alembic/versions/0005_embedding_to_1536.py",
+      "summary": "Migration resizing the chunk embedding column to 1536 dimensions to match the truncated qwen3-embedding-8b output routed through OpenRouter.",
+      "tags": ["database", "migration", "pgvector", "embeddings", "schema-change"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/alembic/versions/0006_document_metadata.py",
+      "type": "file",
+      "name": "0006_document_metadata.py",
+      "filePath": "backend/alembic/versions/0006_document_metadata.py",
+      "summary": "Migration adding metadata columns (type, page/chunk counts, JSONB metadata, status fields) to the `documents` table along with a supporting index.",
+      "tags": ["database", "migration", "metadata", "schema", "alembic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/alembic/versions/0007_create_users.py",
+      "type": "file",
+      "name": "0007_create_users.py",
+      "filePath": "backend/alembic/versions/0007_create_users.py",
+      "summary": "Migration creating the `users` table (UUID id, username, password hash, active flag, created-at timestamp) with a unique index, establishing the schema for JWT-based authentication.",
+      "tags": ["database", "migration", "authentication", "users", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/alembic/versions/0008_create_conversations_messages.py",
+      "type": "file",
+      "name": "0008_create_conversations_messages.py",
+      "filePath": "backend/alembic/versions/0008_create_conversations_messages.py",
+      "summary": "Migration creating `conversations` and `messages` tables with foreign keys to users and conversations, JSONB message metadata, and indexes — the schema backbone for persisted chat history.",
+      "tags": ["database", "migration", "chat-history", "conversations", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/app/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/app/__init__.py",
+      "summary": "Empty package marker file that makes `backend/app` importable as the root Python package for the FastAPI backend.",
+      "tags": ["package-marker", "python", "empty-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/app/services/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/app/services/__init__.py",
+      "summary": "Empty package marker file that makes `backend/app/services` importable as a Python package for the backend's service layer, including the RAG pipeline.",
+      "tags": ["package-marker", "python", "empty-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/app/workers/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/app/workers/__init__.py",
+      "summary": "Empty package marker file that makes `backend/app/workers` importable as a Python package for Celery background worker code.",
+      "tags": ["package-marker", "python", "empty-file", "celery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/evals/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/evals/__init__.py",
+      "summary": "Empty package marker file that makes `backend/evals` importable as a Python package for the RAG evaluation harness.",
+      "tags": ["package-marker", "python", "empty-file", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:backend/evals/golden_set.yaml",
+      "type": "config",
+      "name": "golden_set.yaml",
+      "filePath": "backend/evals/golden_set.yaml",
+      "summary": "Golden evaluation dataset (question/expected-answer pairs) consumed by the `evals.run_eval` harness to score and compare RAG retrieval and generation quality across runs.",
+      "tags": ["evaluation", "golden-dataset", "rag", "testing-config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/evals/results/.gitkeep",
+      "type": "file",
+      "name": ".gitkeep",
+      "filePath": "backend/evals/results/.gitkeep",
+      "summary": "Empty placeholder file that keeps the otherwise-empty `backend/evals/results/` output directory tracked in git.",
+      "tags": ["placeholder", "git-tracking", "evaluation", "directory-marker"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/scripts/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/scripts/__init__.py",
+      "summary": "Empty package marker file that makes `backend/scripts` importable as a Python package for backend maintenance and bootstrap scripts.",
+      "tags": ["package-marker", "python", "empty-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:backend/scripts/create_users_table.sql:users",
+      "type": "table",
+      "name": "users",
+      "filePath": "backend/scripts/create_users_table.sql",
+      "summary": "Raw SQL DDL script defining the `users` table (id, username, password_hash, is_active, created_at) with a unique index on username, usable as a manual bootstrap alternative to the Alembic migration.",
+      "tags": ["database", "sql", "users", "schema", "bootstrap-script"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/tests/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "backend/tests/__init__.py",
+      "summary": "Empty package marker file that makes `backend/tests` importable as a Python package for the backend's pytest test suite.",
+      "tags": ["package-marker", "python", "empty-file", "test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:backend/tests/test_chat.py",
+      "type": "file",
+      "name": "test_chat.py",
+      "filePath": "backend/tests/test_chat.py",
+      "summary": "Pytest suite for the chat streaming endpoint, covering a 404 for unknown documents, a 400 for documents still processing, and a successful event-stream response for a fully ingested document.",
+      "tags": ["test", "pytest", "chat-endpoint", "streaming"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/tests/test_graph.py",
+      "type": "file",
+      "name": "test_graph.py",
+      "filePath": "backend/tests/test_graph.py",
+      "summary": "Pytest suite covering RAG helper functions `_build_citations` and `_format_context`, verifying citation deduplication and page-number-prefixed context formatting.",
+      "tags": ["test", "pytest", "rag", "citations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/alembic/versions/0001_initial.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0001_initial.py",
+      "lineRange": [18, 37],
+      "summary": "Enables the pgvector extension and defines the initial `documents` and `chunks` tables, including a vector embedding column, as part of the first database migration.",
+      "tags": ["migration", "schema", "database", "pgvector"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/alembic/versions/0002_fix_embedding_dim.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0002_fix_embedding_dim.py",
+      "lineRange": [19, 29],
+      "summary": "Drops and recreates the `chunks` table to correct the pgvector embedding column's dimensionality.",
+      "tags": ["migration", "pgvector", "schema-fix", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/alembic/versions/0004_parent_child_chunks.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0004_parent_child_chunks.py",
+      "lineRange": [18, 45],
+      "summary": "Creates the parent-chunk table with foreign key and uniqueness constraints, then adds and indexes a `parent_id` column linking existing chunks to their parent context blocks.",
+      "tags": ["migration", "parent-child-chunks", "schema", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/alembic/versions/0005_embedding_to_1536.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0005_embedding_to_1536.py",
+      "lineRange": [18, 32],
+      "summary": "Replaces the chunk embedding column with a 1536-dimension pgvector column and backfills data via raw SQL, aligning storage with the truncated embedding model output.",
+      "tags": ["migration", "pgvector", "embeddings", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/alembic/versions/0006_document_metadata.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0006_document_metadata.py",
+      "lineRange": [26, 42],
+      "summary": "Adds multiple metadata columns (type, counts, JSONB metadata, status fields) to the `documents` table and creates a supporting index.",
+      "tags": ["migration", "metadata", "schema", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/alembic/versions/0007_create_users.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0007_create_users.py",
+      "lineRange": [21, 41],
+      "summary": "Creates the `users` table with a UUID primary key, username, password hash, active flag, and created-at timestamp, plus a unique index on username, to support JWT authentication.",
+      "tags": ["migration", "authentication", "users", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/alembic/versions/0008_create_conversations_messages.py:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "backend/alembic/versions/0008_create_conversations_messages.py",
+      "lineRange": [24, 82],
+      "summary": "Creates the `conversations` and `messages` tables with foreign keys to users/conversations, JSONB message metadata, and indexes, forming the persistence schema for chat history.",
+      "tags": ["migration", "chat-history", "schema", "database"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:backend/tests/test_chat.py:test_chat_stream_400_for_processing_document",
+      "type": "function",
+      "name": "test_chat_stream_400_for_processing_document",
+      "filePath": "backend/tests/test_chat.py",
+      "lineRange": [13, 27],
+      "summary": "Verifies the chat streaming endpoint returns HTTP 400 when the requested document has not finished processing.",
+      "tags": ["test", "pytest", "chat-endpoint", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:backend/tests/test_chat.py:test_chat_stream_returns_event_stream_for_done_document",
+      "type": "function",
+      "name": "test_chat_stream_returns_event_stream_for_done_document",
+      "filePath": "backend/tests/test_chat.py",
+      "lineRange": [30, 53],
+      "summary": "Verifies the chat streaming endpoint returns a proper server-sent event stream when the target document's status is `done`, mocking the underlying RAG pipeline call.",
+      "tags": ["test", "pytest", "chat-endpoint", "streaming", "mocking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/tests/test_graph.py:test_build_citations_includes_page_and_source_and_dedups",
+      "type": "function",
+      "name": "test_build_citations_includes_page_and_source_and_dedups",
+      "filePath": "backend/tests/test_graph.py",
+      "lineRange": [4, 15],
+      "summary": "Verifies that `_build_citations` produces deduplicated citation entries including page number and source metadata from mocked chunk objects.",
+      "tags": ["test", "pytest", "rag", "citations"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:backend/alembic/versions/0001_initial.py", "target": "function:backend/alembic/versions/0001_initial.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0001_initial.py", "target": "function:backend/alembic/versions/0001_initial.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0002_fix_embedding_dim.py", "target": "function:backend/alembic/versions/0002_fix_embedding_dim.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0002_fix_embedding_dim.py", "target": "function:backend/alembic/versions/0002_fix_embedding_dim.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0004_parent_child_chunks.py", "target": "function:backend/alembic/versions/0004_parent_child_chunks.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0004_parent_child_chunks.py", "target": "function:backend/alembic/versions/0004_parent_child_chunks.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0005_embedding_to_1536.py", "target": "function:backend/alembic/versions/0005_embedding_to_1536.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0005_embedding_to_1536.py", "target": "function:backend/alembic/versions/0005_embedding_to_1536.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0006_document_metadata.py", "target": "function:backend/alembic/versions/0006_document_metadata.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0006_document_metadata.py", "target": "function:backend/alembic/versions/0006_document_metadata.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0007_create_users.py", "target": "function:backend/alembic/versions/0007_create_users.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0007_create_users.py", "target": "function:backend/alembic/versions/0007_create_users.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0008_create_conversations_messages.py", "target": "function:backend/alembic/versions/0008_create_conversations_messages.py:upgrade", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/alembic/versions/0008_create_conversations_messages.py", "target": "function:backend/alembic/versions/0008_create_conversations_messages.py:upgrade", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/tests/test_chat.py", "target": "function:backend/tests/test_chat.py:test_chat_stream_400_for_processing_document", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/tests/test_chat.py", "target": "function:backend/tests/test_chat.py:test_chat_stream_400_for_processing_document", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/tests/test_chat.py", "target": "function:backend/tests/test_chat.py:test_chat_stream_returns_event_stream_for_done_document", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/tests/test_chat.py", "target": "function:backend/tests/test_chat.py:test_chat_stream_returns_event_stream_for_done_document", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/tests/test_graph.py", "target": "function:backend/tests/test_graph.py:test_build_citations_includes_page_and_source_and_dedups", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:backend/tests/test_graph.py", "target": "function:backend/tests/test_graph.py:test_build_citations_includes_page_and_source_and_dedups", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:backend/alembic/versions/0007_create_users.py", "target": "table:backend/scripts/create_users_table.sql:users", "type": "migrates", "direction": "forward", "weight": 0.7 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0001_initial.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0002_fix_embedding_dim.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0003_add_fts_gin_index.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0004_parent_child_chunks.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0005_embedding_to_1536.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0006_document_metadata.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0007_create_users.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:backend/alembic/script.py.mako", "target": "file:backend/alembic/versions/0008_create_conversations_messages.py", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "file:.understand-anything/.understandignore", "target": "config:.understand-anything/config.json", "type": "related", "direction": "forward", "weight": 0.5 },
+    { "source": "config:backend/evals/golden_set.yaml", "target": "file:backend/evals/results/.gitkeep", "type": "related", "direction": "forward", "weight": 0.5 }
+  ]
+}

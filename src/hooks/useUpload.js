@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { apiFetch } from '../api/client'
 
 export function useUpload({ onComplete } = {}) {
   const [state, setState] = useState({
@@ -16,7 +17,7 @@ export function useUpload({ onComplete } = {}) {
 
     let docId
     try {
-      const res = await fetch('/api/documents/upload', { method: 'POST', body: formData })
+      const res = await apiFetch('/api/documents/upload', { method: 'POST', body: formData })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
         throw new Error(err.detail || 'Upload failed')
