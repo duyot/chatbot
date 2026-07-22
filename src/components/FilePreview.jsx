@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getDocumentFile } from '../repositories/documentRepository'
+import CitationOverlay from './CitationOverlay'
+import PdfViewer from './PdfViewer'
 import './FilePreview.css'
 
 function CloseIcon() {
@@ -10,7 +12,7 @@ function CloseIcon() {
   )
 }
 
-export default function FilePreview({ document, onClose }) {
+export default function FilePreview({ document, onClose, highlightTarget = null }) {
   const [blobUrl, setBlobUrl] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -48,6 +50,11 @@ export default function FilePreview({ document, onClose }) {
   if (!document) return null
 
   const mimeType = document.mime_type || ''
+  // Highlight target scoped to this document (images overlay directly; PDFs are
+  // rendered + overlaid by PdfViewer).
+  const docHighlight =
+    highlightTarget && highlightTarget.documentId === document.id ? highlightTarget : null
+  const highlightRects = docHighlight?.rects || []
 
   return (
     <div className="file-preview">
@@ -63,10 +70,13 @@ export default function FilePreview({ document, onClose }) {
           <p className="file-preview-hint">Couldn't load a preview for this file.</p>
         )}
         {!loading && !error && blobUrl && mimeType.startsWith('image/') && (
-          <img className="file-preview-image" src={blobUrl} alt={document.file_name} />
+          <div className="file-preview-image-wrap">
+            <img className="file-preview-image" src={blobUrl} alt={document.file_name} />
+            <CitationOverlay rects={highlightRects} />
+          </div>
         )}
         {!loading && !error && blobUrl && mimeType === 'application/pdf' && (
-          <iframe className="file-preview-frame" src={blobUrl} title={document.file_name} />
+          <PdfViewer blobUrl={blobUrl} highlightTarget={docHighlight} />
         )}
         {!loading && !error && blobUrl && !mimeType.startsWith('image/') && mimeType !== 'application/pdf' && (
           <div className="file-preview-fallback">

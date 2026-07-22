@@ -73,6 +73,7 @@ def _build_citations(state: AgentState) -> list[dict]:
             "page": getattr(c, "page", None),
             "source": getattr(c, "source", None),
             "content": (c.content or "")[:400],
+            "bbox": getattr(c, "bbox", None) or [],
         })
     return out
 

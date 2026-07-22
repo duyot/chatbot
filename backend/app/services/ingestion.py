@@ -1,6 +1,6 @@
 import logging
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 import fitz  # PyMuPDF
 from docx import Document as DocxDocument
@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..config import settings
 from ..models import DocumentChunk, DocumentParentChunk
-from .ocr_client import ocr_image, OCRError
+from .ocr_client import ocr_image_lines, OCRError
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +18,28 @@ logger = logging.getLogger(__name__)
 # --- Parsed representation --------------------------------------------------
 
 @dataclass
+class LayoutLine:
+    """One text line of a page with its axis-aligned bbox, normalized to [0,1]
+    of the page (so it is independent of render DPI / display size)."""
+    text: str
+    bbox: List[float]                  # [x0, y0, x1, y1] in [0,1]
+
+
+@dataclass
 class PageContent:
-    """One logical page of a source document."""
+    """One logical page of a source document.
+
+    `text` is the page text used for chunking/embedding; when `lines` is present
+    `text` is exactly "\\n".join(l.text for l in lines) so a chunk's character
+    offset in `text` maps back to the contributing lines' bboxes.
+    """
     page: int                          # 1-based
     text: str
     source: str                        # "native" | "ocr"
     ocr_confidence: Optional[float] = None
+    lines: List[LayoutLine] = field(default_factory=list)
+    width: Optional[float] = None      # source page width (px or pt), pre-normalization
+    height: Optional[float] = None
 
 
 @dataclass
@@ -50,6 +66,7 @@ class ChildChunk:
     page: int
     source: str
     ocr_confidence: Optional[float] = None
+    bbox: Optional[List[List[float]]] = None  # normalized rects covering this chunk
 
 
 _IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
@@ -65,17 +82,85 @@ _MIME_BY_EXT = {
 
 # --- Parsing ----------------------------------------------------------------
 
-def _ocr_page_image(image_bytes: bytes, filename: str) -> Tuple[str, Optional[float]]:
-    """OCR a rendered page/image, degrading gracefully. Returns ("", None) when
-    OCR is disabled or the service errors, so one bad page doesn't fail the
-    whole document (the doc-level guard in the worker handles a fully-empty doc)."""
+def _clamp01(v: float) -> float:
+    return 0.0 if v < 0 else 1.0 if v > 1 else v
+
+
+def _quad_to_norm_rect(
+    quad: Optional[list], width: float, height: float
+) -> Optional[List[float]]:
+    """Convert an OCR polygon [[x,y], ...] (image-pixel coords) to a normalized
+    axis-aligned rect [x0,y0,x1,y1] in [0,1]. Returns None if the quad or the
+    page dimensions are missing."""
+    if not quad or not width or not height:
+        return None
+    xs = [float(p[0]) for p in quad]
+    ys = [float(p[1]) for p in quad]
+    return [
+        _clamp01(min(xs) / width), _clamp01(min(ys) / height),
+        _clamp01(max(xs) / width), _clamp01(max(ys) / height),
+    ]
+
+
+def _ocr_page_image(
+    image_bytes: bytes, filename: str
+) -> Tuple[str, Optional[float], List[LayoutLine]]:
+    """OCR a rendered page/image, degrading gracefully. Returns
+    (text, avg_confidence, lines). Returns ("", None, []) when OCR is disabled or
+    the service errors, so one bad page doesn't fail the whole document (the
+    doc-level guard in the worker handles a fully-empty doc).
+
+    `text` is "\\n".join of the non-blank line texts, matching the char layout the
+    line bboxes are indexed against."""
     if not settings.ocr_enabled:
-        return "", None
+        return "", None, []
     try:
-        return ocr_image(image_bytes, filename=filename)
+        body = ocr_image_lines(image_bytes, filename=filename)
     except OCRError:
         logger.warning("_ocr_page_image: OCR failed, treating page as empty file=%s", filename)
-        return "", None
+        return "", None, []
+
+    width, height = body.get("width") or 0, body.get("height") or 0
+    lines: List[LayoutLine] = []
+    confs: List[float] = []
+    for ln in body.get("lines", []):
+        text = (ln.get("text") or "").strip()
+        if not text:
+            continue
+        rect = _quad_to_norm_rect(ln.get("bbox"), width, height)
+        lines.append(LayoutLine(text=text, bbox=rect or []))
+        conf = ln.get("confidence")
+        if isinstance(conf, (int, float)):
+            confs.append(float(conf))
+
+    text = "\n".join(l.text for l in lines)
+    avg_conf = (sum(confs) / len(confs)) if confs else None
+    return text, avg_conf, lines
+
+
+def _native_pdf_lines(page) -> Tuple[List[LayoutLine], float, float]:
+    """Extract per-line geometry from a native PDF page via PyMuPDF, normalized to
+    [0,1] of the page rect. Returns (lines, page_width, page_height). Both PyMuPDF
+    line bboxes and the pixmap/pdf.js viewport use a top-left origin, so no y-flip
+    is needed."""
+    rect = page.rect
+    pw, ph = float(rect.width), float(rect.height)
+    lines: List[LayoutLine] = []
+    if not pw or not ph:
+        return lines, pw, ph
+    data = page.get_text("dict")
+    for block in data.get("blocks", []):
+        for line in block.get("lines", []):
+            text = "".join(s.get("text", "") for s in line.get("spans", []))
+            if not text.strip():
+                continue
+            x0, y0, x1, y1 = line.get("bbox", (0, 0, 0, 0))
+            lines.append(LayoutLine(
+                text=text,
+                bbox=[_clamp01(x0 / pw), _clamp01(y0 / ph),
+                      _clamp01(x1 / pw), _clamp01(y1 / ph)],
+            ))
+    return lines, pw, ph
 
 
 def _parse_pdf(file_path: str, file_name: str) -> ParsedDocument:
@@ -87,13 +172,23 @@ def _parse_pdf(file_path: str, file_name: str) -> ParsedDocument:
     for i, page in enumerate(doc):
         native_text = page.get_text() or ""
         if len(native_text.strip()) >= settings.ocr_min_text_chars:
-            pages.append(PageContent(page=i + 1, text=native_text, source="native"))
+            lines, pw, ph = _native_pdf_lines(page)
+            # Rebuild text from the geometry lines so chunk char-offsets map back to
+            # bboxes; fall back to raw text if geometry extraction found nothing.
+            text = "\n".join(l.text for l in lines) if lines else native_text
+            pages.append(PageContent(
+                page=i + 1, text=text, source="native",
+                lines=lines, width=pw, height=ph,
+            ))
             native_pages += 1
         else:
             pix = page.get_pixmap(dpi=settings.ocr_dpi)
             img_bytes = pix.tobytes("png")
-            text, conf = _ocr_page_image(img_bytes, f"{file_name}#p{i + 1}.png")
-            pages.append(PageContent(page=i + 1, text=text, source="ocr", ocr_confidence=conf))
+            text, conf, lines = _ocr_page_image(img_bytes, f"{file_name}#p{i + 1}.png")
+            pages.append(PageContent(
+                page=i + 1, text=text, source="ocr", ocr_confidence=conf,
+                lines=lines, width=float(pix.width), height=float(pix.height),
+            ))
             ocr_pages += 1
     metadata = {
         "page_count": len(pages),
@@ -116,9 +211,9 @@ def _parse_docx(file_path: str) -> ParsedDocument:
 def _parse_image(file_path: str, file_name: str) -> ParsedDocument:
     with open(file_path, "rb") as f:
         img_bytes = f.read()
-    text, conf = _ocr_page_image(img_bytes, file_name)
+    text, conf, lines = _ocr_page_image(img_bytes, file_name)
     return ParsedDocument(
-        pages=[PageContent(page=1, text=text, source="ocr", ocr_confidence=conf)],
+        pages=[PageContent(page=1, text=text, source="ocr", ocr_confidence=conf, lines=lines)],
         metadata={"page_count": 1, "ocr_pages": 1, "native_pages": 0, "ocr_engine": "paddleocr"},
     )
 
@@ -181,31 +276,75 @@ def chunk_text(text: str) -> Tuple[List[str], List[List[str]]]:
     return parents, children_per_parent
 
 
+def _line_spans(lines: List[LayoutLine]) -> List[Tuple[int, int, List[float]]]:
+    """Char [start, end) of each line within "\\n".join(l.text for l in lines),
+    paired with its normalized rect. Mirrors how PageContent.text is built."""
+    spans: List[Tuple[int, int, List[float]]] = []
+    pos = 0
+    for ln in lines:
+        start = pos
+        end = pos + len(ln.text)
+        spans.append((start, end, ln.bbox))
+        pos = end + 1  # account for the "\n" joiner
+    return spans
+
+
+def _rects_for_span(
+    spans: List[Tuple[int, int, List[float]]], start: int, end: int
+) -> List[List[float]]:
+    """Rects of every line whose char span overlaps [start, end), in order."""
+    return [box for s, e, box in spans if box and s < end and e > start]
+
+
+def _find_from(haystack: str, needle: str, cursor: int) -> int:
+    """str.find starting at cursor, falling back to a global find. Returns -1 if
+    the substring is absent (e.g. splitter normalization changed whitespace)."""
+    idx = haystack.find(needle, cursor)
+    return idx if idx >= 0 else haystack.find(needle)
+
+
 def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
     """Chunk page-by-page so every parent maps to exactly one page, giving exact
-    page attribution. Children inherit their parent's page/source/confidence."""
+    page attribution. Children inherit their parent's page/source/confidence and,
+    when the page has line geometry, the normalized bboxes of the lines they
+    overlap (found by tracking each chunk's char offset within the page text)."""
     parents: List[ParentChunk] = []
     children_per_parent: List[List[ChildChunk]] = []
     for page in parsed.pages:
         if not page.text.strip():
             continue
+        spans = _line_spans(page.lines)
         p_texts, c_per_p = chunk_text(page.text)
+        p_cursor = 0
         for p_text, c_texts in zip(p_texts, c_per_p):
+            p_start = _find_from(page.text, p_text, p_cursor)
+            if p_start >= 0:
+                p_cursor = p_start + len(p_text)
             parents.append(ParentChunk(
                 content=p_text,
                 page_start=page.page,
                 page_end=page.page,
                 source=page.source,
             ))
-            children_per_parent.append([
-                ChildChunk(
+            child_objs: List[ChildChunk] = []
+            c_cursor = 0
+            for c in c_texts:
+                c_off = _find_from(p_text, c, c_cursor)
+                if c_off >= 0:
+                    c_cursor = c_off + 1  # children overlap, so advance minimally
+                if spans and p_start >= 0 and c_off >= 0:
+                    g_start = p_start + c_off
+                    rects = _rects_for_span(spans, g_start, g_start + len(c))
+                else:
+                    rects = []
+                child_objs.append(ChildChunk(
                     content=c,
                     page=page.page,
                     source=page.source,
                     ocr_confidence=page.ocr_confidence,
-                )
-                for c in c_texts
-            ])
+                    bbox=rects,
+                ))
+            children_per_parent.append(child_objs)
     n_children = sum(len(c) for c in children_per_parent)
     logger.info(
         "chunk_document: pages=%d parents=%d children=%d",
@@ -293,6 +432,7 @@ def store_chunks(
                 page=child.page,
                 source=child.source,
                 ocr_confidence=child.ocr_confidence,
+                bbox=child.bbox or None,
             ))
             global_idx += 1
     db.bulk_save_objects(child_rows)

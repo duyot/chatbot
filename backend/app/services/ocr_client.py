@@ -24,10 +24,15 @@ class OCRError(RuntimeError):
     """Raised when the OCR microservice is unreachable or returns an error."""
 
 
-def ocr_image(image_bytes: bytes, *, filename: str = "image") -> tuple[str, float | None]:
-    """OCR a single rendered page / image. Returns (text, avg_confidence).
+def ocr_image_lines(image_bytes: bytes, *, filename: str = "image") -> dict:
+    """OCR a single rendered page / image, preserving line-level geometry.
 
-    avg_confidence is None when the service returns no usable lines.
+    Returns the service's structured result:
+        {"lines": [{"text": str, "bbox": [[x, y], ...], "confidence": float}, ...],
+         "width": int, "height": int}
+    where bbox is a polygon in image-pixel coordinates and width/height are the
+    image dimensions (both needed to normalize bboxes downstream). Transport/HTTP
+    failures raise OCRError so the caller can decide how to degrade.
     """
     url = settings.ocr_service_url.rstrip("/") + "/ocr"
     try:
@@ -39,10 +44,26 @@ def ocr_image(image_bytes: bytes, *, filename: str = "image") -> tuple[str, floa
         logger.warning("ocr_image: request failed url=%s file=%s err=%s", url, filename, exc)
         raise OCRError(str(exc)) from exc
 
-    lines = body.get("lines", []) if isinstance(body, dict) else []
+    if not isinstance(body, dict):
+        return {"lines": [], "width": 0, "height": 0}
+    return {
+        "lines": body.get("lines") or [],
+        "width": int(body.get("width") or 0),
+        "height": int(body.get("height") or 0),
+    }
+
+
+def ocr_image(image_bytes: bytes, *, filename: str = "image") -> tuple[str, float | None]:
+    """OCR a single rendered page / image. Returns (text, avg_confidence).
+
+    Thin text-only wrapper over ocr_image_lines: joins non-blank lines in returned
+    (reading) order and averages the confidence of the contributing lines.
+    avg_confidence is None when the service returns no usable lines.
+    """
+    body = ocr_image_lines(image_bytes, filename=filename)
     texts: list[str] = []
     confs: list[float] = []
-    for ln in lines:
+    for ln in body["lines"]:
         text = (ln.get("text") or "").strip()
         if not text:
             continue

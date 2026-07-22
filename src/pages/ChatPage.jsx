@@ -28,6 +28,7 @@ export default function ChatPage() {
   const { conversations, refresh, remove, clearAll } = useConversations()
   const { documents } = useDocuments()
   const [selectedDocumentId, setSelectedDocumentId] = useState(null)
+  const [highlightTarget, setHighlightTarget] = useState(null)
   const [activeConversationId, setActiveConversationId] = useState(null)
   const [showToast, setShowToast] = useState(false)
   const [sidebarOpen, setSidebarOpenState] = useState(() => {
@@ -41,6 +42,29 @@ export default function ChatPage() {
   }, [])
 
   const selectedDocument = documents.find((d) => d.id === selectedDocumentId) ?? null
+  // Citation highlighting is supported for images (direct overlay) and PDFs
+  // (rendered + overlaid via pdf.js).
+  const selectedMime = selectedDocument?.mime_type || ''
+  const citationEnabled =
+    !!selectedDocument && (selectedMime.startsWith('image/') || selectedMime === 'application/pdf')
+
+  // Switching documents invalidates any active highlight.
+  const onSelectDocument = useCallback((id) => {
+    setSelectedDocumentId(id)
+    setHighlightTarget(null)
+  }, [])
+
+  // Fired from an assistant message's citation button: draw the source rects on
+  // the currently selected (image) document.
+  const onShowCitation = useCallback((citations) => {
+    if (!selectedDocumentId) return
+    const withBox = (citations || []).filter((c) => Array.isArray(c.bbox) && c.bbox.length > 0)
+    if (withBox.length === 0) return
+    // Highlight the first cited page (rects are page-scoped to keep them aligned).
+    const page = withBox[0].page ?? 1
+    const rects = withBox.filter((c) => (c.page ?? 1) === page).flatMap((c) => c.bbox)
+    setHighlightTarget({ documentId: selectedDocumentId, page, rects })
+  }, [selectedDocumentId])
 
   const upload = useUpload({
     onComplete: () => setShowToast(true),
@@ -122,14 +146,15 @@ export default function ChatPage() {
           {selectedDocument && (
             <FilePreview
               document={selectedDocument}
-              onClose={() => setSelectedDocumentId(null)}
+              onClose={() => { setSelectedDocumentId(null); setHighlightTarget(null) }}
+              highlightTarget={highlightTarget}
             />
           )}
           <div className="chat-main">
             <DocumentSelector
               documents={documents}
               value={selectedDocumentId}
-              onChange={setSelectedDocumentId}
+              onChange={onSelectDocument}
             />
             {messages.length === 0 && (
               <p className="chat-page-hint">
@@ -138,7 +163,12 @@ export default function ChatPage() {
                   : 'Select a document above to start chatting.'}
               </p>
             )}
-            <ChatThread messages={messages} pending={pending} />
+            <ChatThread
+              messages={messages}
+              pending={pending}
+              citationEnabled={citationEnabled}
+              onShowCitation={onShowCitation}
+            />
             <Composer
               onSend={onSend}
               onFileSelect={upload.uploadFile}

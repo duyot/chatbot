@@ -63,6 +63,10 @@ class DocumentChunk(Base):
     page = Column(Integer, nullable=True)
     source = Column(String, nullable=True)
     ocr_confidence = Column(Float, nullable=True)
+    # Citation geometry: list of normalized rects [[x0,y0,x1,y1], ...] in [0,1] of the
+    # page, covering the source line(s) this chunk was derived from. Null/[] when
+    # unmappable (e.g. DOCX, or no layout match).
+    bbox = Column(JSONB, nullable=True)
 
     __table_args__ = (
         Index("ix_document_chunks_doc_page", "document_id", "page"),

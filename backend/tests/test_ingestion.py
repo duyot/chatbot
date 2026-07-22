@@ -39,7 +39,12 @@ def test_parse_document_image_uses_ocr(tmp_path, mocker):
     from app.services.ingestion import parse_document
     img_path = tmp_path / "photo.png"
     img_path.write_bytes(b"\x89PNG fake bytes")
-    mocker.patch.object(ingestion, "ocr_image", return_value=("scanned text", 0.92))
+    mocker.patch.object(ingestion, "ocr_image_lines", return_value={
+        "lines": [
+            {"text": "scanned text", "bbox": [[0, 0], [100, 0], [100, 20], [0, 20]], "confidence": 0.92},
+        ],
+        "width": 200, "height": 100,
+    })
     parsed = parse_document(str(img_path), "photo.png")
     assert len(parsed.pages) == 1
     assert parsed.pages[0].source == "ocr"
@@ -58,7 +63,7 @@ def test_parse_document_pdf_native_text_skips_ocr(tmp_path, mocker):
     page.insert_text((72, 72), "This is a native digital PDF with plenty of text content.")
     d.save(str(pdf_path))
     d.close()
-    ocr_spy = mocker.patch.object(ingestion, "ocr_image", return_value=("should not run", 0.1))
+    ocr_spy = mocker.patch.object(ingestion, "ocr_image_lines", return_value={"lines": [], "width": 0, "height": 0})
     parsed = parse_document(str(pdf_path), "doc.pdf")
     assert parsed.pages[0].source == "native"
     assert "native digital PDF" in parsed.pages[0].text
@@ -74,7 +79,12 @@ def test_parse_document_pdf_scanned_triggers_ocr(tmp_path, mocker):
     d.new_page()  # blank page: no text layer
     d.save(str(pdf_path))
     d.close()
-    mocker.patch.object(ingestion, "ocr_image", return_value=("ocr extracted text", 0.7))
+    mocker.patch.object(ingestion, "ocr_image_lines", return_value={
+        "lines": [
+            {"text": "ocr extracted text", "bbox": [[0, 0], [50, 0], [50, 10], [0, 10]], "confidence": 0.7},
+        ],
+        "width": 100, "height": 100,
+    })
     parsed = parse_document(str(pdf_path), "scan.pdf")
     assert parsed.pages[0].source == "ocr"
     assert parsed.pages[0].text == "ocr extracted text"
@@ -259,6 +269,60 @@ def test_chunk_metadata_columns_round_trip(db):
     assert fetched_child.page == 2
     assert fetched_child.source == "ocr"
     assert abs(fetched_child.ocr_confidence - 0.87) < 1e-6
+
+
+def test_quad_to_norm_rect_normalizes_and_clamps():
+    from app.services.ingestion import _quad_to_norm_rect
+    rect = _quad_to_norm_rect([[10, 20], [110, 20], [110, 60], [10, 60]], 200, 100)
+    assert rect == [0.05, 0.2, 0.55, 0.6]
+    # missing quad or dims -> None (unmappable)
+    assert _quad_to_norm_rect(None, 200, 100) is None
+    assert _quad_to_norm_rect([[0, 0]], 0, 0) is None
+
+
+def test_line_spans_and_rects_for_span():
+    from app.services.ingestion import LayoutLine, _line_spans, _rects_for_span
+    lines = [
+        LayoutLine(text="hello", bbox=[0.0, 0.0, 0.5, 0.1]),   # chars 0..5
+        LayoutLine(text="world", bbox=[0.0, 0.2, 0.5, 0.3]),   # chars 6..11 (after "\n")
+    ]
+    spans = _line_spans(lines)
+    assert [(s, e) for s, e, _ in spans] == [(0, 5), (6, 11)]
+    # span within the first line only
+    assert _rects_for_span(spans, 0, 5) == [[0.0, 0.0, 0.5, 0.1]]
+    # span straddling both lines
+    assert _rects_for_span(spans, 3, 8) == [[0.0, 0.0, 0.5, 0.1], [0.0, 0.2, 0.5, 0.3]]
+    # lines with an empty bbox are skipped
+    spans2 = _line_spans([LayoutLine(text="x", bbox=[])])
+    assert _rects_for_span(spans2, 0, 1) == []
+
+
+def test_chunk_document_attaches_bbox_from_page_lines():
+    from app.services.ingestion import chunk_document, ParsedDocument, PageContent, LayoutLine
+    page = PageContent(
+        page=1,
+        text="hello\nworld",
+        source="ocr",
+        ocr_confidence=0.9,
+        lines=[
+            LayoutLine(text="hello", bbox=[0.0, 0.0, 0.5, 0.1]),
+            LayoutLine(text="world", bbox=[0.0, 0.2, 0.5, 0.3]),
+        ],
+    )
+    parsed = ParsedDocument(pages=[page], metadata={})
+    _parents, children_per_parent = chunk_document(parsed)
+    child = children_per_parent[0][0]  # short text -> single child spanning both lines
+    assert child.bbox == [[0.0, 0.0, 0.5, 0.1], [0.0, 0.2, 0.5, 0.3]]
+
+
+def test_chunk_document_no_lines_yields_empty_bbox():
+    from app.services.ingestion import chunk_document, ParsedDocument, PageContent
+    parsed = ParsedDocument(
+        pages=[PageContent(page=1, text="Some text without geometry.", source="native")],
+        metadata={},
+    )
+    _parents, children_per_parent = chunk_document(parsed)
+    assert children_per_parent[0][0].bbox == []
 
 
 def test_chunk_text_produces_parents_and_children():

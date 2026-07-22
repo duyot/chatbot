@@ -45,7 +45,7 @@ function renderContent(content) {
   return elements
 }
 
-export default function ChatMessage({ role, content, streaming = false, citations = [], error = false }) {
+export default function ChatMessage({ role, content, streaming = false, citations = [], error = false, showCitation = false, onShowCitation }) {
   const [citationsOpen, setCitationsOpen] = useState(false)
   const isUser = role === 'user'
 
@@ -127,6 +127,21 @@ export default function ChatMessage({ role, content, streaming = false, citation
                 </svg>
               </button>
               <span className="chat-msg-action-divider" />
+              {showCitation && (
+                <>
+                  <button
+                    className="chat-msg-action-btn"
+                    title="Show sources in document"
+                    onClick={() => onShowCitation?.()}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                      <path d="M7.5 1.5c2.5 0 4.4 1.9 4.4 4.3 0 3-4.4 7.4-4.4 7.4S3.1 8.8 3.1 5.8c0-2.4 1.9-4.3 4.4-4.3z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+                      <circle cx="7.5" cy="5.8" r="1.6" stroke="currentColor" strokeWidth="1.3" />
+                    </svg>
+                  </button>
+                  <span className="chat-msg-action-divider" />
+                </>
+              )}
               <button className="chat-msg-action-btn" title="More">
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                   <circle cx="3.5" cy="7.5" r="1" fill="currentColor" />
