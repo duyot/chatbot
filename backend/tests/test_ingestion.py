@@ -342,3 +342,29 @@ def test_chunk_text_produces_parents_and_children():
         # Tokens are smaller than chars, but length sanity: children re-joined should
         # roughly cover the parent (allow slack for overlap and whitespace)
         assert len(joined) >= len(parent_text) * 0.7
+
+
+def test_search_text_is_generated_from_context_and_content(db):
+    """search_text is a Postgres STORED generated column; it must concatenate
+    context and content, and stay correct when context is NULL."""
+    import uuid
+    from app.models import Document, DocumentChunk
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    with_ctx = DocumentChunk(
+        document_id=doc.id, chunk_index=0, content="the rate is 40%",
+        context="Section 3 of the lease agreement.", embedding=[0.0] * 1536,
+    )
+    without_ctx = DocumentChunk(
+        document_id=doc.id, chunk_index=1, content="bare chunk",
+        embedding=[0.0] * 1536,
+    )
+    db.add_all([with_ctx, without_ctx])
+    db.flush()
+    db.refresh(with_ctx)
+    db.refresh(without_ctx)
+
+    assert with_ctx.search_text == "Section 3 of the lease agreement. the rate is 40%"
+    # NULL context must not null out the whole column
+    assert without_ctx.search_text == " bare chunk"

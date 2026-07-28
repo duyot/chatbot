@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Text, DateTime, Integer, Float, Boolean, ForeignKey, UniqueConstraint, Index
+from sqlalchemy import Column, String, Text, DateTime, Integer, Float, Boolean, ForeignKey, UniqueConstraint, Index, Computed
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from pgvector.sqlalchemy import Vector
 from .database import Base
@@ -58,6 +58,18 @@ class DocumentChunk(Base):
     )
     chunk_index = Column(Integer, nullable=False)
     content = Column(Text, nullable=False)
+    # LLM-generated description situating this chunk within its source document.
+    # Embedded and indexed alongside content; NULL means "not contextualized"
+    # (pre-0010 rows, or contextualization disabled/failed) and is fully supported.
+    context = Column(Text, nullable=True)
+    # Postgres STORED generated column: what BM25 indexes. Declared here (not
+    # only in the migration) because tests build their schema from
+    # Base.metadata.create_all(), not Alembic. Read-only — never assign to it.
+    search_text = Column(
+        Text,
+        Computed("coalesce(context, '') || ' ' || content", persisted=True),
+        nullable=True,
+    )
     embedding = Column(Vector(1536))
     # Retrieval metadata: page (1-based), source in {native, ocr}, OCR confidence (avg).
     page = Column(Integer, nullable=True)

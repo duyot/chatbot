@@ -77,13 +77,13 @@ services:
     restart: unless-stopped
 
   db:
-    image: pgvector/pgvector:pg16
+    image: paradedb/paradedb:0.24.3-pg18
     environment:
       POSTGRES_DB: chatbot
       POSTGRES_USER: chatbot
       POSTGRES_PASSWORD: chatbot
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/
     ports:
       - "5434:5432"
     healthcheck:
