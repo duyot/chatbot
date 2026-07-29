@@ -31,6 +31,20 @@ def get_reranker() -> str:
     return settings.reranker_model
 
 
+def _rerank_text(chunk: Any) -> str:
+    """Text sent to the cross-encoder for one candidate.
+
+    Includes the generated context when present so the reranker scores on the
+    same signal the retrieval arms used. Tolerates objects without a .context
+    attribute — rerank() is called with plain chunk-likes in places.
+    """
+    content = (getattr(chunk, "content", "") or "").strip()
+    context = (getattr(chunk, "context", None) or "").strip()
+    if not context:
+        return content
+    return f"{context}\n\n{content}"
+
+
 def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
     """Score each chunk via OpenRouter /v1/rerank, return top_n (chunk, score)
     sorted descending.
@@ -47,7 +61,7 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
         "Authorization": f"Bearer {settings.openrouter_api_key}",
         "Content-Type": "application/json",
     }
-    documents = [{"text": (c.content or "").strip()} for c in chunks]
+    documents = [{"text": _rerank_text(c)} for c in chunks]
     payload = {
         "model": settings.reranker_model,
         "query": query,

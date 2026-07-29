@@ -45,9 +45,9 @@ def test_rerank_sorts_by_score(mocker):
         ]},
     )
 
-    chunk_a = MagicMock(id="A", content="cat")
-    chunk_b = MagicMock(id="B", content="dog")
-    chunk_c = MagicMock(id="C", content="fish")
+    chunk_a = MagicMock(id="A", content="cat", context=None)
+    chunk_b = MagicMock(id="B", content="dog", context=None)
+    chunk_c = MagicMock(id="C", content="fish", context=None)
 
     result = rerank("pets", [chunk_a, chunk_b, chunk_c], top_n=2)
 
@@ -74,8 +74,8 @@ def test_rerank_handles_bare_list_response(mocker):
         ],
     )
 
-    chunk_a = MagicMock(id="A", content="x")
-    chunk_b = MagicMock(id="B", content="y")
+    chunk_a = MagicMock(id="A", content="x", context=None)
+    chunk_b = MagicMock(id="B", content="y", context=None)
 
     result = rerank("q", [chunk_a, chunk_b], top_n=2)
     assert [c.id for c, _ in result] == ["B", "A"]
@@ -92,7 +92,7 @@ def test_rerank_skips_out_of_range_index(mocker):
         ]},
     )
 
-    chunk_a = MagicMock(id="A", content="x")
+    chunk_a = MagicMock(id="A", content="x", context=None)
     result = rerank("q", [chunk_a], top_n=5)
 
     assert [c.id for c, _ in result] == ["A"]
@@ -111,7 +111,7 @@ def test_rerank_truncates_to_top_n(mocker):
         ]},
     )
 
-    chunks = [MagicMock(id=i, content=str(i)) for i in range(3)]
+    chunks = [MagicMock(id=i, content=str(i), context=None) for i in range(3)]
     result = rerank("q", chunks, top_n=2)
     assert len(result) == 2
     assert [c.id for c, _ in result] == [1, 2]
@@ -123,7 +123,7 @@ def test_rerank_falls_back_to_input_order_on_api_error(mocker):
 
     _mock_rerank_response(mocker, body=None, raises=RuntimeError("openrouter down"))
 
-    chunks = [MagicMock(id=i, content=str(i)) for i in range(3)]
+    chunks = [MagicMock(id=i, content=str(i), context=None) for i in range(3)]
     result = rerank("q", chunks, top_n=2)
     assert [c.id for c, _ in result] == [0, 1]
     assert all(s == 0.0 for _, s in result)
@@ -132,6 +132,46 @@ def test_rerank_falls_back_to_input_order_on_api_error(mocker):
 def test_rerank_empty_chunks_returns_empty():
     from app.services.rag.reranker import rerank
     assert rerank("q", [], top_n=5) == []
+
+
+def test_rerank_sends_context_with_content(mocker):
+    """The cross-encoder must see the same contextual signal the retrieval arms
+    did, or it re-ranks on strictly less information than recall used."""
+    from app.services.rag.reranker import rerank
+
+    patched = _mock_rerank_response(
+        mocker, {"results": [{"index": 0, "relevance_score": 0.9}]}
+    )
+
+    with_ctx = MagicMock(id="A", content="the rate is 40%", context="Section 3.")
+    without_ctx = MagicMock(id="B", content="bare", context=None)
+
+    rerank("q", [with_ctx, without_ctx], top_n=2)
+
+    body = patched.return_value.__enter__.return_value.post.call_args.kwargs["json"]
+    assert body["documents"] == [
+        {"text": "Section 3.\n\nthe rate is 40%"},
+        {"text": "bare"},
+    ]
+
+
+def test_rerank_handles_chunks_without_context_attribute(mocker):
+    """Defensive: rerank is also called with plain objects that only carry
+    .id and .content."""
+    from app.services.rag.reranker import rerank
+
+    patched = _mock_rerank_response(
+        mocker, {"results": [{"index": 0, "relevance_score": 0.5}]}
+    )
+
+    class Bare:
+        id = "A"
+        content = "text only"
+
+    rerank("q", [Bare()], top_n=1)
+
+    body = patched.return_value.__enter__.return_value.post.call_args.kwargs["json"]
+    assert body["documents"] == [{"text": "text only"}]
 
 
 import uuid
