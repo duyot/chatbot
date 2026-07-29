@@ -67,6 +67,10 @@ class ChildChunk:
     source: str
     ocr_confidence: Optional[float] = None
     bbox: Optional[List[List[float]]] = None  # normalized rects covering this chunk
+    # LLM-generated context situating this chunk in its document. None when
+    # contextualization is disabled or failed; the chunk then embeds on content
+    # alone, exactly as before this feature existed.
+    context: Optional[str] = None
 
 
 _IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
@@ -373,6 +377,19 @@ def embed_text(text: str) -> List[float]:
     return response.data[0].embedding
 
 
+def build_embedding_input(context: Optional[str], content: str) -> str:
+    """Text actually sent to the embedding model for a child chunk.
+
+    Contextual embeddings prepend the generated context so the vector carries
+    document-level meaning. A chunk with no context embeds on content alone —
+    this must stay byte-identical to the pre-contextual behaviour so disabling
+    the feature is a true no-op.
+    """
+    if not context:
+        return content
+    return f"{context}\n\n{content}"
+
+
 def embed_chunks(chunks: List[str]) -> List[List[float]]:
     client = _openai_client()
     embeddings: List[List[float]] = []
@@ -433,6 +450,7 @@ def store_chunks(
                 source=child.source,
                 ocr_confidence=child.ocr_confidence,
                 bbox=child.bbox or None,
+                context=child.context,
             ))
             global_idx += 1
     db.bulk_save_objects(child_rows)

@@ -15,13 +15,16 @@ from uuid import UUID
 
 from sqlalchemy import select, delete
 
+from app.config import settings
 from app.database import SessionLocal
 from app.models import Document, DocumentChunk, DocumentParentChunk
+from app.services.contextualizer import contextualize_with_stats
 from app.services.ingestion import (
     parse_document,
     chunk_document,
     embed_chunks,
     store_chunks,
+    build_embedding_input,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -46,7 +49,23 @@ def reingest_one(doc_id: UUID) -> None:
         parents, children_per_parent = chunk_document(parsed)
         if not parents:
             raise ValueError("No extractable text found in document (empty or OCR failed)")
-        flat_children = [c.content for sub in children_per_parent for c in sub]
+
+        ctx_stats = None
+        if settings.contextual_embeddings_enabled:
+            contexts, ctx_stats = contextualize_with_stats(parsed, children_per_parent)
+            for children, child_contexts in zip(children_per_parent, contexts):
+                for child, ctx in zip(children, child_contexts):
+                    child.context = ctx
+            logger.info(
+                "contextualized %d/%d children tier=%s",
+                ctx_stats["contextualized_children"], ctx_stats["total_children"],
+                ctx_stats["tier"],
+            )
+
+        flat_children = [
+            build_embedding_input(c.context, c.content)
+            for sub in children_per_parent for c in sub
+        ]
         embeddings = embed_chunks(flat_children)
         store_chunks(db, str(doc_id), parents, children_per_parent, embeddings)
 
@@ -54,7 +73,10 @@ def reingest_one(doc_id: UUID) -> None:
         doc.error_msg = None
         doc.mime_type = parsed.metadata.get("mime_type")
         doc.page_count = parsed.metadata.get("page_count")
-        doc.doc_metadata = parsed.metadata
+        metadata = dict(parsed.metadata)
+        if ctx_stats is not None:
+            metadata["contextualization"] = ctx_stats
+        doc.doc_metadata = metadata
         db.commit()
         logger.info("reingest done: %s", doc_id)
     except Exception as e:

@@ -67,6 +67,8 @@ class DocumentChunk(Base):
     # page, covering the source line(s) this chunk was derived from. Null/[] when
     # unmappable (e.g. DOCX, or no layout match).
     bbox = Column(JSONB, nullable=True)
+    # LLM-generated context situating this chunk in its document.
+    context = Column(Text, nullable=True)
 
     __table_args__ = (
         Index("ix_document_chunks_doc_page", "document_id", "page"),
