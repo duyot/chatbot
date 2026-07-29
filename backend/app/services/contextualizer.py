@@ -85,6 +85,13 @@ def _call_model(blocks: List[dict], max_tokens: int) -> str:
         temperature=0.0,
         messages=[{"role": "user", "content": blocks}],
     )
+    # A cache_control passthrough failure produces correct output at the
+    # wrong cost (roughly 10x) rather than an error, so this is the only
+    # signal that catches it happening in production. Never crash on a
+    # missing/odd usage field — this is observability, not correctness.
+    usage = getattr(response, "usage", None)
+    if usage is not None:
+        logger.info("_call_model: usage=%s", usage)
     return (response.choices[0].message.content or "").strip()
 
 

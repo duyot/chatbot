@@ -46,10 +46,15 @@ def bm25_available(db: Session) -> bool:
                 sa_text("SELECT 1 FROM pg_extension WHERE extname = 'pg_search'")
             ).first()
             _BM25_AVAILABLE = bool(row)
+            logger.info("bm25_available: pg_search detected=%s", _BM25_AVAILABLE)
         except Exception as exc:  # noqa: BLE001
+            # Probe errored (e.g. transient DB blip) — distinct from probing
+            # successfully and finding pg_search genuinely absent. Don't latch
+            # False into the module cache, or one bad connection makes this
+            # process run unindexed FTS for its whole lifetime; leave the
+            # cache unset so the next call retries.
             logger.warning("bm25_available: probe failed, using ts_rank (%s)", exc)
-            _BM25_AVAILABLE = False
-        logger.info("bm25_available: pg_search detected=%s", _BM25_AVAILABLE)
+            return False
     return _BM25_AVAILABLE
 
 
@@ -237,10 +242,13 @@ def retrieve(
     vec_hits, fts_rows = hybrid_search(db, document_id, query, page_range)
 
     fused = rrf_fuse(vec_hits, fts_rows, settings.rrf_k)
-    # Both arms return up to top_k, so the fused set can hold their sum. Keep
-    # all of it: the reranker is what narrows to rerank_top_n, and starving it
-    # of candidates is the one thing that reliably degrades rerank quality.
-    candidate_limit = settings.vector_top_k + settings.fts_top_k
+    # RRF order must actually SELECT candidates, or the weights are inert:
+    # rerank() re-sorts whatever it receives, so if every fused id survives,
+    # fusion cannot influence the final result. Both arms return up to top_k
+    # and the fused set holds their union, so truncating at the larger arm's
+    # top_k is what makes the weighting load-bearing. Using the SUM here
+    # (an earlier revision did) can never truncate and silently disables it.
+    candidate_limit = max(settings.vector_top_k, settings.fts_top_k)
     fused_ids = [cid for cid, _ in fused[:candidate_limit]]
     candidates = fetch_chunks_by_ids(db, fused_ids)
 

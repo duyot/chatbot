@@ -123,10 +123,14 @@ def test_rerank_falls_back_to_input_order_on_api_error(mocker):
 
     _mock_rerank_response(mocker, body=None, raises=RuntimeError("openrouter down"))
 
+    from app.services.rag.reranker import RERANK_FAILED_SCORE
+
     chunks = [MagicMock(id=i, content=str(i), context=None) for i in range(3)]
     result = rerank("q", chunks, top_n=2)
     assert [c.id for c, _ in result] == [0, 1]
-    assert all(s == 0.0 for _, s in result)
+    # Sentinel, not a real 0.0 relevance score, so a degraded rerank is
+    # detectable downstream instead of looking like a genuine low score.
+    assert all(s == RERANK_FAILED_SCORE for _, s in result)
 
 
 def test_rerank_empty_chunks_returns_empty():
@@ -343,7 +347,13 @@ def test_tsrank_fallback_matches_on_context_too(db, mocker):
     assert len(keyword_rows) == 1
 
 
-@pytest.mark.skipif(True, reason="requires pg_search; run against the ParadeDB container")
+@pytest.mark.skipif(
+    True,
+    reason=(
+        "integration test: exercises the real pg_search BM25 path; skipped "
+        "by default so the suite does not depend on the ParadeDB image"
+    ),
+)
 def test_bm25_search_matches_on_context(db, mocker):
     """Integration check for the real BM25 path. Flip the skipif to False and
     run with DATABASE_URL pointed at the ParadeDB container's chatbot_test DB."""
@@ -394,6 +404,21 @@ def test_rrf_fuse_explicit_weights_override_settings():
 
     result = rrf_fuse([C("V")], [C("K")], k=60, w_vec=0.1, w_keyword=0.9)
     assert [cid for cid, _ in result][0] == "K"
+
+
+def test_rerank_text_matches_embedding_input_format():
+    """_rerank_text and build_embedding_input are deliberately separate
+    implementations (reranking and embedding are different concerns), but they
+    must format identically or retrieval and reranking would see different
+    text. Nothing else catches drift — there is no eval harness."""
+    from app.services.rag.reranker import _rerank_text
+    from app.services.ingestion import build_embedding_input
+
+    chunk = MagicMock(id="A", content="the rate is 40%", context="Section 3.")
+    assert _rerank_text(chunk) == build_embedding_input(chunk.context, chunk.content)
+
+    bare = MagicMock(id="B", content="no context here", context=None)
+    assert _rerank_text(bare) == build_embedding_input(None, bare.content)
 
 
 def test_rrf_fuse_scores_are_additive_across_arms():

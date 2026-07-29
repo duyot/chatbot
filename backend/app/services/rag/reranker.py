@@ -25,6 +25,13 @@ from ...config import settings
 
 logger = logging.getLogger(__name__)
 
+# Returned in place of a real relevance score when rerank() degrades to input
+# order. Real relevance scores from the configured models are always >= 0, so
+# this sentinel is distinguishable from a genuine (if low) score — a degraded
+# rerank must be detectable, not silently indistinguishable from "the reranker
+# ran and found everything irrelevant."
+RERANK_FAILED_SCORE = -1.0
+
 
 def get_reranker() -> str:
     """Return the configured reranker model name. Kept for API compatibility."""
@@ -37,6 +44,10 @@ def _rerank_text(chunk: Any) -> str:
     Includes the generated context when present so the reranker scores on the
     same signal the retrieval arms used. Tolerates objects without a .context
     attribute — rerank() is called with plain chunk-likes in places.
+
+    Format counterpart: app/services/ingestion.py:build_embedding_input must
+    produce the identical string, or retrieval and reranking see different
+    text.
     """
     content = (getattr(chunk, "content", "") or "").strip()
     context = (getattr(chunk, "context", None) or "").strip()
@@ -50,8 +61,9 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
     sorted descending.
 
     `chunks` is a list with .id and .content attributes (DocumentChunk works
-    directly). On any error returns [(c, 0.0) for c in chunks[:top_n]] so the
-    retrieval pipeline degrades gracefully to RRF order.
+    directly). On any error returns [(c, RERANK_FAILED_SCORE) for c in
+    chunks[:top_n]] so the retrieval pipeline degrades gracefully to RRF
+    order, while still leaving a signal that the rerank did not actually run.
     """
     if not chunks:
         return []
@@ -83,12 +95,12 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
         logger.error(
             "rerank: API call failed (%s); falling back to input order", exc,
         )
-        return [(c, 0.0) for c in chunks[:top_n]]
+        return [(c, RERANK_FAILED_SCORE) for c in chunks[:top_n]]
 
     results = body.get("results") if isinstance(body, dict) else body
     if not isinstance(results, list):
         logger.error("rerank: unexpected response shape: %r", body)
-        return [(c, 0.0) for c in chunks[:top_n]]
+        return [(c, RERANK_FAILED_SCORE) for c in chunks[:top_n]]
 
     scored: list[tuple[Any, float]] = []
     for item in results:

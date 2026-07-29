@@ -148,8 +148,10 @@ sequenceDiagram
      `bm25_available()`) → `rrf_fuse` (**weighted** RRF, `k=60`, 0.8 semantic /
      0.2 keyword) → `rerank()` via OpenRouter `/v1/rerank` on
      `context + content` (top 6) → `apply_metadata_boost` (no-op by default) →
-     `fetch_parents` (dedup parent chunks). Both arms return `top_k=75`, so the
-     reranker sees up to 150 candidates.
+     `fetch_parents` (dedup parent chunks). Both arms return up to `top_k=75`,
+     but the fused RRF list is truncated to `max(vector_top_k, fts_top_k)=75`
+     candidates before reranking — not the sum — or the RRF weights would have
+     no effect on which candidates the reranker ever sees.
    - `grade` (function `grade_chunks`, `nodes.py:74-115`) — **default fast path**: `graded_useful=True` if any chunks were retrieved (not an LLM call unless `settings.strict_grader=True`).
    - `route_after_grade` (`graph.py:30-35`) — routes to `retry` if not useful and `retry_count < settings.max_retrieval_retries` (default 2), else to `generate` either way (useful or "give up").
    - `retry` (function `rewrite_and_retry`, `nodes.py:118-129`) — LLM proposes one alternate query phrasing, loops back to `retrieve`.

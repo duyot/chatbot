@@ -384,6 +384,9 @@ def build_embedding_input(context: Optional[str], content: str) -> str:
     document-level meaning. A chunk with no context embeds on content alone —
     this must stay byte-identical to the pre-contextual behaviour so disabling
     the feature is a true no-op.
+
+    Format counterpart: app/services/rag/reranker.py:_rerank_text must produce
+    the identical string, or retrieval and reranking see different text.
     """
     if not context:
         return content

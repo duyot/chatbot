@@ -45,6 +45,12 @@ def setup_tables():
                 "CREATE INDEX IF NOT EXISTS chunks_bm25 ON document_chunks "
                 "USING bm25 (id, search_text) WITH (key_field = 'id')"
             ))
+        # Plain GIN index backing the ts_rank fallback (migration 0011) — no
+        # extension guard needed, this is stock Postgres full-text search.
+        conn.execute(sa_text(
+            "CREATE INDEX IF NOT EXISTS ix_document_chunks_search_text_fts "
+            "ON document_chunks USING GIN (to_tsvector('english', search_text))"
+        ))
     yield
     Base.metadata.drop_all(bind=engine)
 

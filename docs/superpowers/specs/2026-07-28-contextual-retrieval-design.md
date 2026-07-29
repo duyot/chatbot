@@ -188,7 +188,10 @@ CREATE INDEX chunks_bm25 ON document_chunks
 
 `context` is nullable — that is the degradation path, and `coalesce` keeps the
 generated column correct for every row without one. The GIN index from
-migration `0003` stays in place for the `ts_rank` fallback.
+migration `0003` indexes `to_tsvector('english', content)`, which cannot serve
+a query over `search_text` (a different expression) — so it does **not**
+cover the `ts_rank` fallback. Migration `0011` adds a second GIN index over
+`to_tsvector('english', search_text)` for that path.
 
 `shared_preload_libraries` is **not** required: `pg_search` only needs it on
 Postgres < 17, and the ParadeDB image ships Postgres 18.
@@ -209,7 +212,11 @@ bare `content` when it is not. The caller builds these strings, so
 persists `child.context`.
 
 When `contextual_embeddings_enabled` is `False` the contextualize step is
-skipped and every context is `None`, reproducing today's pipeline exactly.
+skipped and every context is `None`, reproducing the pre-contextual
+**embedding** behaviour only (the embedding input degrades to bare
+`content`, byte-identical to before). It does **not** reproduce the rest of
+today's pipeline: pool sizes (30→75), fusion weights (50/50→0.8/0.2), and the
+BM25 keyword arm all change unconditionally and are not gated on this flag.
 
 ## Retrieval flow
 
@@ -233,12 +240,17 @@ LIMIT :k
 ```
 
 The existing `ts_rank`/`plainto_tsquery` query is retained as the fallback
-implementation, so a developer who has not rebuilt the db image still gets a
-working app, and so the two can be A/B'd later.
+implementation. This is **not** a safety net for a developer who hasn't
+rebuilt the db image — migration `0010` opens with `CREATE EXTENSION
+pg_search`, which fails outright on a non-ParadeDB image, and
+`backend/Dockerfile`'s CMD (`alembic upgrade head && uvicorn`) means that
+container never starts in the first place. The real reason the fallback
+exists is so the keyword arm can be A/B'd against BM25 on a ParadeDB host via
+`bm25_enabled=False`.
 
 **Weighted RRF.** `rrf_fuse()` takes weights:
-`w_vec / (k + rank)` for vector hits, `w_bm25 / (k + rank)` for keyword hits.
-Defaults 0.8 / 0.2.
+`w_vec / (k + rank)` for vector hits, `w_keyword / (k + rank)` for keyword
+hits. Defaults 0.8 / 0.2.
 
 **Contextual reranking.** `reranker.rerank()` sends
 `f"{context}\n\n{content}"` per candidate rather than bare `content`, so the
@@ -282,7 +294,9 @@ Added to `backend/app/config.py`:
 contextual_embeddings_enabled: bool = True
 contextualizer_model: str = "anthropic/claude-haiku-4.5"
 contextualizer_max_workers: int = 8
-contextualizer_full_doc_token_limit: int = 100_000
+contextualizer_full_doc_token_limit: int = 100_000  # cost ceiling, not just a
+    # context-window guard: cost is quadratic in document size in the full-doc
+    # tier (every child re-reads the whole doc), roughly $4-5 at the threshold.
 contextualizer_cache_ttl: str = "1h"
 
 bm25_enabled: bool = True          # auto-disabled when pg_search is absent
