@@ -29,7 +29,7 @@ graph TD
         OCR["RapidOCR FastAPI service<br/>ocr-service/app.py"]
     end
 
-    DB[("Postgres 16 + pgvector<br/>documents, chunks, users,<br/>conversations, messages")]
+    DB[("Postgres 18 + ParadeDB<br/>documents, chunks, users,<br/>conversations, messages")]
     REDIS[("Redis 7<br/>Celery broker + result backend")]
     OPENROUTER["OpenRouter API<br/>chat LLM, embeddings, rerank"]
 
@@ -81,8 +81,11 @@ A minimal FastAPI service wrapping `rapidocr_onnxruntime.RapidOCR` (PP-OCR ONNX 
 ### Agentic RAG — `backend/app/services/rag/`
 A LangGraph state machine (`graph.py`) invoked as `agentic_rag_stream(document_id, message, db)` from `backend/app/routers/chat.py`. Six nodes (`rewrite_query`, `retrieve`, `grade`, `retry`, `generate`, `check` — see `wiki/02-flows.md` for the full graph and per-node detail) implement query rewriting, hybrid retrieval + rerank, a retry loop, grounded answer generation, and a post-hoc faithfulness check. All LLM calls (chat, rerank) and embedding calls go through OpenRouter using `openai`-compatible clients.
 
-### Database — Postgres 16 + pgvector (`docker-compose.yml`)
-Single Postgres instance (`pgvector/pgvector:pg16`) holding both the vector/FTS-indexed document chunks and the app's relational tables (users, conversations, messages). See `wiki/03-data-model.md`.
+### Database — Postgres 18 + ParadeDB (`docker-compose.yml`)
+Single Postgres instance (`paradedb/paradedb:0.24.3-pg18`), which bundles both
+`pg_search` (BM25) and `pgvector`, holding both the vector/keyword-indexed
+document chunks and the app's relational tables (users, conversations,
+messages). See `wiki/03-data-model.md`.
 
 ### Redis — `docker-compose.yml`
 Used exclusively as the Celery broker + result backend (`backend/app/workers/celery_app.py`) — not used for caching or pub/sub elsewhere in the app.
