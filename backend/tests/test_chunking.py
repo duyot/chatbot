@@ -291,3 +291,101 @@ def test_build_prose_parent_multiple_children_carry_different_pages_and_bboxes()
     assert len(page_3_with_bbox) > 0, "expected children on page 3 to carry bboxes"
     assert [0.0, 0.6, 1.0, 1.0] in page_3_with_bbox[0].bbox, \
         f"expected el3's bbox in page 3 child, got {page_3_with_bbox[0].bbox}"
+
+
+# --- split_markdown_table --------------------------------------------------
+
+_TABLE_HEAD = "| Region | Q1 | Q2 |\n|---|---|---|"
+
+
+def _table_md(n_rows):
+    rows = "\n".join(f"| R{i} | {i} | {i * 2} |" for i in range(n_rows))
+    return f"{_TABLE_HEAD}\n{rows}"
+
+
+def test_split_markdown_table_repeats_header_and_separator_in_every_group():
+    from app.services.chunking import split_markdown_table
+    groups = split_markdown_table(_table_md(25), rows_per_group=10)
+
+    assert len(groups) == 3
+    for g in groups:
+        lines = g.splitlines()
+        assert lines[0] == "| Region | Q1 | Q2 |"
+        assert "---" in lines[1]
+
+
+def test_split_markdown_table_distributes_all_data_rows_exactly_once():
+    from app.services.chunking import split_markdown_table
+    groups = split_markdown_table(_table_md(25), rows_per_group=10)
+    data_lines = [
+        line for g in groups for line in g.splitlines()
+        if line.startswith("| R") and len(line) > 3 and line[3].isdigit()
+    ]
+    assert len(data_lines) == 25
+    assert len(set(data_lines)) == 25
+
+
+def test_split_markdown_table_small_table_is_one_group():
+    from app.services.chunking import split_markdown_table
+    groups = split_markdown_table(_table_md(3), rows_per_group=10)
+    assert groups == [_table_md(3)]
+
+
+def test_split_markdown_table_degenerate_input_returns_one_opaque_group():
+    """No separator line, or too few lines to have a header at all."""
+    from app.services.chunking import split_markdown_table
+    assert split_markdown_table("just one line of junk", rows_per_group=10) == \
+        ["just one line of junk"]
+    assert split_markdown_table("| a | b |", rows_per_group=10) == ["| a | b |"]
+
+
+def test_split_markdown_table_empty_string_returns_empty_list():
+    from app.services.chunking import split_markdown_table
+    assert split_markdown_table("", rows_per_group=10) == []
+
+
+# --- build_table_parent ----------------------------------------------------
+
+def test_build_table_parent_small_table_yields_exactly_one_child(mocker):
+    from app.services import chunking
+    mocker.patch.object(chunking.settings, "table_max_tokens", 1500)
+    el = _el("table", _table_md(3), page=2, bbox=[0.1, 0.2, 0.9, 0.5])
+
+    parent, children = chunking.build_table_parent("A > B", el)
+
+    assert len(children) == 1
+    assert children[0].content.startswith("A > B\n\n")
+    assert "| Region | Q1 | Q2 |" in children[0].content
+    assert parent.content.startswith("A > B\n\n")
+
+
+def test_build_table_parent_splits_oversized_table_into_row_groups(mocker):
+    from app.services import chunking
+    mocker.patch.object(chunking.settings, "table_max_tokens", 40)
+    mocker.patch.object(chunking.settings, "table_row_group_rows", 5)
+    el = _el("table", _table_md(30), page=1, bbox=[0.0, 0.0, 1.0, 1.0])
+
+    _, children = chunking.build_table_parent("", el)
+
+    assert len(children) == 6
+    for child in children:
+        assert "| Region | Q1 | Q2 |" in child.content
+
+
+def test_build_table_parent_every_child_carries_the_whole_table_bbox():
+    from app.services import chunking
+    el = _el("table", _table_md(3), page=2, bbox=[0.1, 0.2, 0.9, 0.5])
+    _, children = chunking.build_table_parent("", el)
+    assert children[0].bbox == [[0.1, 0.2, 0.9, 0.5]]
+
+
+def test_build_table_parent_marks_children_as_table_element_type():
+    from app.services import chunking
+    _, children = chunking.build_table_parent("", _el("table", _table_md(2)))
+    assert all(c.element_type == "table" for c in children)
+
+
+def test_build_table_parent_page_span_is_the_elements_page():
+    from app.services import chunking
+    parent, _ = chunking.build_table_parent("", _el("table", _table_md(2), page=9))
+    assert (parent.page_start, parent.page_end) == (9, 9)

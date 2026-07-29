@@ -233,3 +233,66 @@ def build_prose_parent(heading_path: str, group: List[Element]) -> tuple:
             element_type="text",
         ))
     return parent, children
+
+
+def split_markdown_table(markdown: str, rows_per_group: int) -> List[str]:
+    """Split a markdown table into row groups, repeating the header row and its
+    separator in each one.
+
+    A table whose markdown is degenerate — fewer than three lines, or a missing
+    `|---|` separator — is returned as a single opaque group rather than
+    guessed at. Losing the row grouping is much better than mangling content.
+    """
+    if not markdown.strip():
+        return []
+    lines = [ln for ln in markdown.splitlines() if ln.strip()]
+    if len(lines) < 3 or "---" not in lines[1]:
+        return [markdown]
+
+    header, separator, data = lines[0], lines[1], lines[2:]
+    if len(data) <= rows_per_group:
+        return [markdown]
+
+    return [
+        "\n".join([header, separator, *data[i:i + rows_per_group]])
+        for i in range(0, len(data), rows_per_group)
+    ]
+
+
+def build_table_parent(heading_path: str, element: Element) -> tuple:
+    """One atomic parent for a table, plus its children.
+
+    The whole table is one parent so whole-table questions ("what is the
+    total?") can be answered. Children are row groups only when the table
+    exceeds table_max_tokens; a small table yields exactly one child equal to
+    the whole table. A table is never split mid-row.
+
+    Every child's bbox is the whole table region — per-element coarse
+    attribution, so the preview highlights the table rather than a row.
+    """
+    source = _group_source([element])
+    parent = ParentChunk(
+        content=with_heading(heading_path, element.text),
+        page_start=element.page,
+        page_end=element.page,
+        source=source,
+    )
+
+    if count_tokens(element.text) > settings.table_max_tokens:
+        bodies = split_markdown_table(element.text, settings.table_row_group_rows)
+    else:
+        bodies = [element.text]
+
+    rects = [element.bbox] if element.bbox else []
+    children = [
+        ChildChunk(
+            content=with_heading(heading_path, body),
+            page=element.page,
+            source=source,
+            ocr_confidence=element.confidence,
+            bbox=rects,
+            element_type="table",
+        )
+        for body in bodies
+    ]
+    return parent, children
