@@ -342,6 +342,97 @@ A throwaway container must answer four questions before any code lands:
 reconsider the RapidLayout + RapidTable alternative** documented under "Rejected
 alternatives".
 
+## Spike findings (Task 1, 2026-07-29)
+
+- `docling` on `python:3.10-slim`: clean install, but resolves `numpy==2.2.6` and
+  `pillow==12.3.0` transitively (via `docling-ibm-models` / `opencv-python`),
+  overriding the service's previous `numpy==1.26.4` / `pillow==10.4.0` pins —
+  bumped both rather than fighting the resolver.
+- `[onnxruntime]` extra avoids torch: **no**. Both plain `docling` (121
+  packages) and `docling[onnxruntime]` (126 packages) pull `torch` +
+  `torchvision` transitively via `docling-ibm-models` for TableFormer. The
+  extra is strictly worse — it additionally pulls `onnxruntime-gpu`, a CUDA
+  package, on a CPU-only target. **Decision: install plain `docling`, never
+  `docling[onnxruntime]`.**
+- Torch is unavoidable, but CPU-only wheels are available: adding
+  `--extra-index-url https://download.pytorch.org/whl/cpu` to
+  `requirements.txt` resolves `torch==2.13.0+cpu` / `torchvision==0.28.0+cpu`,
+  drops the package count 121 → 102, and eliminates all `nvidia-*` CUDA
+  runtime packages.
+- Resolved RapidOCR package: `rapidocr==3.9.2` (the v3 unified package,
+  matching the pre-existing bare `rapidocr` line — not `rapidocr-onnxruntime`).
+  RapidOCR v3 unbundled its inference engine: neither `rapidocr` nor `docling`
+  pulls an ONNX runtime as a transitive dependency or extra, so
+  `RapidOCR()` raises `ImportError: onnxruntime is not installed.` unless
+  `onnxruntime` (CPU build) is pinned explicitly in `requirements.txt`. Import
+  path is `from rapidocr import RapidOCR` (not `rapidocr_onnxruntime`).
+- Final image size: **2.54 GB** (was ~500 MB). Under the ~4 GB budget.
+- Model prefetch command: `docling-tools models download layout tableformer`
+  (works as documented in the brief for `docling==2.116.0`), followed by
+  `python -c "from rapidocr import RapidOCR; RapidOCR()"` to unpack the
+  bundled PP-OCR ONNX weights — mirrors the pre-existing warm-up.
+- Offline construction verified: **yes** —
+  `docker run --rm --network none ocr-spike python -c "from docling.document_converter import DocumentConverter; DocumentConverter(); print('converter constructed offline OK')"`
+  printed `converter constructed offline OK` with no network reachout.
+
+**Decision:** proceed with Docling. 2.54 GB is comfortably under the 4 GB
+stop-and-ask threshold; the RapidLayout + RapidTable fallback is not needed.
+
+## Spike findings (Task 1, 2026-07-29)
+
+All values measured, not estimated.
+
+| Question | Answer |
+|---|---|
+| `docling` installs on `python:3.10-slim`? | Yes, clean. `docling==2.116.0` |
+| Does `[onnxruntime]` avoid torch? | **No — and it is strictly worse.** Both `docling` (121 pkgs) and `docling[onnxruntime]` (126 pkgs) pull `torch` + `torchvision`; the extra additionally pulls `onnxruntime-gpu`, a GPU package, on a CPU-only host. Plain `docling` is used. |
+| Resolved RapidOCR package | `rapidocr==3.9.2` (the v3 unified package), matching the bare `rapidocr` already pinned |
+| Final image size | **2.54 GB** (was ~500 MB) — under the 4 GB stop-and-ask threshold |
+| Model prefetch command | `docling-tools models download layout tableformer` → `Models downloaded into: /root/.cache/docling/models.` |
+| Offline construction verified | **Yes.** `docker run --rm --network none ocr-spike python -c "…DocumentConverter()…"` prints `OFFLINE OK` |
+
+**Decision: proceed with Docling.** The RapidLayout + RapidTable fallback is
+not needed.
+
+### How the size was kept to 2.54 GB
+
+torch is unavoidable — it arrives transitively via `docling-ibm-models` for
+TableFormer regardless of extras. The default PyPI `torch` for Linux is the
+**CUDA** build, which would have breached the threshold. Installing from the
+CPU-only wheel index instead resolves `torch==2.13.0+cpu` /
+`torchvision==0.28.0+cpu`, drops the package count from 121 to 102, and
+eliminates all ~19 `nvidia-*` CUDA runtime libraries. The flag lives on line 1
+of `ocr-service/requirements.txt`:
+
+```
+--extra-index-url https://download.pytorch.org/whl/cpu
+```
+
+### Dependency corrections the spike forced
+
+- **`onnxruntime` must be pinned explicitly.** RapidOCR v3 unbundled its
+  inference engine: `rapidocr==3.9.2` resolves 17 packages and includes **no**
+  ONNX runtime, and plain `docling` does not supply one either. Without it the
+  Dockerfile's `RapidOCR()` warm-up has no engine to run on. Pinned
+  `onnxruntime==1.23.2` (CPU build — this host has no GPU).
+- **Test dependencies were missing entirely.** Tasks 2-3 run pytest with the
+  `mocker` fixture, including inside the image, so `pytest==8.3.3`,
+  `pytest-mock==3.14.0` and `httpx==0.28.1` are now pinned.
+- **`numpy` 1.26.4 → 2.2.6 and `pillow` 10.4.0 → 12.3.0.** These pre-existing
+  pins were raised to satisfy docling 2.116.0's constraints.
+- **The `COPY` line names files that do not exist yet.** `wire.py` and
+  `parser.py` arrive in Tasks 2 and 3, so the Dockerfile currently copies only
+  `app.py` and carries a comment telling those tasks to extend the line. A
+  gating task must not leave a Dockerfile that cannot build.
+
+### Known wart
+
+`ENV HF_HOME=/app/.cache/huggingface` is set, but `docling-tools` writes its
+weights to `/root/.cache/docling/models` — a different location entirely. The
+image works because both the prefetch and the runtime run as root. If this
+service is ever changed to run as a non-root user, the baked weights become
+unreadable and the container will silently start downloading at runtime.
+
 ## Deferred
 
 - **Embedding-based semantic chunking within long prose sections.** Adds a paid
