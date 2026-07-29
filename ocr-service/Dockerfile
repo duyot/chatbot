@@ -33,9 +33,8 @@ ENV HF_HOME=/app/.cache/huggingface
 RUN docling-tools models download layout tableformer \
     && python -c "from rapidocr import RapidOCR; RapidOCR()"
 
-# parser.py lands in Task 3; this Dockerfile is extended to COPY it then.
-# wire.py (Task 2) and app.py are present.
-COPY app.py wire.py .
+# app.py, wire.py, and parser.py (Docling adapter) — the whole application.
+COPY app.py wire.py parser.py .
 
 EXPOSE 8080
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]

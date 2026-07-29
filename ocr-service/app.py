@@ -6,13 +6,16 @@ from the Celery worker; the worker calls it over HTTP.
 Endpoints:
   GET  /health  -> readiness probe
   POST /ocr     -> multipart image file; returns line-level text + bbox + score
+  POST /parse   -> multipart document file; returns typed elements (see wire.py)
 """
 import io
 import logging
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image
-from rapidocr_onnxruntime import RapidOCR
+from rapidocr import RapidOCR
+
+from parser import ParseError, parse_bytes
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ocr-service")
@@ -50,3 +53,23 @@ async def ocr(file: UploadFile = File(...)):
 
     logger.info("ocr: file=%s lines=%d", file.filename, len(lines))
     return {"lines": lines, "width": width, "height": height}
+
+
+@app.post("/parse")
+async def parse(file: UploadFile = File(...)):
+    """Structure-aware parse of a whole document (PDF / DOCX / image).
+
+    Returns typed elements in reading order with normalized bboxes — see
+    wire.py for the contract. 422 means "this input is not convertible",
+    which the caller surfaces to the user; anything else is a real 500.
+    """
+    raw = await file.read()
+    try:
+        body = parse_bytes(raw, filename=file.filename or "document")
+    except ParseError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    logger.info(
+        "parse: file=%s pages=%s elements=%d",
+        file.filename, body["metadata"].get("page_count"), len(body["elements"]),
+    )
+    return body
