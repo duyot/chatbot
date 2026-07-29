@@ -232,3 +232,96 @@ def test_hybrid_search_page_filter_restricts_results(db, mocker):
 
     vec_hits, fts_rows = hybrid_search(db, str(doc.id), "alpha", page_range=(1, 1))
     assert {c.page for c in vec_hits} == {1}
+
+
+def test_bm25_available_false_when_setting_disabled(db, mocker):
+    from app.services.rag import retrieval
+    mocker.patch.object(retrieval.settings, "bm25_enabled", False)
+    retrieval.reset_bm25_cache()
+    assert retrieval.bm25_available(db) is False
+
+
+def test_bm25_available_caches_after_first_probe(db, mocker):
+    from app.services.rag import retrieval
+    mocker.patch.object(retrieval.settings, "bm25_enabled", True)
+    retrieval.reset_bm25_cache()
+
+    spy = mocker.spy(db, "execute")
+    first = retrieval.bm25_available(db)
+    calls_after_first = spy.call_count
+    second = retrieval.bm25_available(db)
+
+    assert first == second
+    assert spy.call_count == calls_after_first, "probe must run once per process"
+
+
+def test_hybrid_search_uses_tsrank_when_bm25_unavailable(db, mocker):
+    """The fallback must return real results, not an empty list — a dev without
+    pg_search should still get working keyword recall."""
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import hybrid_search
+    from app.models import Document, DocumentChunk
+
+    mocker.patch.object(retrieval, "embed_text", return_value=[0.0] * 1536)
+    mocker.patch.object(retrieval, "bm25_available", return_value=False)
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.add_all([
+        DocumentChunk(document_id=doc.id, chunk_index=0, content="quarterly revenue grew",
+                      embedding=[0.0] * 1536, page=1, source="native"),
+        DocumentChunk(document_id=doc.id, chunk_index=1, content="unrelated boilerplate",
+                      embedding=[0.0] * 1536, page=1, source="native"),
+    ])
+    db.flush()
+
+    _, keyword_rows = hybrid_search(db, str(doc.id), "quarterly revenue")
+    assert len(keyword_rows) >= 1
+
+
+def test_tsrank_fallback_matches_on_context_too(db, mocker):
+    """Even the fallback searches context + content, so contextual keyword
+    recall does not depend on pg_search being installed."""
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import hybrid_search
+    from app.models import Document, DocumentChunk
+
+    mocker.patch.object(retrieval, "embed_text", return_value=[0.0] * 1536)
+    mocker.patch.object(retrieval, "bm25_available", return_value=False)
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.add(DocumentChunk(
+        document_id=doc.id, chunk_index=0, content="the rate is 40 percent",
+        context="Section 3 on escalation clauses",
+        embedding=[0.0] * 1536, page=1, source="native",
+    ))
+    db.flush()
+
+    # "escalation" appears only in the context, never in content.
+    _, keyword_rows = hybrid_search(db, str(doc.id), "escalation")
+    assert len(keyword_rows) == 1
+
+
+@pytest.mark.skipif(True, reason="requires pg_search; run against the ParadeDB container")
+def test_bm25_search_matches_on_context(db, mocker):
+    """Integration check for the real BM25 path. Flip the skipif to False and
+    run with DATABASE_URL pointed at the ParadeDB container's chatbot_test DB."""
+    from app.services.rag import retrieval
+    from app.services.rag.retrieval import hybrid_search
+    from app.models import Document, DocumentChunk
+
+    mocker.patch.object(retrieval, "embed_text", return_value=[0.0] * 1536)
+    retrieval.reset_bm25_cache()
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.add(DocumentChunk(
+        document_id=doc.id, chunk_index=0, content="the rate is 40 percent",
+        context="Section 3 on escalation clauses",
+        embedding=[0.0] * 1536, page=1, source="native",
+    ))
+    db.flush()
+
+    _, keyword_rows = hybrid_search(db, str(doc.id), "escalation")
+    assert len(keyword_rows) == 1

@@ -1,7 +1,7 @@
 import os
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text as sa_text
 from sqlalchemy.orm import sessionmaker
 
 os.environ.setdefault("DATABASE_URL", "postgresql+psycopg2://chatbot:chatbot@localhost:5432/chatbot_test")
@@ -33,6 +33,18 @@ TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 @pytest.fixture(scope="session", autouse=True)
 def setup_tables():
     Base.metadata.create_all(bind=engine)
+    # chunks_bm25 is migration-only: create_all() cannot build a pg_search
+    # bm25 index, and declaring it on the model would make create_all() fail
+    # outright on a plain Postgres without the extension. Create it here when
+    # pg_search is available so the BM25 code path is exercisable in tests.
+    with engine.begin() as conn:
+        if conn.execute(
+            sa_text("SELECT 1 FROM pg_extension WHERE extname = 'pg_search'")
+        ).first():
+            conn.execute(sa_text(
+                "CREATE INDEX IF NOT EXISTS chunks_bm25 ON document_chunks "
+                "USING bm25 (id, search_text) WITH (key_field = 'id')"
+            ))
     yield
     Base.metadata.drop_all(bind=engine)
 
