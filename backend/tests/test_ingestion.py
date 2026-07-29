@@ -419,6 +419,37 @@ def test_store_chunks_persists_context(db):
     assert [r.context for r in rows] == ["CTX ONE", None]
 
 
+def test_store_chunks_persists_element_type_from_chunk_elements(db):
+    """element_type must survive the full chunk_elements -> store_chunks -> DB
+    round trip, not just be set on the in-memory ChildChunk dataclass — the
+    column is nullable, so a wiring bug here would silently store NULL."""
+    import uuid
+    from app.models import Document, DocumentChunk
+    from app.services.chunking import chunk_elements
+    from app.services.ingestion import store_chunks
+    from tests.test_chunking import _el, _table_md
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.flush()
+
+    parents, children = chunk_elements([
+        _el("paragraph", "Prose body."),
+        _el("table", _table_md(2)),
+    ])
+    n_children = sum(len(c) for c in children)
+    store_chunks(db, str(doc.id), parents, children, [[0.0] * 1536] * n_children)
+
+    rows = (
+        db.query(DocumentChunk)
+        .filter(DocumentChunk.document_id == doc.id)
+        .order_by(DocumentChunk.chunk_index)
+        .all()
+    )
+    element_types = {r.element_type for r in rows}
+    assert element_types == {"text", "table"}
+
+
 def _wire(elements, pages=None):
     return {
         "schema_version": 1,

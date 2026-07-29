@@ -407,6 +407,11 @@ def test_chunk_elements_never_merges_a_table_with_prose():
     assert "Prose before" in contents[0] and "| Region" not in contents[0]
     assert "| Region" in contents[1]
     assert "Prose after" in contents[2] and "| Region" not in contents[2]
+    # The two prose parents must be mutually exclusive — without pending.clear(),
+    # "Prose before" would leak into the post-table parent while every assertion
+    # above still passed.
+    assert "Prose before" not in contents[2]
+    assert "Prose after" not in contents[0]
 
 
 def test_chunk_elements_flushes_parent_at_a_heading_boundary():
