@@ -75,3 +75,51 @@ def test_ingest_document_fails_on_empty_extraction():
 
     assert mock_doc.status == "failed"
     assert "No extractable text" in (mock_doc.error_msg or "")
+
+
+def test_ingest_document_does_not_retry_a_parse_timeout(db, mocker):
+    """A parse that timed out once will time out again; retrying just burns
+    another full timeout of worker time."""
+    from app.models import Document
+    from app.services.ocr_client import ParseTimeout
+    from app.workers import tasks
+
+    doc_id = str(uuid.uuid4())
+    db.add(Document(
+        id=doc_id, file_name="huge.pdf", file_path="/tmp/huge.pdf", status="pending",
+    ))
+    db.commit()
+
+    mocker.patch.object(tasks, "SessionLocal", return_value=db)
+    mocker.patch.object(tasks, "parse_document",
+                        side_effect=ParseTimeout("parse exceeded 1800.0s"))
+    retry = mocker.patch.object(tasks.ingest_document, "retry")
+
+    tasks.ingest_document(doc_id)
+
+    retry.assert_not_called()
+    refreshed = db.query(Document).filter(Document.id == doc_id).first()
+    assert refreshed.status == "failed"
+    assert "1800" in refreshed.error_msg
+
+
+def test_ingest_document_still_retries_other_failures(db, mocker):
+    from celery.exceptions import MaxRetriesExceededError
+    from app.models import Document
+    from app.workers import tasks
+
+    doc_id = str(uuid.uuid4())
+    db.add(Document(
+        id=doc_id, file_name="x.pdf", file_path="/tmp/x.pdf", status="pending",
+    ))
+    db.commit()
+
+    mocker.patch.object(tasks, "SessionLocal", return_value=db)
+    mocker.patch.object(tasks, "parse_document", side_effect=RuntimeError("transient"))
+    retry = mocker.patch.object(
+        tasks.ingest_document, "retry", side_effect=MaxRetriesExceededError(),
+    )
+
+    tasks.ingest_document(doc_id)
+
+    retry.assert_called_once()
