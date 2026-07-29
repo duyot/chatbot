@@ -404,7 +404,7 @@ def _find_from(haystack: str, needle: str, cursor: int) -> int:
     return idx if idx >= 0 else haystack.find(needle)
 
 
-def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
+def _chunk_document_legacy(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
     """Chunk page-by-page so every parent maps to exactly one page, giving exact
     page attribution. Children inherit their parent's page/source/confidence and,
     when the page has line geometry, the normalized bboxes of the lines they
@@ -452,6 +452,19 @@ def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List
         len(parsed.pages), len(parents), n_children,
     )
     return parents, children_per_parent
+
+
+def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
+    """Chunk a parsed document.
+
+    Uses layout-aware chunking when the parser returned typed elements; falls
+    back to the legacy per-page line-based chunker when it did not (the
+    docling_enabled=False rollback path).
+    """
+    if parsed.elements:
+        from .chunking import chunk_elements  # local: chunking imports this module
+        return chunk_elements(parsed.elements)
+    return _chunk_document_legacy(parsed)
 
 
 # --- Embeddings -------------------------------------------------------------
@@ -551,6 +564,7 @@ def store_chunks(
                 ocr_confidence=child.ocr_confidence,
                 bbox=child.bbox or None,
                 context=child.context,
+                element_type=child.element_type,
             ))
             global_idx += 1
     db.bulk_save_objects(child_rows)

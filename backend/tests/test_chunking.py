@@ -389,3 +389,90 @@ def test_build_table_parent_page_span_is_the_elements_page():
     from app.services import chunking
     parent, _ = chunking.build_table_parent("", _el("table", _table_md(2), page=9))
     assert (parent.page_start, parent.page_end) == (9, 9)
+
+
+# --- chunk_elements (end to end over an element list) ----------------------
+
+def test_chunk_elements_never_merges_a_table_with_prose():
+    from app.services.chunking import chunk_elements
+    parents, _ = chunk_elements([
+        _el("heading", "Financials", level=1),
+        _el("paragraph", "Prose before the table."),
+        _el("table", _table_md(3)),
+        _el("paragraph", "Prose after the table."),
+    ])
+
+    assert len(parents) == 3
+    contents = [p.content for p in parents]
+    assert "Prose before" in contents[0] and "| Region" not in contents[0]
+    assert "| Region" in contents[1]
+    assert "Prose after" in contents[2] and "| Region" not in contents[2]
+
+
+def test_chunk_elements_flushes_parent_at_a_heading_boundary():
+    from app.services.chunking import chunk_elements
+    parents, _ = chunk_elements([
+        _el("heading", "A", level=1),
+        _el("paragraph", "short a"),
+        _el("heading", "B", level=1),
+        _el("paragraph", "short b"),
+    ])
+
+    assert len(parents) == 2
+    assert parents[0].content.startswith("A\n\n")
+    assert parents[1].content.startswith("B\n\n")
+
+
+def test_chunk_elements_children_align_with_parents():
+    from app.services.chunking import chunk_elements
+    parents, children = chunk_elements([
+        _el("paragraph", "one"),
+        _el("table", _table_md(2)),
+    ])
+    assert len(parents) == len(children)
+    assert all(len(group) >= 1 for group in children)
+
+
+def test_chunk_elements_empty_input_yields_nothing():
+    from app.services.chunking import chunk_elements
+    assert chunk_elements([]) == ([], [])
+
+
+def test_chunk_elements_drops_noise_before_chunking():
+    from app.services.chunking import chunk_elements
+    parents, _ = chunk_elements([
+        _el("page_header", "CONFIDENTIAL"),
+        _el("paragraph", "real body"),
+        _el("page_footer", "1 of 9"),
+    ])
+    assert len(parents) == 1
+    assert "CONFIDENTIAL" not in parents[0].content
+    assert "1 of 9" not in parents[0].content
+
+
+def test_chunk_document_routes_to_layout_chunker_when_elements_present():
+    from app.services.ingestion import ParsedDocument, PageContent, chunk_document
+    parsed = ParsedDocument(
+        pages=[PageContent(page=1, text="Body prose", source="ocr")],
+        metadata={},
+        elements=[
+            _el("heading", "Section One", level=1),
+            _el("paragraph", "Body prose"),
+        ],
+    )
+    parents, _ = chunk_document(parsed)
+
+    assert parents[0].content.startswith("Section One\n\n")
+
+
+def test_chunk_document_falls_back_to_legacy_when_no_elements():
+    from app.services.ingestion import ParsedDocument, PageContent, chunk_document
+    parsed = ParsedDocument(
+        pages=[PageContent(page=1, text="Legacy body text", source="native")],
+        metadata={},
+        elements=[],
+    )
+    parents, _ = chunk_document(parsed)
+
+    assert len(parents) == 1
+    assert parents[0].content == "Legacy body text"

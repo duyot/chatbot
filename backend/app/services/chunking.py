@@ -296,3 +296,45 @@ def build_table_parent(heading_path: str, element: Element) -> tuple:
         for body in bodies
     ]
     return parent, children
+
+
+# --- End-to-end: elements -> parents + children -----------------------------
+
+def chunk_elements(elements: List[Element]) -> tuple:
+    """Chunk a document's typed elements into parents + children.
+
+    Per section: prose accumulates into token-budgeted groups, and a table
+    interrupts that accumulation to become its own parent. No parent crosses a
+    heading boundary or splits a table.
+    """
+    parents: List[ParentChunk] = []
+    children_per_parent: List[List[ChildChunk]] = []
+
+    for section in split_sections(elements):
+        pending: List[Element] = []
+
+        def flush(pending=pending, heading_path=section.heading_path):
+            for group in pack_prose(pending, settings.parent_max_tokens):
+                parent, children = build_prose_parent(heading_path, group)
+                parents.append(parent)
+                children_per_parent.append(children)
+            pending.clear()
+
+        for el in section.elements:
+            if el.type == "table":
+                flush()
+                parent, children = build_table_parent(section.heading_path, el)
+                parents.append(parent)
+                children_per_parent.append(children)
+            else:
+                # PROSE_TYPES plus any unknown-but-kept type: treat as prose
+                # rather than discard content we do not recognize.
+                pending.append(el)
+        flush()
+
+    n_children = sum(len(c) for c in children_per_parent)
+    logger.info(
+        "chunk_elements: elements=%d parents=%d children=%d",
+        len(elements), len(parents), n_children,
+    )
+    return parents, children_per_parent
