@@ -42,7 +42,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-This builds and starts, in dependency order: `db` (Postgres+pgvector) → `redis` → `ocr` → `backend` (runs `alembic upgrade head` then `uvicorn`) → `worker` (Celery) → `frontend` (nginx, serves the built SPA and proxies `/api/`).
+This builds and starts, in dependency order: `db` (ParadeDB, Postgres 18 bundling `pg_search` + `pgvector`) → `redis` → `ocr` → `backend` (runs `alembic upgrade head` then `uvicorn`) → `worker` (Celery) → `frontend` (nginx, serves the built SPA and proxies `/api/`).
 
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000 (also reachable via the frontend's `/api/` proxy)
