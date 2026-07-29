@@ -38,18 +38,21 @@ async def ocr(file: UploadFile = File(...)):
     # PIL only for dimensions; RapidOCR decodes the bytes itself (correct color).
     width, height = Image.open(io.BytesIO(raw)).size
 
-    result, _elapse = _ocr(raw)
+    result = _ocr(raw)
 
     lines = []
-    # RapidOCR returns a list of [box, text, score]; box is 4 [x, y] points.
-    for item in (result or []):
-        box, text, score = item[0], item[1], item[2]
-        lines.append({
-            "text": text,
-            "bbox": [[float(p[0]), float(p[1])] for p in box],
-            "confidence": float(score),
-        })
-        logger.info(f"box: {box}, text: {text}, score: {score}")
+    # RapidOCR v3's __call__ returns a RapidOCROutput dataclass, not a
+    # (result, elapsed) tuple and not an iterable of [box, text, score]
+    # triples. `.boxes` is an (N, 4, 2) ndarray, `.txts`/`.scores` are
+    # length-N tuples; all three are None when nothing was detected.
+    if result.boxes is not None:
+        for box, text, score in zip(result.boxes, result.txts, result.scores):
+            lines.append({
+                "text": text,
+                "bbox": [[float(p[0]), float(p[1])] for p in box],
+                "confidence": float(score),
+            })
+            logger.info(f"box: {box}, text: {text}, score: {score}")
 
     logger.info("ocr: file=%s lines=%d", file.filename, len(lines))
     return {"lines": lines, "width": width, "height": height}
