@@ -63,14 +63,7 @@
       "Read(//tmp/**)",
       "mcp__plugin_ecc_chrome-devtools__navigate_page",
       "Bash(docker restart *)",
-      "Bash(pkill -f \"vite\")",
-      "WebFetch(domain:hub.docker.com)",
-      "WebFetch(domain:docs.paradedb.com)",
-      "PowerShell(gh api *)",
-      "Skill(claude-api)"
+      "Bash(pkill -f \"vite\")"
     ]
-  },
-  "worktree": {
-    "baseRef": "head"
   }
 }

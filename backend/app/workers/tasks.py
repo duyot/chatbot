@@ -3,17 +3,9 @@ import logging
 from celery.exceptions import MaxRetriesExceededError, Retry
 
 from .celery_app import celery_app
-from ..config import settings
 from ..database import SessionLocal
 from ..models import Document
-from ..services.contextualizer import contextualize_with_stats
-from ..services.ingestion import (
-    parse_document,
-    chunk_document,
-    embed_chunks,
-    store_chunks,
-    build_embedding_input,
-)
+from ..services.ingestion import parse_document, chunk_document, embed_chunks, store_chunks
 
 logger = logging.getLogger(__name__)
 
@@ -36,25 +28,7 @@ def ingest_document(self, document_id: str):
         parents, children_per_parent = chunk_document(parsed)
         if not parents:
             raise ValueError("No extractable text found in document (empty or OCR failed)")
-
-        ctx_stats = None
-        if settings.contextual_embeddings_enabled:
-            contexts, ctx_stats = contextualize_with_stats(parsed, children_per_parent)
-            for children, child_contexts in zip(children_per_parent, contexts):
-                for child, ctx in zip(children, child_contexts):
-                    child.context = ctx
-            logger.info(
-                "[task:%s] contextualized %d/%d children tier=%s",
-                self.request.id, ctx_stats["contextualized_children"],
-                ctx_stats["total_children"], ctx_stats["tier"],
-            )
-        else:
-            logger.info("[task:%s] contextual embeddings disabled, skipping", self.request.id)
-
-        flat_children = [
-            build_embedding_input(c.context, c.content)
-            for sub in children_per_parent for c in sub
-        ]
+        flat_children = [c.content for sub in children_per_parent for c in sub]
         logger.info(
             "[task:%s] chunked text parents=%d children=%d",
             self.request.id, len(parents), len(flat_children),
@@ -70,10 +44,7 @@ def ingest_document(self, document_id: str):
         doc.status = "done"
         doc.mime_type = parsed.metadata.get("mime_type")
         doc.page_count = parsed.metadata.get("page_count")
-        metadata = dict(parsed.metadata)
-        if ctx_stats is not None:
-            metadata["contextualization"] = ctx_stats
-        doc.doc_metadata = metadata
+        doc.doc_metadata = parsed.metadata
         db.commit()
         logger.info("[task:%s] ingest_document completed document_id=%s", self.request.id, document_id)
     except Retry:
