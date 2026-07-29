@@ -146,13 +146,27 @@ def hybrid_search(
     return vec_hits, fts_rows
 
 
-def rrf_fuse(vec_hits, fts_rows, k: int) -> list[tuple[Any, float]]:
-    """Reciprocal Rank Fusion. Returns (id, score) sorted descending by score."""
+def rrf_fuse(
+    vec_hits,
+    fts_rows,
+    k: int,
+    w_vec: float | None = None,
+    w_keyword: float | None = None,
+) -> list[tuple[Any, float]]:
+    """Weighted Reciprocal Rank Fusion. Returns (id, score) sorted descending.
+
+    Semantic search understands paraphrase; keyword search catches exact terms.
+    The default 0.8/0.2 split follows the guideline's recommendation and is
+    tunable via settings. Weights default to settings when not passed, so
+    existing call sites keep working.
+    """
+    wv = settings.rrf_weight_vector if w_vec is None else w_vec
+    wk = settings.rrf_weight_keyword if w_keyword is None else w_keyword
     scores: dict[Any, float] = defaultdict(float)
     for rank, chunk in enumerate(vec_hits):
-        scores[chunk.id] += 1.0 / (k + rank)
+        scores[chunk.id] += wv / (k + rank)
     for rank, row in enumerate(fts_rows):
-        scores[row.id] += 1.0 / (k + rank)
+        scores[row.id] += wk / (k + rank)
     return sorted(scores.items(), key=lambda x: -x[1])
 
 
@@ -223,7 +237,11 @@ def retrieve(
     vec_hits, fts_rows = hybrid_search(db, document_id, query, page_range)
 
     fused = rrf_fuse(vec_hits, fts_rows, settings.rrf_k)
-    fused_ids = [cid for cid, _ in fused[:max(settings.vector_top_k, settings.fts_top_k)]]
+    # Both arms return up to top_k, so the fused set can hold their sum. Keep
+    # all of it: the reranker is what narrows to rerank_top_n, and starving it
+    # of candidates is the one thing that reliably degrades rerank quality.
+    candidate_limit = settings.vector_top_k + settings.fts_top_k
+    fused_ids = [cid for cid, _ in fused[:candidate_limit]]
     candidates = fetch_chunks_by_ids(db, fused_ids)
 
     reranked = rerank(query, candidates, settings.rerank_top_n)

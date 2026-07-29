@@ -325,3 +325,50 @@ def test_bm25_search_matches_on_context(db, mocker):
 
     _, keyword_rows = hybrid_search(db, str(doc.id), "escalation")
     assert len(keyword_rows) == 1
+
+
+def test_rrf_fuse_weights_vector_above_keyword():
+    """At equal rank, a vector-only hit must outrank a keyword-only hit under
+    the default 0.8/0.2 split."""
+    from app.services.rag.retrieval import rrf_fuse
+
+    class C:
+        def __init__(self, id):
+            self.id = id
+
+    result = rrf_fuse([C("V")], [C("K")], k=60)
+    ids = [cid for cid, _ in result]
+
+    assert ids[0] == "V"
+    scores = dict(result)
+    assert scores["V"] == pytest.approx(0.8 / 60)
+    assert scores["K"] == pytest.approx(0.2 / 60)
+
+
+def test_rrf_fuse_explicit_weights_override_settings():
+    from app.services.rag.retrieval import rrf_fuse
+
+    class C:
+        def __init__(self, id):
+            self.id = id
+
+    result = rrf_fuse([C("V")], [C("K")], k=60, w_vec=0.1, w_keyword=0.9)
+    assert [cid for cid, _ in result][0] == "K"
+
+
+def test_rrf_fuse_scores_are_additive_across_arms():
+    from app.services.rag.retrieval import rrf_fuse
+
+    class C:
+        def __init__(self, id):
+            self.id = id
+
+    # BOTH is rank 1 in each arm; VEC_ONLY is rank 0 in the vector arm only.
+    vec = [C("VEC_ONLY"), C("BOTH")]
+    kw = [C("KW_ONLY"), C("BOTH")]
+
+    scores = dict(rrf_fuse(vec, kw, k=1))
+    # BOTH: 0.8/2 + 0.2/2 = 0.5 ; VEC_ONLY: 0.8/1 = 0.8 ; KW_ONLY: 0.2/1 = 0.2
+    assert scores["BOTH"] == pytest.approx(0.5)
+    assert scores["VEC_ONLY"] == pytest.approx(0.8)
+    assert scores["KW_ONLY"] == pytest.approx(0.2)
