@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..config import settings
 from ..models import DocumentChunk, DocumentParentChunk
-from .ocr_client import ocr_image_lines, OCRError
+from .ocr_client import ocr_image_lines, parse_document_remote, OCRError
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +43,29 @@ class PageContent:
 
 
 @dataclass
+class Element:
+    """One typed document element from ocr-service /parse.
+
+    `bbox` is [x0, y0, x1, y1] normalized to [0,1] of its page, or None when the
+    service could not determine one. `type` is one of the eight wire types; see
+    ocr-service/wire.py. Reading order is list order — never sort these.
+    """
+    id: str
+    page: int
+    type: str
+    text: str
+    bbox: Optional[List[float]] = None
+    level: Optional[int] = None
+    confidence: Optional[float] = None
+
+
+@dataclass
 class ParsedDocument:
     pages: List[PageContent]
     metadata: dict
+    # Typed elements in reading order. Empty on the legacy (docling_enabled=False)
+    # path, which is what makes the legacy chunker's fallback detectable.
+    elements: List[Element] = field(default_factory=list)
 
     @property
     def text(self) -> str:
@@ -222,14 +242,75 @@ def _parse_image(file_path: str, file_name: str) -> ParsedDocument:
     )
 
 
-def parse_document(file_path: str, file_name: str) -> ParsedDocument:
-    """Parse a source file into per-page text + metadata.
+def _elements_from_wire(body: dict) -> List[Element]:
+    return [
+        Element(
+            id=el.get("id") or f"e{i}",
+            page=int(el.get("page") or 1),
+            type=el.get("type") or "paragraph",
+            text=el.get("text") or "",
+            bbox=el.get("bbox"),
+            level=el.get("level"),
+            confidence=el.get("confidence"),
+        )
+        for i, el in enumerate(body.get("elements") or [])
+    ]
 
-    PDFs are hybrid (native text layer, OCR fallback per page); images are
-    always OCR'd; DOCX is treated as a single native page.
+
+def _pages_from_wire(body: dict, elements: List[Element]) -> List[PageContent]:
+    """Rebuild PageContent from the wire body.
+
+    Chunking works off `elements`, but the contextualizer still needs
+    `parsed.text` and per-page text, so every page gets its elements joined in
+    reading order. `lines` stays empty — bbox attribution is per-element now.
+    """
+    text_by_page: dict = {}
+    for el in elements:
+        text_by_page.setdefault(el.page, []).append(el.text)
+
+    pages: List[PageContent] = []
+    for p in body.get("pages") or []:
+        page_no = int(p.get("page") or 1)
+        pages.append(PageContent(
+            page=page_no,
+            text="\n".join(text_by_page.get(page_no, [])),
+            source=p.get("source") or "ocr",
+            ocr_confidence=p.get("ocr_confidence"),
+            width=p.get("width"),
+            height=p.get("height"),
+        ))
+    return pages
+
+
+def _parse_remote(file_path: str, file_name: str) -> ParsedDocument:
+    """Structure-aware parse via ocr-service /parse. Handles PDF, DOCX and
+    images uniformly — Docling detects the format itself.
+
+    Errors propagate as OCRError/ParseTimeout: a failed parse must fail the
+    document rather than silently degrade to structure-less chunks.
+    """
+    with open(file_path, "rb") as f:
+        data = f.read()
+    body = parse_document_remote(data, filename=file_name)
+    elements = _elements_from_wire(body)
+    pages = _pages_from_wire(body, elements)
+    metadata = dict(body.get("metadata") or {})
+    metadata["engine"] = "docling"
+    return ParsedDocument(pages=pages, metadata=metadata, elements=elements)
+
+
+def parse_document(file_path: str, file_name: str) -> ParsedDocument:
+    """Parse a source file into typed elements + per-page text + metadata.
+
+    With docling_enabled (the default) this is a single call to ocr-service
+    /parse, which handles PDF, DOCX and images. The legacy per-format,
+    line-based path is kept behind the flag for one release as the documented
+    rollback; see the design spec.
     """
     ext = os.path.splitext(file_name)[1].lower()
-    if ext == ".pdf":
+    if settings.docling_enabled:
+        parsed = _parse_remote(file_path, file_name)
+    elif ext == ".pdf":
         parsed = _parse_pdf(file_path, file_name)
     elif ext == ".docx":
         parsed = _parse_docx(file_path)
@@ -240,8 +321,8 @@ def parse_document(file_path: str, file_name: str) -> ParsedDocument:
     parsed.metadata["mime_type"] = _MIME_BY_EXT.get(ext)
     total_len = sum(len(p.text) for p in parsed.pages)
     logger.info(
-        "parse_document: file=%s type=%s pages=%d ocr_pages=%s text_len=%d",
-        file_name, ext or "?", len(parsed.pages),
+        "parse_document: file=%s type=%s pages=%d elements=%d ocr_pages=%s text_len=%d",
+        file_name, ext or "?", len(parsed.pages), len(parsed.elements),
         parsed.metadata.get("ocr_pages"), total_len,
     )
     return parsed

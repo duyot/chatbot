@@ -20,9 +20,12 @@ def test_chunk_text_short_content_stays_one_chunk():
     assert len(children_per_parent) == 1
     assert children_per_parent[0][0] == "Short paragraph."
 
-def test_parse_document_docx_returns_native_page(tmp_path):
+def test_parse_document_docx_returns_native_page(tmp_path, mocker):
+    """Legacy path (docling_enabled=False)."""
     from docx import Document as DocxDocument
+    from app.services import ingestion
     from app.services.ingestion import parse_document
+    mocker.patch.object(ingestion.settings, "docling_enabled", False)
     docx_path = tmp_path / "test.docx"
     doc = DocxDocument()
     doc.add_paragraph("Hello from DOCX")
@@ -35,8 +38,10 @@ def test_parse_document_docx_returns_native_page(tmp_path):
 
 
 def test_parse_document_image_uses_ocr(tmp_path, mocker):
+    """Legacy path (docling_enabled=False)."""
     from app.services import ingestion
     from app.services.ingestion import parse_document
+    mocker.patch.object(ingestion.settings, "docling_enabled", False)
     img_path = tmp_path / "photo.png"
     img_path.write_bytes(b"\x89PNG fake bytes")
     mocker.patch.object(ingestion, "ocr_image_lines", return_value={
@@ -54,9 +59,11 @@ def test_parse_document_image_uses_ocr(tmp_path, mocker):
 
 
 def test_parse_document_pdf_native_text_skips_ocr(tmp_path, mocker):
+    """Legacy path (docling_enabled=False)."""
     import fitz
     from app.services import ingestion
     from app.services.ingestion import parse_document
+    mocker.patch.object(ingestion.settings, "docling_enabled", False)
     pdf_path = tmp_path / "doc.pdf"
     d = fitz.open()
     page = d.new_page()
@@ -71,9 +78,11 @@ def test_parse_document_pdf_native_text_skips_ocr(tmp_path, mocker):
 
 
 def test_parse_document_pdf_scanned_triggers_ocr(tmp_path, mocker):
+    """Legacy path (docling_enabled=False)."""
     import fitz
     from app.services import ingestion
     from app.services.ingestion import parse_document
+    mocker.patch.object(ingestion.settings, "docling_enabled", False)
     pdf_path = tmp_path / "scan.pdf"
     d = fitz.open()
     d.new_page()  # blank page: no text layer
@@ -408,3 +417,95 @@ def test_store_chunks_persists_context(db):
         .all()
     )
     assert [r.context for r in rows] == ["CTX ONE", None]
+
+
+def _wire(elements, pages=None):
+    return {
+        "schema_version": 1,
+        "metadata": {"page_count": len(pages or [1]), "ocr_pages": 1, "native_pages": 0},
+        "pages": pages or [{"page": 1, "width": 600.0, "height": 800.0,
+                            "source": "ocr", "ocr_confidence": 0.91}],
+        "elements": elements,
+    }
+
+
+def test_parse_document_uses_remote_parser_and_keeps_elements(tmp_path, mocker):
+    from app.services import ingestion
+    pdf = tmp_path / "scan.pdf"
+    pdf.write_bytes(b"%PDF-fake")
+    mocker.patch.object(ingestion.settings, "docling_enabled", True)
+    mocker.patch.object(ingestion, "parse_document_remote", return_value=_wire([
+        {"id": "e0", "page": 1, "type": "heading", "level": 2,
+         "text": "3.2 Revenue", "bbox": [0.1, 0.1, 0.6, 0.14], "confidence": None},
+        {"id": "e1", "page": 1, "type": "table",
+         "text": "| R | Q1 |\n|---|---|\n| APAC | 12 |",
+         "bbox": [0.1, 0.2, 0.9, 0.5], "confidence": 0.9},
+    ]))
+
+    parsed = ingestion.parse_document(str(pdf), "scan.pdf")
+
+    assert [e.type for e in parsed.elements] == ["heading", "table"]
+    assert parsed.elements[0].level == 2
+    assert parsed.elements[1].bbox == [0.1, 0.2, 0.9, 0.5]
+
+
+def test_parse_document_builds_pages_from_elements(tmp_path, mocker):
+    """contextualizer needs parsed.text and per-page text, so pages must still
+    be populated even though chunking now works off elements."""
+    from app.services import ingestion
+    pdf = tmp_path / "scan.pdf"
+    pdf.write_bytes(b"%PDF-fake")
+    mocker.patch.object(ingestion.settings, "docling_enabled", True)
+    mocker.patch.object(ingestion, "parse_document_remote", return_value=_wire(
+        [
+            {"id": "e0", "page": 1, "type": "paragraph", "text": "page one prose",
+             "bbox": None, "confidence": None},
+            {"id": "e1", "page": 2, "type": "paragraph", "text": "page two prose",
+             "bbox": None, "confidence": None},
+        ],
+        pages=[
+            {"page": 1, "width": 600.0, "height": 800.0, "source": "ocr",
+             "ocr_confidence": 0.9},
+            {"page": 2, "width": 600.0, "height": 800.0, "source": "native",
+             "ocr_confidence": None},
+        ],
+    ))
+
+    parsed = ingestion.parse_document(str(pdf), "scan.pdf")
+
+    assert [p.page for p in parsed.pages] == [1, 2]
+    assert parsed.pages[0].text == "page one prose"
+    assert parsed.pages[0].source == "ocr"
+    assert parsed.pages[1].source == "native"
+    assert "page one prose" in parsed.text and "page two prose" in parsed.text
+
+
+def test_parse_document_sets_mime_type_and_engine(tmp_path, mocker):
+    from app.services import ingestion
+    pdf = tmp_path / "scan.pdf"
+    pdf.write_bytes(b"%PDF-fake")
+    mocker.patch.object(ingestion.settings, "docling_enabled", True)
+    mocker.patch.object(ingestion, "parse_document_remote", return_value=_wire([]))
+
+    parsed = ingestion.parse_document(str(pdf), "scan.pdf")
+
+    assert parsed.metadata["mime_type"] == "application/pdf"
+    assert parsed.metadata["engine"] == "docling"
+
+
+def test_parse_document_legacy_path_when_docling_disabled(tmp_path, mocker):
+    """docling_enabled=False must reproduce the old behaviour exactly."""
+    from docx import Document as DocxDocument
+    from app.services import ingestion
+    docx_path = tmp_path / "legacy.docx"
+    doc = DocxDocument()
+    doc.add_paragraph("Legacy path still works")
+    doc.save(str(docx_path))
+    mocker.patch.object(ingestion.settings, "docling_enabled", False)
+    remote = mocker.patch.object(ingestion, "parse_document_remote")
+
+    parsed = ingestion.parse_document(str(docx_path), "legacy.docx")
+
+    remote.assert_not_called()
+    assert parsed.elements == []
+    assert "Legacy path still works" in parsed.pages[0].text
