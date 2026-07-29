@@ -91,6 +91,9 @@ class ChildChunk:
     # contextualization is disabled or failed; the chunk then embeds on content
     # alone, exactly as before this feature existed.
     context: Optional[str] = None
+    # "table" for chunks derived from a table element, "text" otherwise. None on
+    # the legacy path. Lets the eval harness score table questions separately.
+    element_type: Optional[str] = None
 
 
 _IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
