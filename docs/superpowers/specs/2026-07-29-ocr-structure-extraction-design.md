@@ -344,42 +344,6 @@ alternatives".
 
 ## Spike findings (Task 1, 2026-07-29)
 
-- `docling` on `python:3.10-slim`: clean install, but resolves `numpy==2.2.6` and
-  `pillow==12.3.0` transitively (via `docling-ibm-models` / `opencv-python`),
-  overriding the service's previous `numpy==1.26.4` / `pillow==10.4.0` pins —
-  bumped both rather than fighting the resolver.
-- `[onnxruntime]` extra avoids torch: **no**. Both plain `docling` (121
-  packages) and `docling[onnxruntime]` (126 packages) pull `torch` +
-  `torchvision` transitively via `docling-ibm-models` for TableFormer. The
-  extra is strictly worse — it additionally pulls `onnxruntime-gpu`, a CUDA
-  package, on a CPU-only target. **Decision: install plain `docling`, never
-  `docling[onnxruntime]`.**
-- Torch is unavoidable, but CPU-only wheels are available: adding
-  `--extra-index-url https://download.pytorch.org/whl/cpu` to
-  `requirements.txt` resolves `torch==2.13.0+cpu` / `torchvision==0.28.0+cpu`,
-  drops the package count 121 → 102, and eliminates all `nvidia-*` CUDA
-  runtime packages.
-- Resolved RapidOCR package: `rapidocr==3.9.2` (the v3 unified package,
-  matching the pre-existing bare `rapidocr` line — not `rapidocr-onnxruntime`).
-  RapidOCR v3 unbundled its inference engine: neither `rapidocr` nor `docling`
-  pulls an ONNX runtime as a transitive dependency or extra, so
-  `RapidOCR()` raises `ImportError: onnxruntime is not installed.` unless
-  `onnxruntime` (CPU build) is pinned explicitly in `requirements.txt`. Import
-  path is `from rapidocr import RapidOCR` (not `rapidocr_onnxruntime`).
-- Final image size: **2.54 GB** (was ~500 MB). Under the ~4 GB budget.
-- Model prefetch command: `docling-tools models download layout tableformer`
-  (works as documented in the brief for `docling==2.116.0`), followed by
-  `python -c "from rapidocr import RapidOCR; RapidOCR()"` to unpack the
-  bundled PP-OCR ONNX weights — mirrors the pre-existing warm-up.
-- Offline construction verified: **yes** —
-  `docker run --rm --network none ocr-spike python -c "from docling.document_converter import DocumentConverter; DocumentConverter(); print('converter constructed offline OK')"`
-  printed `converter constructed offline OK` with no network reachout.
-
-**Decision:** proceed with Docling. 2.54 GB is comfortably under the 4 GB
-stop-and-ask threshold; the RapidLayout + RapidTable fallback is not needed.
-
-## Spike findings (Task 1, 2026-07-29)
-
 All values measured, not estimated.
 
 | Question | Answer |
@@ -389,7 +353,7 @@ All values measured, not estimated.
 | Resolved RapidOCR package | `rapidocr==3.9.2` (the v3 unified package), matching the bare `rapidocr` already pinned |
 | Final image size | **2.54 GB** (was ~500 MB) — under the 4 GB stop-and-ask threshold |
 | Model prefetch command | `docling-tools models download layout tableformer` → `Models downloaded into: /root/.cache/docling/models.` |
-| Offline construction verified | **Yes.** `docker run --rm --network none ocr-spike python -c "…DocumentConverter()…"` prints `OFFLINE OK` |
+| Offline construction verified | **Yes.** `docker run --rm --network none ocr-spike python -c "…DocumentConverter()…"` prints `converter constructed offline OK`, no network reachout |
 
 **Decision: proceed with Docling.** The RapidLayout + RapidTable fallback is
 not needed.
