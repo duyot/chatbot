@@ -24,6 +24,19 @@ class OCRError(RuntimeError):
     """Raised when the OCR microservice is unreachable or returns an error."""
 
 
+class ParseTimeout(OCRError):
+    """The parse exceeded settings.parse_timeout_s.
+
+    Distinct from OCRError so the worker can skip retrying it — a parse that
+    timed out once will time out again.
+    """
+
+
+# The only wire schema this client understands. A mismatch means ocr-service
+# was deployed with an incompatible contract; fail loudly rather than guess.
+SUPPORTED_SCHEMA_VERSION = 1
+
+
 def ocr_image_lines(image_bytes: bytes, *, filename: str = "image") -> dict:
     """OCR a single rendered page / image, preserving line-level geometry.
 
@@ -80,3 +93,51 @@ def ocr_image(image_bytes: bytes, *, filename: str = "image") -> tuple[str, floa
         f"{avg_conf:.3f}" if avg_conf is not None else "n/a",
     )
     return joined, avg_conf
+
+
+def parse_document_remote(file_bytes: bytes, *, filename: str) -> dict:
+    """Structure-aware parse of a whole document by ocr-service POST /parse.
+
+    Returns the wire body: {"schema_version", "metadata", "pages", "elements"}
+    where elements are typed, in reading order, with bboxes normalized to
+    [0,1]. See ocr-service/wire.py for the full contract.
+
+    Raises ParseTimeout on timeout and OCRError on any other transport, HTTP,
+    JSON, or schema-version failure.
+    """
+    url = settings.ocr_service_url.rstrip("/") + "/parse"
+    try:
+        with httpx.Client(timeout=settings.parse_timeout_s) as client:
+            resp = client.post(url, files={"file": (filename, file_bytes)})
+            resp.raise_for_status()
+            body = resp.json()
+    except httpx.TimeoutException as exc:
+        logger.warning(
+            "parse_document_remote: timed out after %ss url=%s file=%s",
+            settings.parse_timeout_s, url, filename,
+        )
+        raise ParseTimeout(
+            f"parse exceeded {settings.parse_timeout_s}s for {filename}"
+        ) from exc
+    except Exception as exc:  # transport, HTTP status, or JSON decode
+        logger.warning(
+            "parse_document_remote: request failed url=%s file=%s err=%s",
+            url, filename, exc,
+        )
+        raise OCRError(str(exc)) from exc
+
+    if not isinstance(body, dict):
+        raise OCRError(f"/parse returned {type(body).__name__}, expected object")
+    version = body.get("schema_version")
+    if version != SUPPORTED_SCHEMA_VERSION:
+        raise OCRError(
+            f"/parse returned schema_version={version!r}, "
+            f"this client supports {SUPPORTED_SCHEMA_VERSION}"
+        )
+
+    logger.info(
+        "parse_document_remote: file=%s pages=%s elements=%d",
+        filename, body.get("metadata", {}).get("page_count"),
+        len(body.get("elements") or []),
+    )
+    return body

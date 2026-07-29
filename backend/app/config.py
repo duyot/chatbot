@@ -86,6 +86,28 @@ class Settings(BaseSettings):
     # Render DPI for rasterizing scanned PDF pages before OCR.
     ocr_dpi: int = 200
 
+    # --- Structure-aware parsing (see
+    # docs/superpowers/specs/2026-07-29-ocr-structure-extraction-design.md).
+    # The worker POSTs the whole document to ocr-service /parse and receives
+    # typed elements. Set False to fall back to the legacy per-page-image
+    # line-based path, which is kept for exactly one release.
+    docling_enabled: bool = True
+    docling_ocr_backend: str = "rapidocr"
+    docling_table_mode: str = "accurate"
+    # A 100-page scan at 5-10s/page is a 10-15 minute synchronous request.
+    # ocr_timeout_s (60s) sizes the per-image legacy call and is far too small.
+    parse_timeout_s: float = 1800.0
+
+    # --- Layout-aware chunking (same spec).
+    # Per-page running noise, dropped before chunking.
+    drop_element_types: list[str] = ["page_header", "page_footer"]
+    # Token budgets, measured with tiktoken cl100k_base to match the splitter.
+    parent_max_tokens: int = 1500
+    table_max_tokens: int = 1500
+    # Data rows per group when a table exceeds table_max_tokens. The header row
+    # and its separator are repeated in every group.
+    table_row_group_rows: int = 10
+
     # Metadata-aware rerank boost (Phase 4). Defaults are no-ops so retrieval
     # behaviour is unchanged until tuned via the eval harness (see CLAUDE.md).
     # final_score = rerank_score + native_boost (if source==native)
