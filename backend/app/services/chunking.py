@@ -145,33 +145,27 @@ def _group_source(group: List[Element]) -> str:
     return "ocr" if any(el.confidence is not None for el in group) else "native"
 
 
-def _owning_element(spans: List[ElementSpan], offset: int) -> Optional[Element]:
+def _owning_element(spans: List[ElementSpan], offset: int) -> tuple:
     """The element a child starts inside, used for its page and confidence.
 
     If the offset lands in a gap between elements (ELEMENT_JOINER space) or if
     the offset is not found, fall back to the nearest preceding element — the
-    one immediately before the gap is almost certainly the correct owner."""
+    one immediately before the gap is almost certainly the correct owner.
+
+    Returns (element, was_fallback: bool) so the caller can log with the actual
+    child text when a fallback is taken."""
     if offset >= 0:
         for s in spans:
             if s.start <= offset < s.end:
-                return s.element
+                return s.element, False
         # Offset is in a gap or past all spans. Find the nearest preceding element.
         for i in range(len(spans) - 1, -1, -1):
             if spans[i].start <= offset:
-                logger.warning(
-                    "_owning_element: child at offset %d (text: %r) fell back to "
-                    "nearest preceding element id=%s (was not directly contained in any span)",
-                    offset, "[unknown]"[:40], spans[i].element.id
-                )
-                return spans[i].element
-    # Offset is -1 (not found) or no spans. Log and fall back to first element.
+                return spans[i].element, True
+    # Offset is -1 (not found) or no spans. Fall back to first element.
     if spans:
-        logger.warning(
-            "_owning_element: child at offset %d fell back to first element id=%s",
-            offset, spans[0].element.id
-        )
-        return spans[0].element
-    return None
+        return spans[0].element, True
+    return None, True
 
 
 def pack_prose(elements: List[Element], max_tokens: int) -> List[List[Element]]:
@@ -221,7 +215,15 @@ def build_prose_parent(heading_path: str, group: List[Element]) -> tuple:
         if offset >= 0:
             cursor = offset + 1  # children overlap, so advance minimally
         rects = _rects_for_span(spans, offset, offset + len(piece)) if offset >= 0 else []
-        owner = _owning_element(spans, offset) or group[0]
+        owner, was_fallback = _owning_element(spans, offset)
+        if owner is None:
+            owner = group[0]
+            was_fallback = True
+        if was_fallback:
+            logger.warning(
+                "_owning_element fallback at offset %d, child text: %r, element id: %s",
+                offset, piece[:40], owner.id
+            )
         children.append(ChildChunk(
             content=with_heading(heading_path, piece),
             page=owner.page,
