@@ -279,6 +279,19 @@ def _pages_from_wire(body: dict, elements: List[Element]) -> List[PageContent]:
             width=p.get("width"),
             height=p.get("height"),
         ))
+
+    # An element whose page number isn't covered by any emitted PageContent
+    # would otherwise vanish from parsed.text/contextualization while still
+    # being visible in `elements` — surface it rather than losing it silently.
+    covered_pages = {p.page for p in pages}
+    orphaned_pages = sorted(set(text_by_page) - covered_pages)
+    if orphaned_pages:
+        orphaned_elements = sum(len(text_by_page[pg]) for pg in orphaned_pages)
+        logger.warning(
+            "_pages_from_wire: %d element(s) reference page(s) %s absent from "
+            "the wire body's pages list; their text is dropped from parsed.text",
+            orphaned_elements, orphaned_pages,
+        )
     return pages
 
 

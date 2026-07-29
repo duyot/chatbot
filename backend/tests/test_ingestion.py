@@ -509,3 +509,36 @@ def test_parse_document_legacy_path_when_docling_disabled(tmp_path, mocker):
     remote.assert_not_called()
     assert parsed.elements == []
     assert "Legacy path still works" in parsed.pages[0].text
+
+
+def test_parse_document_warns_on_element_page_mismatch(tmp_path, mocker, caplog):
+    """An element referencing a page absent from the wire body's `pages` list
+    must not silently vanish from parsed.text — it should log a warning, and
+    the well-formed pages must still come through intact."""
+    import logging
+    from app.services import ingestion
+    pdf = tmp_path / "scan.pdf"
+    pdf.write_bytes(b"%PDF-fake")
+    mocker.patch.object(ingestion.settings, "docling_enabled", True)
+    mocker.patch.object(ingestion, "parse_document_remote", return_value=_wire(
+        [
+            {"id": "e0", "page": 1, "type": "paragraph", "text": "page one prose",
+             "bbox": None, "confidence": None},
+            {"id": "e1", "page": 99, "type": "paragraph", "text": "orphaned prose",
+             "bbox": None, "confidence": None},
+        ],
+        pages=[
+            {"page": 1, "width": 600.0, "height": 800.0, "source": "ocr",
+             "ocr_confidence": 0.9},
+        ],
+    ))
+
+    with caplog.at_level(logging.WARNING, logger="app.services.ingestion"):
+        parsed = ingestion.parse_document(str(pdf), "scan.pdf")
+
+    assert [p.page for p in parsed.pages] == [1]
+    assert parsed.pages[0].text == "page one prose"
+    assert "orphaned prose" not in parsed.text
+    warnings = [r for r in caplog.records if r.levelno == logging.WARNING]
+    assert len(warnings) == 1
+    assert "99" in warnings[0].getMessage()
