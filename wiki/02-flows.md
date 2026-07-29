@@ -63,7 +63,9 @@ sequenceDiagram
         OCR-->>W: lines + bbox + confidence
     end
     W->>W: chunk_document() (parent ~1500 tok, child ~300 tok)
-    W->>OR: embed child chunks (batched)
+    W->>OR: contextualize children (doc cached 1h, first call warms cache)
+    OR-->>W: one context string per child
+    W->>OR: embed (context + child text), batched
     OR-->>W: embedding vectors
     W->>DB: INSERT document_parent_chunks, document_chunks
     W->>DB: UPDATE documents SET status=done|failed
@@ -78,6 +80,16 @@ sequenceDiagram
    - `backend/app/services/ingestion.py:126-148` `parse_document()` dispatches by extension. PDFs (`:81-104`) keep a page's native text if it has ≥ `settings.ocr_min_text_chars` (default 20) non-whitespace chars; otherwise the page is rasterized at `settings.ocr_dpi` (200) and sent to OCR.
    - `backend/app/services/ocr_client.py:27-61` `ocr_image()` — HTTP POST to `settings.ocr_service_url + "/ocr"` (only when `settings.ocr_enabled`); OCR failures degrade just that page to empty text.
    - `ingestion.py:184-214` `chunk_document()` — one parent chunk per page (`RecursiveCharacterTextSplitter`, 1500 tokens, `cl100k_base`), then child chunks (300 tokens, 50 overlap) per parent.
+   - `backend/app/services/contextualizer.py:contextualize_with_stats()` — one
+     LLM call per child chunk generating a context string that situates it in
+     the document. The document is sent as a 1-hour prompt-cached block; the
+     first call is issued alone to warm that cache before the remaining calls
+     fan out across `contextualizer_max_workers` threads. Documents over
+     `contextualizer_full_doc_token_limit` (100k) fall back to a generated doc
+     summary plus the child's own page. Per-chunk failures yield `None` and are
+     non-fatal. Skipped entirely when `contextual_embeddings_enabled=False`.
+   - `ingestion.py:build_embedding_input()` — embeds `context + "\n\n" + content`
+     when context exists, bare `content` otherwise.
    - `ingestion.py:237-254` `embed_chunks()` — batches of 100 through an OpenAI-SDK client pointed at OpenRouter (`settings.openai_embedding_model`, `dimensions=settings.embedding_dim`).
    - `ingestion.py:259-303` `store_chunks()` — bulk-inserts `DocumentParentChunk` rows, then `DocumentChunk` rows referencing `parent_id`.
 5. `tasks.py:43-48` sets `status="done"` + metadata on success; any exception sets `status="failed"` + truncated `error_msg` and retries once (`tasks.py:56-62`).
@@ -104,7 +116,7 @@ sequenceDiagram
     API->>G: agentic_rag_stream(document_id, message, db)
 
     G->>OR: rewrite_query (structured output: rewritten_query, intent)
-    G->>DB: hybrid_search (pgvector cosine + Postgres FTS)
+    G->>DB: hybrid_search (pgvector cosine + BM25/FTS over search_text)
     G->>OR: rerank candidates (/v1/rerank)
     G->>DB: fetch parent chunks for reranked children
     G->>G: grade (fast path: useful if any chunks returned)
@@ -128,7 +140,18 @@ sequenceDiagram
 3. `chat.py:52-91` — inside `event_stream()`: resolves or creates the `Conversation` (ownership-checked if `conversation_id` was supplied), yields a `conversation` SSE event, then persists the user's `Message` immediately — all on a **fresh** `SessionLocal()` (`chat.py:53`), not the request-scoped session.
 4. `chat.py:96-98` calls `agentic_rag_stream(document_id, message, stream_db)` (`backend/app/services/rag/graph.py:80-122`), which builds and runs the LangGraph (`build_graph`, `graph.py:38-61`):
    - `rewrite_query` (`nodes.py:34-49`) — LLM structured-output call classifying `intent` and producing a cleaned search query.
-   - `retrieve` (registered node id; function `retrieve_and_rerank`, `nodes.py:56-71`) — calls `retrieval.retrieve()` (`retrieval.py:139-161`): `hybrid_search` (pgvector cosine `ORDER BY embedding.cosine_distance` + Postgres FTS `ts_rank`/`plainto_tsquery`, `retrieval.py:22-67`) → `rrf_fuse` (Reciprocal Rank Fusion, `k=60`, `retrieval.py:70-77`) → `rerank()` via OpenRouter `/v1/rerank` (`reranker.py:34-96`, top 6) → `apply_metadata_boost` (no-op by default, `retrieval.py:109-136`) → `fetch_parents` (dedup parent chunks, `retrieval.py:88-106`).
+   - `retrieve` (registered node id; function `retrieve_and_rerank`,
+     `nodes.py:56-71`) — calls `retrieval.retrieve()` (`retrieval.py`):
+     `hybrid_search` (pgvector cosine + a keyword arm over `search_text`
+     = `context || content` — ParadeDB `pg_search` BM25 when the extension is
+     present, else the `ts_rank` fallback, decided once per process by
+     `bm25_available()`) → `rrf_fuse` (**weighted** RRF, `k=60`, 0.8 semantic /
+     0.2 keyword) → `rerank()` via OpenRouter `/v1/rerank` on
+     `context + content` (top 6) → `apply_metadata_boost` (no-op by default) →
+     `fetch_parents` (dedup parent chunks). Both arms return up to `top_k=75`,
+     but the fused RRF list is truncated to `max(vector_top_k, fts_top_k)=75`
+     candidates before reranking — not the sum — or the RRF weights would have
+     no effect on which candidates the reranker ever sees.
    - `grade` (function `grade_chunks`, `nodes.py:74-115`) — **default fast path**: `graded_useful=True` if any chunks were retrieved (not an LLM call unless `settings.strict_grader=True`).
    - `route_after_grade` (`graph.py:30-35`) — routes to `retry` if not useful and `retry_count < settings.max_retrieval_retries` (default 2), else to `generate` either way (useful or "give up").
    - `retry` (function `rewrite_and_retry`, `nodes.py:118-129`) — LLM proposes one alternate query phrasing, loops back to `retrieve`.

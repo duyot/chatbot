@@ -34,3 +34,10 @@ backend/.venv/
 # Eval results: track baselines only, ignore ad-hoc local runs
 backend/evals/results/*.json
 !backend/evals/results/baseline_*.json
+
+# Subagent-driven-development scratch: ledgers, task briefs, review packages.
+# Per-plan working state, not project history — the git log is the record.
+.superpowers/
+
+# Harness-created git worktrees (EnterWorktree)
+.claude/worktrees/

@@ -51,6 +51,7 @@ async def rewrite_query(state: AgentState) -> dict:
 
 from sqlalchemy.orm import Session
 from .retrieval import retrieve
+from .reranker import RERANK_FAILED_SCORE
 
 
 async def retrieve_and_rerank(state: AgentState, db: Session) -> dict:
@@ -62,11 +63,21 @@ async def retrieve_and_rerank(state: AgentState, db: Session) -> dict:
         f"top_score={scores[0] if scores else 0:.3f}"
     )
     logger.info(note)
+    warnings = list(state.get("warnings", []))
+    if scores and scores[0] == RERANK_FAILED_SCORE:
+        # rerank() degraded to RRF order and the pipeline would otherwise
+        # answer confidently over unreranked chunks with no visible signal.
+        warnings.append({
+            "type": "warning",
+            "message": "Reranking was unavailable; results are ordered by "
+                       "initial retrieval only.",
+        })
     return {
         "retrieved_children": children,
         "parents": parents,
         "rerank_scores": scores,
         "attempted_queries": attempted,
+        "warnings": warnings,
         "notes": state.get("notes", []) + [note],
     }
 

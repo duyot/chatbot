@@ -1,6 +1,11 @@
 # Data Model
 
-Single Postgres 16 database (`pgvector/pgvector:pg16`, see `docker-compose.yml`), schema owned entirely by SQLAlchemy models in `backend/app/models.py` and versioned via Alembic (`backend/alembic/versions/`). No other datastore holds relational/vector data — Redis is Celery-only (see `wiki/04-integrations.md`).
+Single Postgres 18 database (`paradedb/paradedb`, which bundles `pg_search` and
+`pgvector`, see `docker-compose.yml` — note the volume mounts
+`/var/lib/postgresql/`, not `/var/lib/postgresql/data`, for the Postgres 18
+layout), schema owned entirely by SQLAlchemy models in `backend/app/models.py`
+and versioned via Alembic (`backend/alembic/versions/`). No other datastore holds
+relational/vector data — Redis is Celery-only (see `wiki/04-integrations.md`).
 
 ## ERD
 
@@ -62,10 +67,13 @@ erDiagram
         uuid parent_id FK "nullable until reingest"
         int chunk_index
         text content
+        text context "nullable, LLM-generated"
+        text search_text "generated: context || content"
         vector embedding "1536-dim"
         int page
         string source "native|ocr"
         float ocr_confidence
+        jsonb bbox "nullable, citation geometry"
     }
 ```
 
@@ -82,9 +90,22 @@ One row per page-derived "parent" passage (~1500 tokens), unique on `(document_i
 - **Reads**: `backend/app/services/rag/retrieval.py:fetch_parents()` (looked up by the `parent_id`s of reranked children).
 
 ### `document_chunks` (`DocumentChunk`, `models.py:45-69`)
-One row per "child" passage (~300 tokens, 50-token overlap), the retrieval unit. Carries the `pgvector` `embedding` column (`Vector(1536)`, migration `0005_embedding_to_1536.py`) plus an FTS-searchable `content` column (GIN index added in `0003_add_fts_gin_index.py`) and OCR provenance (`source`, `ocr_confidence`). `parent_id` is nullable "until reingest completes" per the model comment.
-- **Writes**: `services/ingestion.py:store_chunks()`; wiped and rebuilt per-document by `scripts/reingest_all.py`.
-- **Reads**: `services/rag/retrieval.py` — vector similarity (`embedding.cosine_distance`) and Postgres FTS (`ts_rank`/`plainto_tsquery`) in `hybrid_search()`, then re-fetched by id after RRF fusion in `fetch_chunks_by_ids()`.
+One row per "child" passage (~300 tokens, 50-token overlap), the retrieval unit.
+Carries the `pgvector` `embedding` column (`Vector(1536)`, migration
+`0005_embedding_to_1536.py`), OCR provenance (`source`, `ocr_confidence`),
+citation geometry (`bbox`, migration `0009`), and — since migration `0010` — the
+generated `context` plus a `search_text` STORED generated column
+(`coalesce(context,'') || ' ' || content`) that the `chunks_bm25` ParadeDB index
+covers. `context` is nullable and NULL is fully supported: those rows retrieve on
+content alone. `parent_id` is nullable "until reingest completes" per the model
+comment.
+- **Writes**: `services/ingestion.py:store_chunks()` (including `context`);
+  wiped and rebuilt per-document by `scripts/reingest_all.py`. `search_text` is
+  computed by Postgres — never assigned.
+- **Reads**: `services/rag/retrieval.py` — vector similarity
+  (`embedding.cosine_distance`) and a keyword arm over `search_text` (BM25 via
+  `pg_search`, or the `ts_rank` fallback) in `hybrid_search()`, then re-fetched
+  by id after weighted RRF fusion in `fetch_chunks_by_ids()`.
 
 ### `users` (`User`, `models.py:72-79`)
 Login accounts. `username` is unique + indexed. No self-service signup — the only writer is a CLI script.
@@ -113,5 +134,7 @@ Individual chat turns. `document_id` is a **nullable, `SET NULL`-on-delete** FK 
 | 0006 | `0006_document_metadata.py` | Adds `documents.mime_type/page_count/doc_metadata`; `document_parent_chunks.page_start/page_end/source`; `document_chunks.page/source/ocr_confidence` + composite index |
 | 0007 | `0007_create_users.py` | Creates `users` + unique index on `username` |
 | 0008 | `0008_create_conversations_messages.py` | Creates `conversations` + `messages` with the FKs described above |
+| 0009 | `0009_chunk_bbox.py` | Adds `document_chunks.bbox` (JSONB citation geometry), nullable, no backfill |
+| 0010 | `0010_contextual_retrieval.py` | `pg_search` extension; `document_chunks.context` + `search_text` generated column; `chunks_bm25` BM25 index |
 
 Run via `alembic upgrade head`, executed automatically on every backend container start (`backend/Dockerfile:10`). After a chunk-schema migration, `python -m scripts.reingest_all` rebuilds chunks/embeddings from source files in `uploads/` (per `CLAUDE.md`).

@@ -3,7 +3,7 @@
 **What it does**: Users upload a document (PDF, DOCX, PNG/JPEG/WebP), the system OCRs/parses and chunks it, and users can then ask questions about it in a chat interface that streams grounded, page-cited answers via an agentic retrieval-augmented-generation (RAG) pipeline.
 **Who uses it**: Authenticated end users (no self-service signup — accounts are provisioned via a CLI script) chatting against their own uploaded documents.
 **Frontend**: React 19 + Vite (JavaScript/JSX, no TypeScript), `react-router-dom` v7, served by nginx in production.
-**Backend**: FastAPI + SQLAlchemy + Celery/Redis, Postgres 16 with `pgvector` for hybrid vector/full-text search, and a LangGraph state machine for the agentic RAG pipeline.
+**Backend**: FastAPI + SQLAlchemy + Celery/Redis, Postgres 18 via ParadeDB (bundling `pg_search` for BM25 alongside `pgvector`) for hybrid keyword + vector search, and a LangGraph state machine for the agentic RAG pipeline.
 **External services**: OpenRouter (chat LLM, embeddings, reranker) and an in-house RapidOCR microservice.
 
 ## Pages

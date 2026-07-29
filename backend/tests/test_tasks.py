@@ -30,6 +30,10 @@ def test_ingest_document_sets_done_on_success():
     with patch("app.workers.tasks.SessionLocal", return_value=mock_db), \
          patch("app.workers.tasks.parse_document", return_value=parsed), \
          patch("app.workers.tasks.chunk_document", return_value=(parents, children)), \
+         patch(
+             "app.workers.tasks.contextualize_with_stats",
+             return_value=([[None]], {"tier": "full_doc", "contextualized_children": 0, "total_children": 1}),
+         ), \
          patch("app.workers.tasks.embed_chunks", return_value=[[0.1] * 1536]), \
          patch("app.workers.tasks.store_chunks"):
         ingest_document.apply(args=[doc_id])

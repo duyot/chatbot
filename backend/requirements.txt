@@ -23,6 +23,7 @@ ragas==0.2.6
 datasets==3.0.1
 pyyaml==6.0.2
 langgraph==0.2.50
+tiktoken==0.13.0
 
 # Auth: JWT tokens + bcrypt password hashing. bcrypt is pinned to 4.0.x to
 # avoid the passlib<->bcrypt>=4.1 "module 'bcrypt' has no attribute '__about__'"

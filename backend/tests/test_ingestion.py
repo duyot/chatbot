@@ -342,3 +342,69 @@ def test_chunk_text_produces_parents_and_children():
         # Tokens are smaller than chars, but length sanity: children re-joined should
         # roughly cover the parent (allow slack for overlap and whitespace)
         assert len(joined) >= len(parent_text) * 0.7
+
+
+def test_search_text_is_generated_from_context_and_content(db):
+    """search_text is a Postgres STORED generated column; it must concatenate
+    context and content, and stay correct when context is NULL."""
+    import uuid
+    from app.models import Document, DocumentChunk
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    with_ctx = DocumentChunk(
+        document_id=doc.id, chunk_index=0, content="the rate is 40%",
+        context="Section 3 of the lease agreement.", embedding=[0.0] * 1536,
+    )
+    without_ctx = DocumentChunk(
+        document_id=doc.id, chunk_index=1, content="bare chunk",
+        embedding=[0.0] * 1536,
+    )
+    db.add_all([with_ctx, without_ctx])
+    db.flush()
+    db.refresh(with_ctx)
+    db.refresh(without_ctx)
+
+    assert with_ctx.search_text == "Section 3 of the lease agreement. the rate is 40%"
+    # NULL context must not null out the whole column
+    assert without_ctx.search_text == " bare chunk"
+
+
+def test_build_embedding_input_prefixes_context_when_present():
+    from app.services.ingestion import build_embedding_input
+    assert build_embedding_input("Section 3.", "the rate is 40%") == (
+        "Section 3.\n\nthe rate is 40%"
+    )
+
+
+def test_build_embedding_input_returns_bare_content_when_no_context():
+    """Disabling contextual embeddings must be a true no-op, so the no-context
+    path has to stay byte-identical to the pre-feature behaviour."""
+    from app.services.ingestion import build_embedding_input
+    assert build_embedding_input(None, "bare") == "bare"
+    assert build_embedding_input("", "bare") == "bare"
+
+
+def test_store_chunks_persists_context(db):
+    import uuid
+    from app.models import Document, DocumentChunk
+    from app.services.ingestion import ParentChunk, ChildChunk, store_chunks
+
+    doc = Document(id=uuid.uuid4(), file_name="t.pdf", file_path="/tmp/t.pdf", status="done")
+    db.add(doc)
+    db.flush()
+
+    parents = [ParentChunk(content="P", page_start=1, page_end=1, source="native")]
+    children = [[
+        ChildChunk(content="c1", page=1, source="native", context="CTX ONE"),
+        ChildChunk(content="c2", page=1, source="native", context=None),
+    ]]
+    store_chunks(db, str(doc.id), parents, children, [[0.0] * 1536, [0.0] * 1536])
+
+    rows = (
+        db.query(DocumentChunk)
+        .filter(DocumentChunk.document_id == doc.id)
+        .order_by(DocumentChunk.chunk_index)
+        .all()
+    )
+    assert [r.context for r in rows] == ["CTX ONE", None]

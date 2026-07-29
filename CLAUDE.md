@@ -57,7 +57,29 @@ When the chatbot UI is built, follow the common layout that matches the existing
 
 ## Backend — RAG pipeline
 
-The agentic RAG service lives in `backend/app/services/rag/` and is a LangGraph state machine. Entry point: `agentic_rag_stream(document_id, message, db)`. Six nodes: rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check. Retrieval is hybrid (pgvector + Postgres FTS) fused with RRF, reranked via OpenRouter's `/v1/rerank` cross-encoder endpoint (default `anthropic/claude-haiku-4.5`; set to `nvidia/llama-nemotron-rerank-vl-1b-v2:free` for a dedicated reranker — scores roughly 0..1) — then we return parent chunks (~1500 tokens) to the LLM while children (~300 tokens) are what gets retrieved. Chat LLM is also `anthropic/claude-haiku-4.5` via OpenRouter; embeddings are `qwen/qwen3-embedding-8b` truncated to 1536 dims (via `dimensions=`) and routed through OpenRouter's OpenAI-compatible `/v1/embeddings`.
+The agentic RAG service lives in `backend/app/services/rag/` and is a LangGraph state machine. Entry point: `agentic_rag_stream(document_id, message, db)`. Six nodes: rewrite_query, retrieve_and_rerank, grade_chunks, rewrite_and_retry, generate_answer, faithfulness_check. Chat LLM is `anthropic/claude-haiku-4.5` via OpenRouter; embeddings are `qwen/qwen3-embedding-8b` truncated to 1536 dims (via `dimensions=`) and routed through OpenRouter's OpenAI-compatible `/v1/embeddings`.
+
+Retrieval is hybrid: pgvector cosine similarity plus a keyword arm over
+`search_text` (`context || content`), fused with **weighted** RRF (0.8 semantic
+/ 0.2 keyword, both in settings — untuned defaults, not measured; see the eval
+note below). The keyword arm is ParadeDB `pg_search` BM25 when the extension is
+available and falls back to Postgres `ts_rank` otherwise — detected once per
+process by `retrieval.bm25_available()`. Results are reranked via OpenRouter's
+`/v1/rerank` cross-encoder on context + content (default
+`anthropic/claude-haiku-4.5`; set `nvidia/llama-nemotron-rerank-vl-1b-v2:free`
+for a dedicated reranker), then we return parent chunks (~1500 tokens) to the
+LLM while children (~300 tokens) are what gets retrieved.
+
+At ingestion, `services/contextualizer.py` generates a context string per child
+chunk situating it in its source document, sending the document as a 1-hour
+prompt-cached block. **The first call must complete before the rest fan out**
+across `contextualizer_max_workers` threads — a cache entry is only readable
+once the first response starts streaming, so a concurrent fan-out would make
+every call pay full input price instead of a cached rate. Documents over
+`contextualizer_full_doc_token_limit` (100k tokens) fall back to a generated
+doc summary plus the child's own page. Per-chunk failures are non-fatal.
+Disable with `contextual_embeddings_enabled=False`. See
+`docs/superpowers/specs/2026-07-28-contextual-retrieval-design.md`.
 
 See `features/chat_with_doc/rag_enhancement.md` for the flow diagram and `docs/superpowers/specs/2026-05-15-agentic-rag-enhancement-design.md` for the design rationale.
 
@@ -80,3 +102,7 @@ Golden set: `backend/evals/golden_set.yaml`. The `@pytest.mark.eval` marker excl
 ### Reingestion after schema changes
 
 After a chunk-schema migration (e.g. parent-child), run `python -m scripts.reingest_all` (or `--doc-id <uuid>` for a single document) to rebuild chunks from source documents in `uploads/`.
+
+Migration `0010` added `context`; there is **no backfill**. Documents ingested
+before it retrieve on content alone until re-ingested. Run
+`python -m scripts.reingest_all` to contextualize them.

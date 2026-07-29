@@ -29,8 +29,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24
 
     # Retrieval tunables
-    vector_top_k: int = 30
-    fts_top_k: int = 30
+    vector_top_k: int = 75
+    # Name retained even though this arm is now BM25: it also sizes the
+    # ts_rank fallback, and renaming would break existing .env files.
+    fts_top_k: int = 75
     rrf_k: int = 60
     rerank_top_n: int = 6
     # Optional gate: chunks below this rerank score are treated as not-useful.
@@ -41,6 +43,34 @@ class Settings(BaseSettings):
     # Default is a chat model since it works without /v1/rerank availability;
     # override to a true reranker like nvidia/llama-nemotron-rerank-vl-1b-v2.
     reranker_model: str = "anthropic/claude-haiku-4.5"
+
+    # --- Contextual embeddings (see docs/superpowers/specs/2026-07-28-contextual-retrieval-design.md)
+    # Each child chunk gets an LLM-generated context string situating it within
+    # its source document; that context is embedded and indexed alongside the
+    # chunk text. Disable to reproduce the pre-contextual pipeline exactly.
+    contextual_embeddings_enabled: bool = True
+    contextualizer_model: str = "anthropic/claude-haiku-4.5"
+    # Concurrent context-generation calls. The first call is always issued alone
+    # to warm the prompt cache before fanning out.
+    contextualizer_max_workers: int = 8
+    # Documents above this token count fall back to
+    # (doc summary + the child's own page) instead of the full document.
+    # Measured with tiktoken cl100k_base, which undercounts Claude tokens by
+    # ~15-20%, so this sits well under the 200k context window on purpose.
+    contextualizer_full_doc_token_limit: int = 100_000
+    # "1h" costs 2x on the cache write vs 1.25x for the 5-minute default, but
+    # break-even is 3 reads and we get 100+ per document — and it stops a long
+    # document from re-paying the write when a 5-minute entry expires mid-run.
+    contextualizer_cache_ttl: str = "1h"
+
+    # --- BM25 keyword search (ParadeDB pg_search)
+    # Auto-detected at runtime: if pg_search is not installed, retrieval falls
+    # back to the Postgres ts_rank query. Set False to force the fallback.
+    bm25_enabled: bool = True
+    # Weighted Reciprocal Rank Fusion. The guideline recommends 80/20
+    # semantic/keyword; both are tunable.
+    rrf_weight_vector: float = 0.8
+    rrf_weight_keyword: float = 0.2
 
     # Agent loop tunables
     max_retrieval_retries: int = 2

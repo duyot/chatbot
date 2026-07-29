@@ -18,6 +18,98 @@ from .reranker import rerank
 
 logger = logging.getLogger(__name__)
 
+# Cached pg_search probe. Module-level rather than @lru_cache because the check
+# needs a live Session, which is unhashable. One query per process.
+_BM25_AVAILABLE: bool | None = None
+
+
+def reset_bm25_cache() -> None:
+    """Clear the cached pg_search probe. Test hook only."""
+    global _BM25_AVAILABLE
+    _BM25_AVAILABLE = None
+
+
+def bm25_available(db: Session) -> bool:
+    """True when BM25 keyword search should be used.
+
+    An explicit bm25_enabled=False always wins, so the ts_rank fallback can be
+    forced for A/B comparison. Otherwise probe once for the pg_search
+    extension: a developer who has not rebuilt the db image still gets a
+    working app instead of a 500.
+    """
+    global _BM25_AVAILABLE
+    if not settings.bm25_enabled:
+        return False
+    if _BM25_AVAILABLE is None:
+        try:
+            row = db.execute(
+                sa_text("SELECT 1 FROM pg_extension WHERE extname = 'pg_search'")
+            ).first()
+            _BM25_AVAILABLE = bool(row)
+            logger.info("bm25_available: pg_search detected=%s", _BM25_AVAILABLE)
+        except Exception as exc:  # noqa: BLE001
+            # Probe errored (e.g. transient DB blip) — distinct from probing
+            # successfully and finding pg_search genuinely absent. Don't latch
+            # False into the module cache, or one bad connection makes this
+            # process run unindexed FTS for its whole lifetime; leave the
+            # cache unset so the next call retries.
+            logger.warning("bm25_available: probe failed, using ts_rank (%s)", exc)
+            return False
+    return _BM25_AVAILABLE
+
+
+def _keyword_search_bm25(
+    db: Session, document_id: str, query: str,
+    page_range: tuple[int, int] | None, k: int,
+) -> list[Any]:
+    """True BM25 over search_text (context || content) via ParadeDB pg_search."""
+    page_clause = "AND page BETWEEN :lo AND :hi" if page_range is not None else ""
+    sql = sa_text(
+        f"""
+        SELECT id, paradedb.score(id) AS rank
+        FROM   document_chunks
+        WHERE  document_id = :doc_id
+          AND  search_text @@@ :q
+          {page_clause}
+        ORDER BY rank DESC
+        LIMIT :k
+        """
+    )
+    params: dict[str, Any] = {"doc_id": document_id, "q": query, "k": k}
+    if page_range is not None:
+        params["lo"], params["hi"] = page_range[0], page_range[1]
+    return db.execute(sql, params).fetchall()
+
+
+def _keyword_search_tsrank(
+    db: Session, document_id: str, query: str,
+    page_range: tuple[int, int] | None, k: int,
+) -> list[Any]:
+    """Postgres FTS fallback when pg_search is unavailable.
+
+    Searches search_text, not content, so contextual keyword recall works here
+    too. ts_rank is not BM25 — but RRF consumes rank order, not scores, so the
+    practical difference is smaller than it sounds.
+    """
+    page_clause = "AND page BETWEEN :lo AND :hi" if page_range is not None else ""
+    sql = sa_text(
+        f"""
+        SELECT id,
+               ts_rank(to_tsvector('english', search_text),
+                       plainto_tsquery('english', :q)) AS rank
+        FROM   document_chunks
+        WHERE  document_id = :doc_id
+          AND  to_tsvector('english', search_text) @@ plainto_tsquery('english', :q)
+          {page_clause}
+        ORDER BY rank DESC
+        LIMIT :k
+        """
+    )
+    params: dict[str, Any] = {"doc_id": document_id, "q": query, "k": k}
+    if page_range is not None:
+        params["lo"], params["hi"] = page_range[0], page_range[1]
+    return db.execute(sql, params).fetchall()
+
 
 def hybrid_search(
     db: Session,
@@ -41,39 +133,45 @@ def hybrid_search(
         .all()
     )
 
-    page_clause = "AND page BETWEEN :lo AND :hi" if page_range is not None else ""
-    fts_sql = sa_text(
-        f"""
-        SELECT id,
-               ts_rank(to_tsvector('english', content),
-                       plainto_tsquery('english', :q)) AS rank
-        FROM   document_chunks
-        WHERE  document_id = :doc_id
-          AND  to_tsvector('english', content) @@ plainto_tsquery('english', :q)
-          {page_clause}
-        ORDER BY rank DESC
-        LIMIT :k
-        """
-    )
-    params: dict[str, Any] = {"doc_id": document_id, "q": query, "k": settings.fts_top_k}
-    if page_range is not None:
-        params["lo"], params["hi"] = page_range[0], page_range[1]
-    fts_rows = db.execute(fts_sql, params).fetchall()
+    if bm25_available(db):
+        fts_rows = _keyword_search_bm25(
+            db, document_id, query, page_range, settings.fts_top_k
+        )
+        arm = "bm25"
+    else:
+        fts_rows = _keyword_search_tsrank(
+            db, document_id, query, page_range, settings.fts_top_k
+        )
+        arm = "ts_rank"
 
     logger.info(
-        "hybrid_search: query=%.80s vec=%d fts=%d page_range=%s",
-        query, len(vec_hits), len(fts_rows), page_range,
+        "hybrid_search: query=%.80s vec=%d keyword=%d arm=%s page_range=%s",
+        query, len(vec_hits), len(fts_rows), arm, page_range,
     )
     return vec_hits, fts_rows
 
 
-def rrf_fuse(vec_hits, fts_rows, k: int) -> list[tuple[Any, float]]:
-    """Reciprocal Rank Fusion. Returns (id, score) sorted descending by score."""
+def rrf_fuse(
+    vec_hits,
+    fts_rows,
+    k: int,
+    w_vec: float | None = None,
+    w_keyword: float | None = None,
+) -> list[tuple[Any, float]]:
+    """Weighted Reciprocal Rank Fusion. Returns (id, score) sorted descending.
+
+    Semantic search understands paraphrase; keyword search catches exact terms.
+    The default 0.8/0.2 split follows the guideline's recommendation and is
+    tunable via settings. Weights default to settings when not passed, so
+    existing call sites keep working.
+    """
+    wv = settings.rrf_weight_vector if w_vec is None else w_vec
+    wk = settings.rrf_weight_keyword if w_keyword is None else w_keyword
     scores: dict[Any, float] = defaultdict(float)
     for rank, chunk in enumerate(vec_hits):
-        scores[chunk.id] += 1.0 / (k + rank)
+        scores[chunk.id] += wv / (k + rank)
     for rank, row in enumerate(fts_rows):
-        scores[row.id] += 1.0 / (k + rank)
+        scores[row.id] += wk / (k + rank)
     return sorted(scores.items(), key=lambda x: -x[1])
 
 
@@ -144,7 +242,14 @@ def retrieve(
     vec_hits, fts_rows = hybrid_search(db, document_id, query, page_range)
 
     fused = rrf_fuse(vec_hits, fts_rows, settings.rrf_k)
-    fused_ids = [cid for cid, _ in fused[:max(settings.vector_top_k, settings.fts_top_k)]]
+    # RRF order must actually SELECT candidates, or the weights are inert:
+    # rerank() re-sorts whatever it receives, so if every fused id survives,
+    # fusion cannot influence the final result. Both arms return up to top_k
+    # and the fused set holds their union, so truncating at the larger arm's
+    # top_k is what makes the weighting load-bearing. Using the SUM here
+    # (an earlier revision did) can never truncate and silently disables it.
+    candidate_limit = max(settings.vector_top_k, settings.fts_top_k)
+    fused_ids = [cid for cid, _ in fused[:candidate_limit]]
     candidates = fetch_chunks_by_ids(db, fused_ids)
 
     reranked = rerank(query, candidates, settings.rerank_top_n)
