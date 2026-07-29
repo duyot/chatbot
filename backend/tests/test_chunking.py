@@ -236,3 +236,58 @@ def test_build_prose_parent_source_is_native_without_confidence():
     from app.services.chunking import build_prose_parent
     parent, _ = build_prose_parent("", [_el("paragraph", "native only")])
     assert parent.source == "native"
+
+
+def test_build_prose_parent_multiple_children_carry_different_pages_and_bboxes():
+    """Comprehensive test: multiple elements on different pages, each large enough
+    to produce its own child. Different children carry different, correctly-scoped
+    bbox and page values tied to their source element."""
+    from app.services.chunking import build_prose_parent
+
+    # Three large elements on different pages, each with distinct bboxes
+    el1 = _el("paragraph", "word " * 250, page=1, bbox=[0.0, 0.0, 1.0, 0.3])
+    el2 = _el("paragraph", "word " * 250, page=2, bbox=[0.0, 0.3, 1.0, 0.6])
+    el3 = _el("paragraph", "word " * 250, page=3, bbox=[0.0, 0.6, 1.0, 1.0])
+
+    parent, children = build_prose_parent("", [el1, el2, el3])
+
+    # Should produce multiple children due to 300-token budget
+    assert len(children) >= 3, f"expected at least 3 children, got {len(children)}"
+
+    # Each child should be attributed to one of the three pages
+    pages = [child.page for child in children]
+    assert 1 in pages, "expected at least one child on page 1"
+    assert 2 in pages, "expected at least one child on page 2"
+    assert 3 in pages, "expected at least one child on page 3"
+
+    # Verify that children on different pages have different bboxes
+    # (at least one child from each page should carry its element's bbox)
+    all_bboxes = [child.bbox for child in children if child.bbox]
+    assert len(all_bboxes) >= 3, "expected children to carry bboxes from their source elements"
+
+    # Spot-check: a child on page 1 should have bbox in the [0.0-0.3] range
+    children_on_page_1 = [c for c in children if c.page == 1]
+    children_on_page_2 = [c for c in children if c.page == 2]
+    children_on_page_3 = [c for c in children if c.page == 3]
+
+    assert len(children_on_page_1) > 0, "expected at least one child on page 1"
+    assert len(children_on_page_2) > 0, "expected at least one child on page 2"
+    assert len(children_on_page_3) > 0, "expected at least one child on page 3"
+
+    # Verify that at least one child on page 1 has a bbox from el1
+    page_1_with_bbox = [c for c in children_on_page_1 if c.bbox]
+    assert len(page_1_with_bbox) > 0, "expected children on page 1 to carry bboxes"
+    assert [0.0, 0.0, 1.0, 0.3] in page_1_with_bbox[0].bbox, \
+        f"expected el1's bbox in page 1 child, got {page_1_with_bbox[0].bbox}"
+
+    # Verify that at least one child on page 2 has a bbox from el2
+    page_2_with_bbox = [c for c in children_on_page_2 if c.bbox]
+    assert len(page_2_with_bbox) > 0, "expected children on page 2 to carry bboxes"
+    assert [0.0, 0.3, 1.0, 0.6] in page_2_with_bbox[0].bbox, \
+        f"expected el2's bbox in page 2 child, got {page_2_with_bbox[0].bbox}"
+
+    # Verify that at least one child on page 3 has a bbox from el3
+    page_3_with_bbox = [c for c in children_on_page_3 if c.bbox]
+    assert len(page_3_with_bbox) > 0, "expected children on page 3 to carry bboxes"
+    assert [0.0, 0.6, 1.0, 1.0] in page_3_with_bbox[0].bbox, \
+        f"expected el3's bbox in page 3 child, got {page_3_with_bbox[0].bbox}"

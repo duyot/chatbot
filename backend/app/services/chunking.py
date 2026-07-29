@@ -146,12 +146,32 @@ def _group_source(group: List[Element]) -> str:
 
 
 def _owning_element(spans: List[ElementSpan], offset: int) -> Optional[Element]:
-    """The element a child starts inside, used for its page and confidence."""
+    """The element a child starts inside, used for its page and confidence.
+
+    If the offset lands in a gap between elements (ELEMENT_JOINER space) or if
+    the offset is not found, fall back to the nearest preceding element — the
+    one immediately before the gap is almost certainly the correct owner."""
     if offset >= 0:
         for s in spans:
             if s.start <= offset < s.end:
                 return s.element
-    return spans[0].element if spans else None
+        # Offset is in a gap or past all spans. Find the nearest preceding element.
+        for i in range(len(spans) - 1, -1, -1):
+            if spans[i].start <= offset:
+                logger.warning(
+                    "_owning_element: child at offset %d (text: %r) fell back to "
+                    "nearest preceding element id=%s (was not directly contained in any span)",
+                    offset, "[unknown]"[:40], spans[i].element.id
+                )
+                return spans[i].element
+    # Offset is -1 (not found) or no spans. Log and fall back to first element.
+    if spans:
+        logger.warning(
+            "_owning_element: child at offset %d fell back to first element id=%s",
+            offset, spans[0].element.id
+        )
+        return spans[0].element
+    return None
 
 
 def pack_prose(elements: List[Element], max_tokens: int) -> List[List[Element]]:
