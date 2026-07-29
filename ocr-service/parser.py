@@ -29,7 +29,7 @@ class ParseError(RuntimeError):
 _converter: Optional[DocumentConverter] = None
 
 
-def _find_bundled_rapidocr_model(prefix: str) -> Optional[str]:
+def _find_bundled_rapidocr_model(prefix: str) -> str:
     """Path to a model file bundled inside the installed `rapidocr` package.
 
     Needed because Docling's `RapidOcrModel`, when given a global
@@ -42,7 +42,15 @@ def _find_bundled_rapidocr_model(prefix: str) -> Optional[str]:
     """
     models_dir = os.path.join(os.path.dirname(rapidocr.__file__), "models")
     matches = glob.glob(os.path.join(models_dir, prefix + "*"))
-    return matches[0] if matches else None
+    if not matches:
+        raise RuntimeError(
+            f"No bundled RapidOCR model matching prefix {prefix!r} found under "
+            f"{models_dir!r}. The installed `rapidocr` package layout has likely "
+            "changed — without an explicit model path, Docling would fall back to "
+            "resolving this model against `artifacts_path`/the network, silently "
+            "breaking OCR or the offline guarantee. Update the prefix to match."
+        )
+    return matches[0]
 
 
 def _get_converter() -> DocumentConverter:
@@ -174,8 +182,15 @@ def parse_bytes(data: bytes, *, filename: str) -> dict:
         tmp.write(data)
         tmp_path = tmp.name
     try:
+        # Converter construction (model loading, artifacts_path validation) is
+        # deliberately outside the ParseError-mapping block below: a failure
+        # there is a deployment/config problem (missing baked weights, a bad
+        # artifacts_path, a corrupt model file), not "this input is bad", and
+        # must propagate as a real 500 rather than a 422 blaming the caller's
+        # file.
+        converter = _get_converter()
         try:
-            result = _get_converter().convert(tmp_path)
+            result = converter.convert(tmp_path)
         except Exception as exc:
             logger.warning("parse_bytes: convert failed file=%s err=%s", filename, exc)
             raise ParseError(str(exc)) from exc
