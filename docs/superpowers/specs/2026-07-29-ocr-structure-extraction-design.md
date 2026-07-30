@@ -103,7 +103,7 @@ backend's contract.
   "schema_version": 1,
   "metadata": {
     "page_count": 12, "ocr_pages": 12, "native_pages": 0,
-    "engine": "docling/2.116.0", "mime_type": "application/pdf"
+    "engine": "docling", "mime_type": "application/pdf"
   },
   "pages": [
     {"page": 1, "width": 612.0, "height": 792.0,
@@ -119,12 +119,6 @@ backend's contract.
   ]
 }
 ```
-
-Note: the `engine` value above is illustrative of the intended format. As
-implemented, `backend/app/services/ingestion.py::_parse_remote` sets
-`metadata["engine"] = "docling"` — a bare string with no version suffix; the
-wire body from `ocr-service` itself carries no `engine` key at all. If a
-versioned engine string is wanted, that is still open work.
 
 Contract rules:
 
@@ -282,8 +276,19 @@ Two operational fixes required as part of this work:
 `docling_enabled=False` restores the legacy path. That requires keeping
 `_parse_pdf` / `_parse_docx` / `_parse_image`, the line-based chunker, and the
 service's old `POST /ocr` endpoint alive **for exactly one release** — deliberate
-dead-ish code with an expiry date. Delete once the eval gate passes on real
-documents.
+dead-ish code with an expiry date.
+
+**Deletion trigger, revised.** The original criterion here was "delete once
+the eval gate passes on real documents" — but Task 11 (that eval gate) was
+deliberately skipped by the human and is not scheduled, so that condition
+would never fire and the legacy path would sit dead-ish indefinitely. The
+reachable trigger instead: **delete after one release during which
+`docling_enabled` was never set to `False` in anger** (i.e. no production
+rollback was needed). If anyone wants the quality evidence the original
+criterion was meant to provide before deleting the fallback — a measured
+comparison of table/prose retrieval before and after this change — running
+the eval gate described under "Eval gate — the acceptance criterion" below is
+the thing to do; it was never run, so that evidence does not currently exist.
 
 ## Testing
 
