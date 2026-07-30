@@ -20,6 +20,14 @@ class DocumentListItem(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class DocumentPageItem(BaseModel):
+    """One rendered preview page. width/height are pixel dimensions of the
+    image, so the UI can reserve correctly-shaped space before it loads."""
+    page: int
+    width: int
+    height: int
+
+
 class ChatRequest(BaseModel):
     document_id: str
     message: str

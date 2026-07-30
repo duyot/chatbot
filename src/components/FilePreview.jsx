@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getDocumentFile } from '../repositories/documentRepository'
 import CitationOverlay from './CitationOverlay'
-import PdfViewer from './PdfViewer'
+import PageImageViewer from './PageImageViewer'
 import './FilePreview.css'
 
 function CloseIcon() {
@@ -13,29 +13,38 @@ function CloseIcon() {
 }
 
 export default function FilePreview({ document, onClose, highlightTarget = null }) {
-  const [blobUrl, setBlobUrl] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const mimeType = document?.mime_type || ''
+  const isPdf = mimeType === 'application/pdf'
+
+  // PDFs preview from server-rendered page images, so we never download the
+  // source file — see PageImageViewer.
+  const docId = document?.id || null
+  const needsFile = Boolean(docId) && !isPdf
+
+  // Single state object, tagged with the document it describes, so status and
+  // url can never disagree and a stale blob can't be shown for a new document.
+  const [file, setFile] = useState({ id: null, status: 'idle', url: null })
+
+  // Reset during render, not in an effect — an effect would paint one frame of
+  // the previous document's preview first.
+  if (file.id !== docId) {
+    setFile({ id: docId, status: needsFile ? 'loading' : 'idle', url: null })
+  }
 
   useEffect(() => {
-    if (!document?.id) return undefined
+    if (!needsFile) return undefined
 
     let cancelled = false
     let url = null
 
     async function load() {
-      setLoading(true)
-      setError(false)
-      setBlobUrl(null)
       try {
-        const blob = await getDocumentFile(document.id)
+        const blob = await getDocumentFile(docId)
         if (cancelled) return
         url = URL.createObjectURL(blob)
-        setBlobUrl(url)
+        setFile({ id: docId, status: 'ready', url })
       } catch {
-        if (!cancelled) setError(true)
-      } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setFile({ id: docId, status: 'error', url: null })
       }
     }
 
@@ -45,16 +54,16 @@ export default function FilePreview({ document, onClose, highlightTarget = null 
       cancelled = true
       if (url) URL.revokeObjectURL(url)
     }
-  }, [document?.id])
+  }, [docId, needsFile])
 
   if (!document) return null
 
-  const mimeType = document.mime_type || ''
-  // Highlight target scoped to this document (images overlay directly; PDFs are
-  // rendered + overlaid by PdfViewer).
+  // Highlight target scoped to this document (images overlay directly; PDF
+  // pages are overlaid per-page by PageImageViewer).
   const docHighlight =
     highlightTarget && highlightTarget.documentId === document.id ? highlightTarget : null
   const highlightRects = docHighlight?.rects || []
+  const isImage = mimeType.startsWith('image/')
 
   return (
     <div className="file-preview">
@@ -65,23 +74,31 @@ export default function FilePreview({ document, onClose, highlightTarget = null 
         </button>
       </div>
       <div className="file-preview-body">
-        {loading && <p className="file-preview-hint">Loading preview…</p>}
-        {!loading && error && (
-          <p className="file-preview-hint">Couldn't load a preview for this file.</p>
+        {isPdf && (
+          // Keyed so switching documents mounts a fresh viewer, which is what
+          // lets usePageImages avoid any reset logic of its own.
+          <PageImageViewer
+            key={document.id}
+            documentId={document.id}
+            highlightTarget={docHighlight}
+          />
         )}
-        {!loading && !error && blobUrl && mimeType.startsWith('image/') && (
+        {!isPdf && file.status === 'loading' && (
+          <p className="file-preview-hint">Loading preview…</p>
+        )}
+        {!isPdf && file.status === 'error' && (
+          <p className="file-preview-hint">Couldn&apos;t load a preview for this file.</p>
+        )}
+        {!isPdf && file.status === 'ready' && isImage && (
           <div className="file-preview-image-wrap">
-            <img className="file-preview-image" src={blobUrl} alt={document.file_name} />
+            <img className="file-preview-image" src={file.url} alt={document.file_name} />
             <CitationOverlay rects={highlightRects} />
           </div>
         )}
-        {!loading && !error && blobUrl && mimeType === 'application/pdf' && (
-          <PdfViewer blobUrl={blobUrl} highlightTarget={docHighlight} />
-        )}
-        {!loading && !error && blobUrl && !mimeType.startsWith('image/') && mimeType !== 'application/pdf' && (
+        {!isPdf && file.status === 'ready' && !isImage && (
           <div className="file-preview-fallback">
             <p className="file-preview-hint">Preview not available for this file type.</p>
-            <a className="file-preview-download" href={blobUrl} download={document.file_name}>
+            <a className="file-preview-download" href={file.url} download={document.file_name}>
               Download {document.file_name}
             </a>
           </div>

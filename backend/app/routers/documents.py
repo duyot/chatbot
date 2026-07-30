@@ -9,9 +9,10 @@ import time
 
 from ..database import get_db, SessionLocal
 from ..models import Document, User
-from ..schemas import DocumentResponse, DocumentListItem
+from ..schemas import DocumentResponse, DocumentListItem, DocumentPageItem
 from ..security import get_current_user
 from ..config import settings
+from ..services import page_images
 
 logger = logging.getLogger(__name__)
 
@@ -70,14 +71,73 @@ async def upload_document(
     return doc
 
 
+def _get_document_or_404(db: Session, document_id: str) -> Document:
+    doc = db.query(Document).filter(Document.id == document_id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    return doc
+
+
+@router.get("/{document_id}/pages", response_model=list[DocumentPageItem])
+def list_document_pages(
+    document_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Manifest of rendered preview pages, in order.
+
+    Normally a directory scan. Documents ingested before page rendering existed
+    — and any whose ingestion-time render failed — are rendered here on first
+    preview, so no backfill step is required for previews to work. Returns []
+    for non-PDFs, which the UI previews by other means.
+    """
+    doc = _get_document_or_404(db, document_id)
+
+    pages = page_images.list_page_images(doc.id)
+    if not pages:
+        pages = page_images.render_document_pages(doc.file_path, doc.id)
+
+    return [
+        DocumentPageItem(page=p.page, width=p.width, height=p.height)
+        for p in pages
+    ]
+
+
+@router.get("/{document_id}/pages/{page}")
+def get_document_page_image(
+    document_id: str,
+    page: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """One rendered page image. `page` is 1-based and typed int, so the path is
+    built from a validated integer and never from caller-supplied text."""
+    doc = _get_document_or_404(db, document_id)
+    if page < 1:
+        raise HTTPException(status_code=404, detail="Page not found")
+
+    path = page_images.page_image_path(doc.id, page)
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Page not found")
+
+    return FileResponse(
+        path,
+        media_type=page_images.media_type(),
+        # Content at a given path never changes (a re-render replaces the whole
+        # file), so this is safe to hold for a day. `private` keeps it out of
+        # shared caches since the route is authenticated.
+        headers={"Cache-Control": "private, max-age=86400"},
+    )
+
+
 @router.get("/{document_id}/file")
 def get_document_file(
     document_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    doc = db.query(Document).filter(Document.id == document_id).first()
-    if not doc or not os.path.exists(doc.file_path):
+    doc = _get_document_or_404(db, document_id)
+    if not os.path.exists(doc.file_path):
         raise HTTPException(status_code=404, detail="Document not found")
 
     return FileResponse(

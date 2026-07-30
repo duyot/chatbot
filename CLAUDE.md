@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project State
 
-This repo is currently the **default Vite + React 19 scaffold** (from `create-vite`). `App.jsx` is still the starter page — no chatbot logic has been implemented yet. Treat feature work as greenfield on top of the scaffold.
+A working document-Q&A app, **not** a scaffold. Four services under `docker-compose.yml`: a React SPA behind nginx (`src/`, `Dockerfile`, `nginx.conf`), a FastAPI backend (`backend/app/`), a Celery ingestion worker (`backend/app/workers/`), and a RapidOCR sidecar (`ocr-service/`), against Postgres 18 + ParadeDB and Redis. See `wiki/` for the architecture, flows, and data model.
 
 ## Stack
 
@@ -12,7 +12,7 @@ This repo is currently the **default Vite + React 19 scaffold** (from `create-vi
 - **Vite 8** as build tool and dev server (`vite.config.js` only registers `@vitejs/plugin-react`)
 - **ESLint 9** flat config (`eslint.config.js`) — uses `@eslint/js` recommended, `eslint-plugin-react-hooks`, and `eslint-plugin-react-refresh` (Vite variant)
 - **JavaScript (JSX)**, not TypeScript. No `tsconfig.json`, no type tooling.
-- **No test framework installed yet.** Adding tests requires picking and installing one (e.g. Vitest + React Testing Library, or Playwright for E2E).
+- **No frontend test framework.** Adding one means picking and installing it (e.g. Vitest + React Testing Library, or Playwright for E2E). The backend has pytest (`backend/tests/`, config in `backend/pytest.ini`).
 
 ## Commands
 
@@ -172,6 +172,44 @@ rather than what they are:
 4. **Reingest** (`python -m scripts.reingest_all`) only after 1-3 are done.
 
 Design: `docs/superpowers/specs/2026-07-29-ocr-structure-extraction-design.md`
+
+### Document preview (page images)
+
+PDF previews are **server-rendered page images**, not client-side pdf.js. At
+ingestion `services/page_images.py` rasterizes each PDF page with PyMuPDF into
+`uploads/pages/{document_id}/{page:04d}.webp` (150 DPI, WebP q80 via Pillow —
+PyMuPDF cannot encode WebP itself). Rendering is **idempotent** (existing pages
+are reused) and **non-fatal**: a failed render never blocks `status="done"`,
+because previews are cosmetic and Q&A is the product.
+
+The UI reads `GET /api/documents/{id}/pages` for a manifest of
+`{page, width, height}`, then fetches each image from
+`GET /api/documents/{id}/pages/{n}`. **The manifest endpoint renders missing
+pages on demand**, so documents ingested before this feature self-heal on first
+preview — no backfill is required. To pre-warm them anyway, or to re-render
+after changing `page_image_dpi`/`page_image_format`:
+
+```bash
+cd backend
+python -m scripts.render_pages_all            # skip already-rendered pages
+python -m scripts.render_pages_all --force    # delete and re-render
+```
+
+Frontend side is `src/hooks/usePageImages.js` + `src/components/PageImageViewer.jsx`.
+Two constraints worth knowing before changing them:
+- Page images are fetched via `apiFetch` into object URLs, **not** a bare
+  `<img src>` — the route is authenticated and an `<img>` cannot send the
+  `Authorization` header.
+- `PageImageViewer` is rendered with `key={document.id}`. That's what lets
+  `usePageImages` hold zero reset logic; React 19's lint rules reject the
+  reset-in-effect and mutate-ref-during-render alternatives.
+
+Citation highlighting needs no DPI-specific handling: `DocumentChunk.bbox` rects
+are normalized to the source page rect, and a rendered page is geometrically
+similar to it at any DPI, so the same rects overlay the image directly.
+
+Only PDFs get page images. Images are previewed from the source file; DOCX falls
+back to a download link.
 
 ### Reingestion after schema changes
 
