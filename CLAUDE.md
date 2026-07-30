@@ -147,18 +147,29 @@ in transitively — without this pin, the Dockerfile's `RapidOCR()` warm-up has
 no engine to run on and fails outright. This has already broken once; check
 it explicitly on any dependency refresh.
 
-**Before reingesting on this branch:** two operational preconditions must be
-true first, or the failures look like a total outage rather than what they
-are.
+**Before reingesting on this branch**, follow this order — skipping or
+reordering these steps produces failures that look like a total outage
+rather than what they are:
 
-- Migration `0012` (adds `document_chunks.element_type`) is verified up and
-  down against `chatbot_test`, but is **deliberately not applied to
-  production** — `chatbot` is still at `0011`. Applying it is a manual
-  deployment step that must happen before any reingest.
-- The long-running `ocr` container must be **rebuilt from this branch**
-  first. The currently running image has no `/parse` route, so every parse
-  404s → `OCRError` → the document fails. That's fail-loud working as
-  designed, but it presents as everything being broken.
+1. **Rebuild the `ocr` image from this branch.** The currently running image
+   has no `/parse` route, so every parse 404s → `OCRError` → the document
+   fails. That's fail-loud working as designed, but it presents as
+   everything being broken.
+2. **Run the slow suite inside the freshly built image, offline, before
+   deploying it:**
+   ```
+   docker run --rm --network none <image> python -m pytest -m slow
+   ```
+   `pytest.ini`'s `addopts = -m "not slow"` excludes this suite from every
+   default run, and there is no CI in this repo — so a real Docling
+   inference bug (e.g. a silently mirrored bbox, or DOCX parsing coming
+   back empty) will not be caught by anything else before it reaches
+   production. This is the last point at which it can be caught.
+3. **Apply migration `0012`** (adds `document_chunks.element_type`) —
+   verified up and down against `chatbot_test`, but **deliberately not
+   applied to production**; `chatbot` is still at `0011`. This is a manual
+   deployment step.
+4. **Reingest** (`python -m scripts.reingest_all`) only after 1-3 are done.
 
 Design: `docs/superpowers/specs/2026-07-29-ocr-structure-extraction-design.md`
 

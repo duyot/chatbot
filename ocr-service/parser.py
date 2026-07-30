@@ -9,6 +9,7 @@ import glob
 import logging
 import os
 import tempfile
+import threading
 from typing import List, Optional
 
 from docling.datamodel.base_models import InputFormat
@@ -26,6 +27,14 @@ class ParseError(RuntimeError):
     """Raised when Docling cannot convert the input at all."""
 
 
+# `/parse` runs in Starlette's threadpool (see app.py), so requests can be
+# concurrent even though this service is CPU-only. `DocumentConverter` is not
+# documented as thread-safe for concurrent `convert()` calls, and unbounded
+# concurrent Docling conversions (TableFormer + ONNX OCR, generate_parsed_pages)
+# risk OOM on a CPU-only box. This lock makes queueing explicit: a second
+# parse waits for the first to finish rather than racing it. `/health` never
+# takes this lock, so it stays answerable while a parse is in flight.
+_converter_lock = threading.Lock()
 _converter: Optional[DocumentConverter] = None
 
 
@@ -67,23 +76,24 @@ def _get_converter() -> DocumentConverter:
     would be misreported as OCR'd even when it had a native text layer.
     """
     global _converter
-    if _converter is None:
-        ocr_options = RapidOcrOptions(
-            det_model_path=_find_bundled_rapidocr_model("PP-OCRv6_det"),
-            cls_model_path=_find_bundled_rapidocr_model("ch_ppocr_mobile_v2.0_cls"),
-            rec_model_path=_find_bundled_rapidocr_model("PP-OCRv6_rec"),
-        )
-        pipeline_options = PdfPipelineOptions()
-        pipeline_options.artifacts_path = settings.cache_dir / "models"
-        pipeline_options.ocr_options = ocr_options
-        pipeline_options.generate_parsed_pages = True
-        _converter = DocumentConverter(
-            format_options={
-                InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options),
-                InputFormat.IMAGE: ImageFormatOption(pipeline_options=pipeline_options),
-            }
-        )
-    return _converter
+    with _converter_lock:
+        if _converter is None:
+            ocr_options = RapidOcrOptions(
+                det_model_path=_find_bundled_rapidocr_model("PP-OCRv6_det"),
+                cls_model_path=_find_bundled_rapidocr_model("ch_ppocr_mobile_v2.0_cls"),
+                rec_model_path=_find_bundled_rapidocr_model("PP-OCRv6_rec"),
+            )
+            pipeline_options = PdfPipelineOptions()
+            pipeline_options.artifacts_path = settings.cache_dir / "models"
+            pipeline_options.ocr_options = ocr_options
+            pipeline_options.generate_parsed_pages = True
+            _converter = DocumentConverter(
+                format_options={
+                    InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options),
+                    InputFormat.IMAGE: ImageFormatOption(pipeline_options=pipeline_options),
+                }
+            )
+        return _converter
 
 
 def _page_dims(dl_doc) -> dict:
@@ -190,7 +200,10 @@ def parse_bytes(data: bytes, *, filename: str) -> dict:
         # file.
         converter = _get_converter()
         try:
-            result = converter.convert(tmp_path)
+            # Serialize the actual conversion too, not just converter
+            # construction — see the comment on _converter_lock above.
+            with _converter_lock:
+                result = converter.convert(tmp_path)
         except Exception as exc:
             logger.warning("parse_bytes: convert failed file=%s err=%s", filename, exc)
             raise ParseError(str(exc)) from exc
@@ -199,14 +212,34 @@ def parse_bytes(data: bytes, *, filename: str) -> dict:
         dims = _page_dims(dl_doc)
         native_cell_counts = _native_cell_counts(result)
         pages = _raw_pages(dl_doc, dims, native_cell_counts)
+        if not pages:
+            # Docling's Word (.docx) backend emits no provenance and no pages
+            # at all: dl_doc.pages == {}, result.pages == [], and every item
+            # (SectionHeaderItem, TextItem, TableItem, ...) has prov == [].
+            # Without this, _raw_pages returns [] and the caller sees
+            # elements=[]/pages=[] for every DOCX, which fails the document
+            # ("No extractable text found") on the ingestion side. Synthesize
+            # a single page so `pages` is non-empty and `page_count` sensible;
+            # width/height are 0 because there is no real page geometry — that
+            # keeps normalize_bbox() returning None (0 width/height) rather
+            # than lying about a null bbox. PDF/image inputs always have real
+            # `dl_doc.pages`, so this branch never fires for them.
+            pages = [RawPage(page=1, width=0.0, height=0.0, source="native", ocr_confidence=None)]
 
         elements: List[RawElement] = []
         for item, _level in dl_doc.iterate_items():
-            prov = (getattr(item, "prov", None) or [None])[0]
-            if prov is None:
-                continue
-            page_no = int(prov.page_no)
-            _, page_height = dims.get(page_no, (0.0, 0.0))
+            provs = getattr(item, "prov", None) or []
+            prov = provs[0] if provs else None
+            if prov is not None:
+                page_no = int(prov.page_no)
+                _, page_height = dims.get(page_no, (0.0, 0.0))
+                bbox_abs = _bbox_top_left(prov, page_height)
+            else:
+                # No provenance -> no geometry, not "no element". Keep the
+                # item (see the comment above `pages` synthesis) with page=1
+                # and a null bbox instead of silently dropping it.
+                page_no = 1
+                bbox_abs = None
             text = _element_text(item, dl_doc)
             if not text.strip():
                 continue
@@ -214,7 +247,7 @@ def parse_bytes(data: bytes, *, filename: str) -> dict:
                 label=_label_of(item),
                 page=page_no,
                 text=text,
-                bbox_abs=_bbox_top_left(prov, page_height),
+                bbox_abs=bbox_abs,
                 level=_heading_level(item),
                 confidence=None,
             ))

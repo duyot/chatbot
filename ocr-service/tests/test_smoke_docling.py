@@ -70,3 +70,54 @@ def test_parse_bytes_bbox_is_not_vertically_mirrored():
             "the page; the top-of-page text should never normalize below y=0.5 "
             "unless the bottom-left/top-left flip is wrong"
         )
+
+
+@pytest.mark.slow
+def test_parse_bytes_extracts_elements_from_a_real_docx():
+    """FIX 1 (Critical): DOCX parsing was returning zero elements.
+
+    Docling's Word backend emits no provenance and no pages at all
+    (`dl_doc.pages == {}`, `result.pages == []`, every item's `prov == []`).
+    The old code skipped every item whose `prov` was falsy, so `elements`
+    and `pages` both came back empty for every DOCX — a mocked wire body
+    can't catch this because the bug is entirely in how parser.py drives
+    real Docling output for this input format. This test builds a real
+    .docx (via python-docx, a transitive Docling dependency for its Word
+    backend, so it is already in this image) with a heading, a paragraph,
+    and a table, and asserts elements actually come out — with `bbox is
+    None`, since DOCX carries no page geometry to normalize against.
+    """
+    import docx
+    from parser import parse_bytes
+
+    document = docx.Document()
+    document.add_heading("Quarterly Report", level=1)
+    document.add_paragraph("Revenue increased in the APAC region this quarter.")
+    table = document.add_table(rows=2, cols=2)
+    table.rows[0].cells[0].text = "Region"
+    table.rows[0].cells[1].text = "Revenue"
+    table.rows[1].cells[0].text = "APAC"
+    table.rows[1].cells[1].text = "1200"
+
+    import io
+    buf = io.BytesIO()
+    document.save(buf)
+
+    body = parse_bytes(buf.getvalue(), filename="report.docx")
+
+    assert body["elements"], "expected non-empty elements for a real DOCX"
+    assert body["pages"], "expected a synthesized page for a DOCX with no native pagination"
+
+    types = [el["type"] for el in body["elements"]]
+    assert "heading" in types, f"expected a heading element, got types={types}"
+    assert "table" in types, f"expected a table element, got types={types}"
+
+    heading_texts = [el["text"] for el in body["elements"] if el["type"] == "heading"]
+    assert any("Quarterly Report" in t for t in heading_texts)
+
+    table_texts = [el["text"] for el in body["elements"] if el["type"] == "table"]
+    assert any("APAC" in t for t in table_texts)
+
+    # DOCX carries no page geometry to normalize bboxes against.
+    for el in body["elements"]:
+        assert el["bbox"] is None, f"expected null bbox for DOCX element, got {el['bbox']!r}"

@@ -12,6 +12,7 @@ import io
 import logging
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from PIL import Image
 from rapidocr import RapidOCR
 
@@ -52,7 +53,6 @@ async def ocr(file: UploadFile = File(...)):
                 "bbox": [[float(p[0]), float(p[1])] for p in box],
                 "confidence": float(score),
             })
-            logger.info(f"box: {box}, text: {text}, score: {score}")
 
     logger.info("ocr: file=%s lines=%d", file.filename, len(lines))
     return {"lines": lines, "width": width, "height": height}
@@ -65,10 +65,19 @@ async def parse(file: UploadFile = File(...)):
     Returns typed elements in reading order with normalized bboxes — see
     wire.py for the contract. 422 means "this input is not convertible",
     which the caller surfaces to the user; anything else is a real 500.
+
+    `parse_bytes` is synchronous and CPU-bound for up to `parse_timeout_s`
+    (30 minutes) — Docling conversion, TableFormer, ONNX OCR. Running it
+    directly on the event loop would make `/health` (and every other
+    request) unanswerable for the whole duration. `run_in_threadpool` moves
+    it to Starlette's worker threadpool so the loop stays free; `parser.py`
+    additionally serializes actual conversions with a lock so concurrent
+    uploads queue explicitly instead of racing the (not thread-safe)
+    DocumentConverter or exhausting memory with parallel Docling runs.
     """
     raw = await file.read()
     try:
-        body = parse_bytes(raw, filename=file.filename or "document")
+        body = await run_in_threadpool(parse_bytes, raw, filename=file.filename or "document")
     except ParseError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     logger.info(

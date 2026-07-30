@@ -239,13 +239,20 @@ Added to `config.py`:
 | Setting | Default | Purpose |
 |---|---|---|
 | `docling_enabled` | `True` | Manual rollback switch to the legacy path |
-| `docling_ocr_backend` | `"rapidocr"` | Reuses the already-deployed OCR engine instead of pulling in EasyOCR |
-| `docling_table_mode` | `"accurate"` | TableFormer accuracy/speed trade-off |
 | `parse_timeout_s` | `1800` | Whole-document parse is minutes, not seconds |
 | `drop_element_types` | `["page_header", "page_footer"]` | Running-noise removal |
 | `parent_max_tokens` | `1500` | Matches current parent size |
 | `table_max_tokens` | `1500` | Threshold for row-group splitting |
 | `table_row_group_rows` | `10` | Rows per group when splitting |
+
+**Correction (post-review):** `docling_ocr_backend` and `docling_table_mode`
+were originally planned as backend-owned knobs but were never wired up —
+parsing happens in `ocr-service`, which never reads backend settings.
+`ocr-service/parser.py` hardcodes `RapidOcrOptions` and never sets
+`table_structure_options.mode`; Docling 2.116.0's default already happens to
+be `ACCURATE`. Both settings were removed from `config.py` rather than
+plumbed through, since making them real knobs is new feature work, not this
+fix.
 
 ## Error handling
 

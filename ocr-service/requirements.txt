@@ -5,6 +5,14 @@ uvicorn[standard]==0.30.6
 python-multipart==0.0.12
 pillow==12.3.0
 numpy==2.2.6
+# torch/torchvision are pulled in transitively via docling-ibm-models for
+# TableFormer. `--extra-index-url` above is supplementary, not authoritative:
+# pip still considers PyPI and picks a version by resolver rules, so a future
+# rebuild could silently land a CUDA wheel from PyPI (violating the
+# CPU-only/no-GPU constraint and adding ~2GB). Pin both to their exact
+# resolved `+cpu` versions, same as every other dependency here.
+torch==2.13.0+cpu
+torchvision==0.28.0+cpu
 docling==2.116.0
 # RapidOCR v3 unbundled its inference engine: neither `rapidocr` nor `docling`
 # pulls an ONNX runtime, so the engine must be pinned explicitly or

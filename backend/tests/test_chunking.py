@@ -149,13 +149,23 @@ def test_pack_prose_keeps_small_elements_in_one_group():
 
 
 def test_pack_prose_splits_when_budget_exceeded():
-    from app.services.chunking import pack_prose
+    from app.services.chunking import count_tokens, pack_prose, ELEMENT_JOINER
     els = [_el("paragraph", "word " * 200, id_=f"e{i}") for i in range(6)]
     groups = pack_prose(els, max_tokens=300)
     assert len(groups) > 1
     # every element lands in exactly one group, order preserved
     flat = [e.id for g in groups for e in g]
     assert flat == [e.id for e in els]
+    # Every group except possibly the last must actually fit the budget —
+    # parent size is load-bearing (parents are what reach the LLM). Without
+    # this, `current_tokens + tokens > max_tokens` at chunking.py:182 could
+    # regress to `current_tokens > max_tokens` (letting one more element in
+    # regardless of size, ~33% over budget here) and every assertion above
+    # would still pass.
+    assert all(
+        count_tokens(ELEMENT_JOINER.join(e.text for e in g)) <= 300
+        for g in groups[:-1]
+    )
 
 
 def test_pack_prose_never_drops_an_oversized_single_element():

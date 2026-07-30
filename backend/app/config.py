@@ -92,8 +92,6 @@ class Settings(BaseSettings):
     # typed elements. Set False to fall back to the legacy per-page-image
     # line-based path, which is kept for exactly one release.
     docling_enabled: bool = True
-    docling_ocr_backend: str = "rapidocr"
-    docling_table_mode: str = "accurate"
     # A 100-page scan at 5-10s/page is a 10-15 minute synchronous request.
     # ocr_timeout_s (60s) sizes the per-image legacy call and is far too small.
     parse_timeout_s: float = 1800.0
