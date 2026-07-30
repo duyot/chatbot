@@ -1,4 +1,4 @@
-.pdf-viewer {
+.page-image-viewer {
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -9,18 +9,23 @@
   padding: 4px 0;
 }
 
-.pdf-page {
+/* aspect-ratio comes from the manifest inline, so the page reserves its correct
+   shape before the image loads and scroll offsets stay stable. */
+.page-image {
   position: relative;
   flex-shrink: 0;
-  max-width: 100%;
+  width: 100%;
+  max-width: 900px;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
-.pdf-page canvas {
+.page-image img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  user-select: none;
 }

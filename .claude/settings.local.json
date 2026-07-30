@@ -63,7 +63,17 @@
       "Read(//tmp/**)",
       "mcp__plugin_ecc_chrome-devtools__navigate_page",
       "Bash(docker restart *)",
-      "Bash(pkill -f \"vite\")"
+      "Bash(pkill -f \"vite\")",
+      "Bash(python -c \"import PIL, fitz; print\\('pillow', PIL.__version__\\); print\\('fitz', fitz.__doc__\\)\")",
+      "Bash(python -c \"import PIL, fitz; print\\('pillow', PIL.__version__\\); print\\('fitz', fitz.pymupdf_version if hasattr\\(fitz,'pymupdf_version'\\) else fitz.VersionBind\\)\")",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\")",
+      "Bash(pip list *)",
+      "Bash(docker exec *)",
+      "Bash(docker inspect chatbot-backend-1 *)",
+      "Bash(docker run *)",
+      "PowerShell(docker run *)",
+      "PowerShell(git *)",
+      "WebFetch(domain:pypi.org)"
     ]
   }
 }

@@ -9,6 +9,10 @@ openai>=1.104.2,<2.0.0
 python-multipart==0.0.12
 langchain-text-splitters==0.3.11
 pymupdf==1.24.11
+# Pillow backs webp encoding for preview page images (PyMuPDF can only emit
+# png/jpg itself) and reads image headers for page dimensions. Same pin as
+# ocr-service/requirements.txt.
+pillow==10.4.0
 python-docx==1.1.2
 pgvector==0.3.2
 pydantic-settings>=2.10.1,<3.0.0

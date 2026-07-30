@@ -7,6 +7,7 @@ from ..config import settings
 from ..database import SessionLocal
 from ..models import Document
 from ..services.contextualizer import contextualize_with_stats
+from ..services.page_images import render_document_pages
 from ..services.ingestion import (
     parse_document,
     chunk_document,
@@ -32,6 +33,21 @@ def ingest_document(self, document_id: str):
             "[task:%s] parse complete file=%s pages=%d text_len=%d",
             self.request.id, doc.file_name, len(parsed.pages), len(parsed.text),
         )
+
+        # Preview page images. Deliberately non-fatal: previews are cosmetic and
+        # must never keep a document out of Q&A. Anything missed here is
+        # rendered lazily on first preview by GET /{id}/pages.
+        try:
+            images = render_document_pages(doc.file_path, document_id)
+            logger.info(
+                "[task:%s] page images rendered count=%d document_id=%s",
+                self.request.id, len(images), document_id,
+            )
+        except Exception:
+            logger.warning(
+                "[task:%s] page image render failed document_id=%s",
+                self.request.id, document_id, exc_info=True,
+            )
 
         parents, children_per_parent = chunk_document(parsed)
         if not parents:

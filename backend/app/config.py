@@ -86,6 +86,22 @@ class Settings(BaseSettings):
     # Render DPI for rasterizing scanned PDF pages before OCR.
     ocr_dpi: int = 200
 
+    # --- Page images (document preview). Each PDF page is rasterized once into
+    # uploads/pages/{document_id}/{page:04d}.{ext} and served to the UI as a
+    # plain image, so the browser never parses the PDF itself. See
+    # app/services/page_images.py.
+    page_images_enabled: bool = True
+    # 150 DPI is ~1240x1754 for A4 — sharper than the pdf.js viewer this
+    # replaced (scale 1.5 ~= 108 DPI) at none of the client-side CPU cost.
+    page_image_dpi: int = 150
+    # "webp" (smallest at equal legibility), "jpg", or "png" (lossless, 3-5x
+    # larger). Changing this orphans previously rendered images: the manifest
+    # only lists files matching the current format, so previews re-render on
+    # next request. Delete uploads/pages/ if you want the old ones gone.
+    page_image_format: str = "webp"
+    # Lossy quality for webp/jpg; ignored for png.
+    page_image_quality: int = 80
+
     # Metadata-aware rerank boost (Phase 4). Defaults are no-ops so retrieval
     # behaviour is unchanged until tuned via the eval harness (see CLAUDE.md).
     # final_score = rerank_score + native_boost (if source==native)
