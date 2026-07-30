@@ -14,6 +14,7 @@ from ..services.ingestion import (
     store_chunks,
     build_embedding_input,
 )
+from ..services.ocr_client import ParseTimeout
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +79,19 @@ def ingest_document(self, document_id: str):
         logger.info("[task:%s] ingest_document completed document_id=%s", self.request.id, document_id)
     except Retry:
         raise
+    except ParseTimeout as exc:
+        # Deliberately not retried: a parse that exceeded parse_timeout_s once
+        # will exceed it again, and each attempt costs another full timeout of
+        # worker time. Surface it and let the user retry explicitly.
+        logger.error(
+            "[task:%s] parse timed out, not retrying document_id=%s",
+            self.request.id, document_id,
+        )
+        doc = db.query(Document).filter(Document.id == document_id).first()
+        if doc:
+            doc.status = "failed"
+            doc.error_msg = str(exc)[:500]
+            db.commit()
     except Exception as exc:
         logger.exception("[task:%s] ingest_document failed document_id=%s", self.request.id, document_id)
         doc = db.query(Document).filter(Document.id == document_id).first()

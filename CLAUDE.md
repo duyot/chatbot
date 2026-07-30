@@ -99,6 +99,80 @@ python -m evals.run_eval --compare <baseline_name> <name>
 
 Golden set: `backend/evals/golden_set.yaml`. The `@pytest.mark.eval` marker excludes the golden-set test from default `pytest` runs (`addopts = -m "not eval"` in `backend/pytest.ini`).
 
+### Structure-aware parsing and layout-aware chunking
+
+`ocr-service` exposes **`POST /parse`**, which takes a whole document (PDF,
+DOCX, or image) and returns typed elements in reading order — `heading`,
+`paragraph`, `list_item`, `table`, `caption`, `figure`, `page_header`,
+`page_footer` — each with a bbox normalized to `[0,1]` of its page. Tables come
+back as **markdown**. The contract lives in `ocr-service/wire.py`
+(`schema_version: 1`); `ocr-service/parser.py` is the only module that imports
+Docling. `POST /ocr` is the legacy per-page-image endpoint, kept as the
+rollback path.
+
+The worker no longer parses files: `ingestion.parse_document()` is one call to
+`/parse`. It still builds `PageContent` per page, because the contextualizer
+needs `parsed.text` and per-page text.
+
+`services/chunking.py` chunks the elements. A heading stack produces
+`heading_path` (`3. Financials > 3.2 Revenue`); prose packs into 1500-token
+parents; **a table is one atomic parent** (row groups with the header repeated
+only when it exceeds `table_max_tokens`). Two invariants: **no parent crosses a
+heading boundary**, and **no chunk splits a table mid-row**.
+
+`heading_path` is prefixed into `content` itself — not stored in its own
+column. That is deliberate: it makes the header embed and BM25-index
+automatically via the `search_text` generated column, so
+`build_embedding_input()` and `reranker._rerank_text()` need no change. **Do not
+"improve" this by moving it into its own field** without re-reading the lockstep
+warning in the contextual-retrieval section above.
+
+Chunk bboxes are **per-element and coarse**: a chunk carries the rects of the
+elements it overlaps, so a table chunk highlights the whole table region rather
+than a matched row.
+
+Parse failures **fail the document** (`status="failed"`) rather than degrading
+to structure-less chunks — mixing chunk qualities in one index is
+undiagnosable. `ParseTimeout` is deliberately **not retried**.
+
+Set `docling_enabled=False` to fall back to the legacy line-based path. That
+fallback, `_chunk_document_legacy`, `_parse_pdf`/`_parse_docx`/`_parse_image`,
+`_quad_to_norm_rect`, and `POST /ocr` are kept for **one release** and should
+then be deleted.
+
+`ocr-service` requires an explicit `onnxruntime` pin
+(`ocr-service/requirements.txt`, currently `1.23.2`, CPU build). RapidOCR v3
+unbundled its inference engine, so neither `rapidocr` nor `docling` pulls one
+in transitively — without this pin, the Dockerfile's `RapidOCR()` warm-up has
+no engine to run on and fails outright. This has already broken once; check
+it explicitly on any dependency refresh.
+
+**Before reingesting on this branch**, follow this order — skipping or
+reordering these steps produces failures that look like a total outage
+rather than what they are:
+
+1. **Rebuild the `ocr` image from this branch.** The currently running image
+   has no `/parse` route, so every parse 404s → `OCRError` → the document
+   fails. That's fail-loud working as designed, but it presents as
+   everything being broken.
+2. **Run the slow suite inside the freshly built image, offline, before
+   deploying it:**
+   ```
+   docker run --rm --network none <image> python -m pytest -m slow
+   ```
+   `pytest.ini`'s `addopts = -m "not slow"` excludes this suite from every
+   default run, and there is no CI in this repo — so a real Docling
+   inference bug (e.g. a silently mirrored bbox, or DOCX parsing coming
+   back empty) will not be caught by anything else before it reaches
+   production. This is the last point at which it can be caught.
+3. **Apply migration `0012`** (adds `document_chunks.element_type`) —
+   verified up and down against `chatbot_test`, but **deliberately not
+   applied to production**; `chatbot` is still at `0011`. This is a manual
+   deployment step.
+4. **Reingest** (`python -m scripts.reingest_all`) only after 1-3 are done.
+
+Design: `docs/superpowers/specs/2026-07-29-ocr-structure-extraction-design.md`
+
 ### Reingestion after schema changes
 
 After a chunk-schema migration (e.g. parent-child), run `python -m scripts.reingest_all` (or `--doc-id <uuid>` for a single document) to rebuild chunks from source documents in `uploads/`.

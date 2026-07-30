@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..config import settings
 from ..models import DocumentChunk, DocumentParentChunk
-from .ocr_client import ocr_image_lines, OCRError
+from .ocr_client import ocr_image_lines, parse_document_remote, OCRError
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +43,29 @@ class PageContent:
 
 
 @dataclass
+class Element:
+    """One typed document element from ocr-service /parse.
+
+    `bbox` is [x0, y0, x1, y1] normalized to [0,1] of its page, or None when the
+    service could not determine one. `type` is one of the eight wire types; see
+    ocr-service/wire.py. Reading order is list order — never sort these.
+    """
+    id: str
+    page: int
+    type: str
+    text: str
+    bbox: Optional[List[float]] = None
+    level: Optional[int] = None
+    confidence: Optional[float] = None
+
+
+@dataclass
 class ParsedDocument:
     pages: List[PageContent]
     metadata: dict
+    # Typed elements in reading order. Empty on the legacy (docling_enabled=False)
+    # path, which is what makes the legacy chunker's fallback detectable.
+    elements: List[Element] = field(default_factory=list)
 
     @property
     def text(self) -> str:
@@ -71,6 +91,9 @@ class ChildChunk:
     # contextualization is disabled or failed; the chunk then embeds on content
     # alone, exactly as before this feature existed.
     context: Optional[str] = None
+    # "table" for chunks derived from a table element, "text" otherwise. None on
+    # the legacy path. Lets the eval harness score table questions separately.
+    element_type: Optional[str] = None
 
 
 _IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
@@ -222,14 +245,88 @@ def _parse_image(file_path: str, file_name: str) -> ParsedDocument:
     )
 
 
-def parse_document(file_path: str, file_name: str) -> ParsedDocument:
-    """Parse a source file into per-page text + metadata.
+def _elements_from_wire(body: dict) -> List[Element]:
+    return [
+        Element(
+            id=el.get("id") or f"e{i}",
+            page=int(el.get("page") or 1),
+            type=el.get("type") or "paragraph",
+            text=el.get("text") or "",
+            bbox=el.get("bbox"),
+            level=el.get("level"),
+            confidence=el.get("confidence"),
+        )
+        for i, el in enumerate(body.get("elements") or [])
+    ]
 
-    PDFs are hybrid (native text layer, OCR fallback per page); images are
-    always OCR'd; DOCX is treated as a single native page.
+
+def _pages_from_wire(body: dict, elements: List[Element]) -> List[PageContent]:
+    """Rebuild PageContent from the wire body.
+
+    Chunking works off `elements`, but the contextualizer still needs
+    `parsed.text` and per-page text, so every page gets its elements joined in
+    reading order. `lines` stays empty — bbox attribution is per-element now.
+    """
+    text_by_page: dict = {}
+    for el in elements:
+        text_by_page.setdefault(el.page, []).append(el.text)
+
+    pages: List[PageContent] = []
+    for p in body.get("pages") or []:
+        page_no = int(p.get("page") or 1)
+        pages.append(PageContent(
+            page=page_no,
+            text="\n".join(text_by_page.get(page_no, [])),
+            source=p.get("source") or "ocr",
+            ocr_confidence=p.get("ocr_confidence"),
+            width=p.get("width"),
+            height=p.get("height"),
+        ))
+
+    # An element whose page number isn't covered by any emitted PageContent
+    # would otherwise vanish from parsed.text/contextualization while still
+    # being visible in `elements` — surface it rather than losing it silently.
+    covered_pages = {p.page for p in pages}
+    orphaned_pages = sorted(set(text_by_page) - covered_pages)
+    if orphaned_pages:
+        orphaned_elements = sum(len(text_by_page[pg]) for pg in orphaned_pages)
+        logger.warning(
+            "_pages_from_wire: %d element(s) reference page(s) %s absent from "
+            "the wire body's pages list; their text is dropped from parsed.text",
+            orphaned_elements, orphaned_pages,
+        )
+    return pages
+
+
+def _parse_remote(file_path: str, file_name: str) -> ParsedDocument:
+    """Structure-aware parse via ocr-service /parse. Handles PDF, DOCX and
+    images uniformly — Docling detects the format itself.
+
+    Errors propagate as OCRError/ParseTimeout: a failed parse must fail the
+    document rather than silently degrade to structure-less chunks.
+    """
+    with open(file_path, "rb") as f:
+        data = f.read()
+    body = parse_document_remote(data, filename=file_name)
+    elements = _elements_from_wire(body)
+    pages = _pages_from_wire(body, elements)
+    metadata = dict(body.get("metadata") or {})
+    metadata["engine"] = "docling"
+    return ParsedDocument(pages=pages, metadata=metadata, elements=elements)
+
+
+def parse_document(file_path: str, file_name: str) -> ParsedDocument:
+    """Parse a source file into typed elements + per-page text + metadata.
+
+    With docling_enabled (the default) this is a single call to ocr-service
+    /parse, which handles PDF, DOCX and images. The legacy per-format,
+    line-based path is kept behind the flag for one release as the documented
+    rollback; see the design spec.
     """
     ext = os.path.splitext(file_name)[1].lower()
-    if ext == ".pdf":
+    if settings.docling_enabled:
+        parsed = _parse_remote(file_path, file_name)
+    elif ext == ".pdf":
         parsed = _parse_pdf(file_path, file_name)
     elif ext == ".docx":
         parsed = _parse_docx(file_path)
@@ -240,8 +337,8 @@ def parse_document(file_path: str, file_name: str) -> ParsedDocument:
     parsed.metadata["mime_type"] = _MIME_BY_EXT.get(ext)
     total_len = sum(len(p.text) for p in parsed.pages)
     logger.info(
-        "parse_document: file=%s type=%s pages=%d ocr_pages=%s text_len=%d",
-        file_name, ext or "?", len(parsed.pages),
+        "parse_document: file=%s type=%s pages=%d elements=%d ocr_pages=%s text_len=%d",
+        file_name, ext or "?", len(parsed.pages), len(parsed.elements),
         parsed.metadata.get("ocr_pages"), total_len,
     )
     return parsed
@@ -307,7 +404,7 @@ def _find_from(haystack: str, needle: str, cursor: int) -> int:
     return idx if idx >= 0 else haystack.find(needle)
 
 
-def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
+def _chunk_document_legacy(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
     """Chunk page-by-page so every parent maps to exactly one page, giving exact
     page attribution. Children inherit their parent's page/source/confidence and,
     when the page has line geometry, the normalized bboxes of the lines they
@@ -355,6 +452,19 @@ def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List
         len(parsed.pages), len(parents), n_children,
     )
     return parents, children_per_parent
+
+
+def chunk_document(parsed: ParsedDocument) -> Tuple[List[ParentChunk], List[List[ChildChunk]]]:
+    """Chunk a parsed document.
+
+    Uses layout-aware chunking when the parser returned typed elements; falls
+    back to the legacy per-page line-based chunker when it did not (the
+    docling_enabled=False rollback path).
+    """
+    if parsed.elements:
+        from .chunking import chunk_elements  # local: chunking imports this module
+        return chunk_elements(parsed.elements)
+    return _chunk_document_legacy(parsed)
 
 
 # --- Embeddings -------------------------------------------------------------
@@ -454,6 +564,7 @@ def store_chunks(
                 ocr_confidence=child.ocr_confidence,
                 bbox=child.bbox or None,
                 context=child.context,
+                element_type=child.element_type,
             ))
             global_idx += 1
     db.bulk_save_objects(child_rows)

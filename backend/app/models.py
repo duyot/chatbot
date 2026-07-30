@@ -79,6 +79,10 @@ class DocumentChunk(Base):
     # page, covering the source line(s) this chunk was derived from. Null/[] when
     # unmappable (e.g. DOCX, or no layout match).
     bbox = Column(JSONB, nullable=True)
+    # "table" for chunks derived from a table element, "text" otherwise. NULL on
+    # pre-0012 rows. Lets the eval harness score table questions separately and
+    # lets the UI render table chunks as markdown.
+    element_type = Column(String, nullable=True)
 
     __table_args__ = (
         Index("ix_document_chunks_doc_page", "document_id", "page"),
