@@ -1,7 +1,11 @@
 # Structure-Aware OCR and Layout-Aware Chunking
 
 **Date:** 2026-07-29
-**Status:** Approved, not implemented
+**Status:** Implemented (Tasks 1-10, plus an added Task 3b). **Task 11 (the eval
+gate below) was deliberately skipped by the human** — no golden-set questions
+were added, no baseline/post-change comparison was run, and the "Ship
+criterion" was never measured. Treat this as shipped on tests-passing plus
+human review, not on a passed eval.
 **Supersedes parsing behaviour in:** `2026-04-20-file-upload-rag-ingestion-design.md`
 **Builds on:** `2026-07-28-contextual-retrieval-design.md`
 
@@ -51,7 +55,9 @@ table structure the highest-value missing signal.
   than TableFormer on borderless and merged-cell tables, and the element-assembly
   layer would be hand-written. Also blocked by a dependency conflict:
   `ocr-service` pins `numpy==1.26.4`, `rapid-layout` 1.2.1 requires `numpy>=2.0.0`.
-  **This is the fallback if the Docling image size proves unacceptable.**
+  **Settled, not needed:** the Task 1 spike measured the Docling image at
+  2.54 GB, under the 4 GB stop-and-ask threshold (see "Spike findings" below),
+  so this fallback was never triggered.
 - **Table detection with no layout model.** Cheapest, but without a `title` class
   there is no heading hierarchy, which is half the chunking win.
 - **VLM OCR.** Requires a GPU.
@@ -88,15 +94,16 @@ Two things deliberately do **not** move:
 ### Wire format
 
 The service returns its own versioned schema, **not** a serialized
-`DoclingDocument`. Docling releases fast (2.115.0 as of 2026-04); its internal
-model shape must not become the backend's contract.
+`DoclingDocument`. Docling releases fast (2.116.0 as pinned in
+`ocr-service/requirements.txt`); its internal model shape must not become the
+backend's contract.
 
 ```json
 {
   "schema_version": 1,
   "metadata": {
     "page_count": 12, "ocr_pages": 12, "native_pages": 0,
-    "engine": "docling/2.115.0", "mime_type": "application/pdf"
+    "engine": "docling/2.116.0", "mime_type": "application/pdf"
   },
   "pages": [
     {"page": 1, "width": 612.0, "height": 792.0,
@@ -112,6 +119,12 @@ model shape must not become the backend's contract.
   ]
 }
 ```
+
+Note: the `engine` value above is illustrative of the intended format. As
+implemented, `backend/app/services/ingestion.py::_parse_remote` sets
+`metadata["engine"] = "docling"` — a bare string with no version suffix; the
+wire body from `ocr-service` itself carries no `engine` key at all. If a
+versioned engine string is wanted, that is still open work.
 
 Contract rules:
 
@@ -306,6 +319,12 @@ Mocked-HTTP cases for each row of the error-handling table.
 
 ### Eval gate — the acceptance criterion
 
+**Status: skipped, not passed.** The human deliberately chose not to run this
+gate before shipping Tasks 1-10. Nothing below was executed — no golden-set
+questions were added, no `pre-docling` baseline was captured, and no
+`--compare` was run. Do not read the presence of this section as evidence the
+ship criterion was met; it was not measured at all.
+
 Tests prove the code does what it says; the eval proves it was worth doing.
 
 The current `golden_set.yaml` predates tables having structure, so it cannot
@@ -358,6 +377,27 @@ All values measured, not estimated.
 **Decision: proceed with Docling.** The RapidLayout + RapidTable fallback is
 not needed.
 
+**This plan was written against `docling==2.115.0`; the pin that actually
+landed is `docling==2.116.0`, which required extra wiring the earlier
+sections of this spec do not mention.** Anyone editing `ocr-service/parser.py`
+needs these, and they are load-bearing, not incidental:
+
+- An explicit `pipeline_options.artifacts_path` pointed at the
+  `docling-tools`-baked weights — `DocumentConverter()` with no
+  `artifacts_path` always tries HuggingFace Hub first, breaking the offline
+  container.
+- Explicit `RapidOcrOptions(det_model_path=..., cls_model_path=...,
+  rec_model_path=...)` naming the bundled RapidOCR model files directly,
+  because Docling's `RapidOcrModel` otherwise resolves *every* model
+  (including RapidOCR's, which ships inside the `rapidocr` package, not under
+  `artifacts_path`) relative to the same `artifacts_path`.
+- `pipeline_options.generate_parsed_pages = True` — without it,
+  `result.pages[*].cells` is always empty post-assembly and every page is
+  misreported as OCR'd even when it has a native text layer.
+- `BoundingBox.to_top_left_origin(page_height)` in place of a manual y-flip —
+  Docling's provenance bbox carries its own `coord_origin`, so flip only via
+  the method Docling ships rather than assuming bottom-left unconditionally.
+
 ### How the size was kept to 2.54 GB
 
 torch is unavoidable — it arrives transitively via `docling-ibm-models` for
@@ -407,6 +447,13 @@ unreadable and the container will silently start downloading at runtime.
   the current preview overlay.
 - **Cross-page table stitching verification.** Docling claims to handle it;
   measure before adding logic.
+- **Delete the legacy path.** After one release: `_parse_pdf`, `_parse_docx`,
+  `_parse_image`, `_chunk_document_legacy`, `_quad_to_norm_rect`, `LayoutLine`,
+  `ocr-service POST /ocr`, `ocr_image`, `ocr_image_lines`, and the
+  `docling_enabled` flag itself.
+- **Render table chunks as markdown in the UI.** `element_type` is populated
+  and consumed by the eval harness; the frontend still renders every citation
+  as plain text.
 
 ## References
 
