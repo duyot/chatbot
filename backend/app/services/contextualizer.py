@@ -23,12 +23,14 @@ ocr_client.py already degrade.
 from __future__ import annotations
 
 import logging
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional, Tuple
 
 import tiktoken
 
 from ..config import settings
+from ..observability import emit, submit_with_trace, timed, trunc
 from .ingestion import ChildChunk, ParsedDocument, _openai_client
 
 logger = logging.getLogger(__name__)
@@ -75,24 +77,105 @@ def count_tokens(text: str) -> int:
     return len(tiktoken.get_encoding("cl100k_base").encode(text))
 
 
-def _call_model(blocks: List[dict], max_tokens: int) -> str:
+class _UsageAccumulator:
+    """Per-document token totals across the contextualizer's fan-out.
+
+    Written from pool threads, so every mutation takes the lock. Reset at the
+    start of each document — this is a running total for one call to
+    contextualize_with_stats, not a process lifetime counter.
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._totals: dict = {}
+        self._calls = 0
+
+    def reset(self) -> None:
+        with self._lock:
+            self._totals = {}
+            self._calls = 0
+
+    def add(self, usage: dict) -> None:
+        if not usage:
+            return
+        with self._lock:
+            self._calls += 1
+            for key, value in usage.items():
+                if isinstance(value, (int, float)):
+                    self._totals[key] = self._totals.get(key, 0) + value
+
+    def snapshot(self) -> dict:
+        with self._lock:
+            return {"calls_with_usage": self._calls, **self._totals}
+
+
+_USAGE = _UsageAccumulator()
+
+
+def _usage_fields(usage) -> dict:
+    """Flatten an OpenAI-shaped usage object, keeping the cache counters.
+
+    A cache_control passthrough failure produces correct output at the wrong
+    cost (roughly 10x) rather than an error, so these counters are the only
+    signal that catches it happening in production: cache_creation should be
+    paid once per document and cache_read on every subsequent chunk. Never
+    crash on a missing or oddly-shaped field — this is observability, not
+    correctness.
+    """
+    if usage is None:
+        return {}
+    details = getattr(usage, "prompt_tokens_details", None)
+    fields = {
+        "prompt_tokens": getattr(usage, "prompt_tokens", None),
+        "completion_tokens": getattr(usage, "completion_tokens", None),
+        "total_tokens": getattr(usage, "total_tokens", None),
+        # OpenRouter surfaces Anthropic's cache accounting under either name
+        # depending on the upstream provider shape.
+        "cached_tokens": getattr(details, "cached_tokens", None) if details else None,
+        "cache_creation_input_tokens": getattr(
+            usage, "cache_creation_input_tokens", None
+        ),
+        "cache_read_input_tokens": getattr(usage, "cache_read_input_tokens", None),
+    }
+    return {k: v for k, v in fields.items() if v is not None}
+
+
+def _call_model(blocks: List[dict], max_tokens: int, stage: str = "situate") -> str:
     """Single chat completion through OpenRouter. Raises on failure — callers
     decide whether that is fatal."""
     client = _openai_client()
-    response = client.chat.completions.create(
+    with timed() as elapsed:
+        response = client.chat.completions.create(
+            model=settings.contextualizer_model,
+            max_tokens=max_tokens,
+            temperature=0.0,
+            messages=[{"role": "user", "content": blocks}],
+        )
+    usage = _usage_fields(getattr(response, "usage", None))
+    text = (response.choices[0].message.content or "").strip()
+    emit(
+        "ctx.call",
+        stage=stage,
         model=settings.contextualizer_model,
+        cache_ttl=settings.contextualizer_cache_ttl,
         max_tokens=max_tokens,
-        temperature=0.0,
-        messages=[{"role": "user", "content": blocks}],
+        ms=elapsed(),
+        usage=usage or None,
+        # One event per chunk would be hundreds of lines per document at
+        # summary level; the aggregate in ctx.summary covers that case.
+        blocks=[
+            {
+                "chars": len(b.get("text") or ""),
+                "cached": "cache_control" in b,
+                "text": trunc(b.get("text") or ""),
+            }
+            for b in blocks
+        ],
+        context=trunc(text),
+        only_full=True,
     )
-    # A cache_control passthrough failure produces correct output at the
-    # wrong cost (roughly 10x) rather than an error, so this is the only
-    # signal that catches it happening in production. Never crash on a
-    # missing/odd usage field — this is observability, not correctness.
-    usage = getattr(response, "usage", None)
-    if usage is not None:
-        logger.info("_call_model: usage=%s", usage)
-    return (response.choices[0].message.content or "").strip()
+    _USAGE.add(usage)
+    return text
 
 
 def _situate(doc_context: str, chunk_content: str) -> Optional[str]:
@@ -134,7 +217,7 @@ def _summarize_document(text: str) -> str:
         "text": SUMMARY_PROMPT.format(doc_content=text[:_SUMMARY_INPUT_CHAR_CAP]),
     }]
     try:
-        return _call_model(blocks, max_tokens=512)
+        return _call_model(blocks, max_tokens=512, stage="summarize")
     except Exception as exc:  # noqa: BLE001
         logger.warning(
             "_summarize_document: failed, falling back to page-only context (%s)", exc
@@ -194,6 +277,18 @@ def contextualize_with_stats(
         "contextualize: doc_tokens=%d tier=%s children=%d workers=%d",
         doc_tokens, tier, len(flat), settings.contextualizer_max_workers,
     )
+    _USAGE.reset()
+    emit(
+        "ctx.tier",
+        tier=tier,
+        doc_tokens=doc_tokens,
+        full_doc_token_limit=settings.contextualizer_full_doc_token_limit,
+        children=len(flat),
+        workers=settings.contextualizer_max_workers,
+        model=settings.contextualizer_model,
+        cache_ttl=settings.contextualizer_cache_ttl,
+        summary=trunc(summary) if summary else None,
+    )
 
     results: List[Optional[str]] = [None] * len(flat)
 
@@ -201,17 +296,32 @@ def contextualize_with_stats(
     # collapse this into the pool: concurrent calls cannot read a cache entry
     # that is still being written, so all of them would pay full price.
     _, _, first_child = flat[0]
-    results[0] = _situate(doc_context_for(first_child), first_child.content)
+    with timed() as first_ms:
+        results[0] = _situate(doc_context_for(first_child), first_child.content)
+    emit(
+        "ctx.cache_warm",
+        ms=first_ms(),
+        ok=results[0] is not None,
+        usage=_USAGE.snapshot() or None,
+    )
 
-    if len(flat) > 1:
-        with ThreadPoolExecutor(max_workers=settings.contextualizer_max_workers) as pool:
-            futures = {
-                pool.submit(_situate, doc_context_for(child), child.content): idx
-                for idx, (_, _, child) in enumerate(flat)
-                if idx > 0
-            }
-            for future, idx in futures.items():
-                results[idx] = future.result()
+    with timed() as fanout_ms:
+        if len(flat) > 1:
+            with ThreadPoolExecutor(
+                max_workers=settings.contextualizer_max_workers
+            ) as pool:
+                futures = {
+                    # submit_with_trace, not pool.submit: ContextVars do not
+                    # cross into worker threads, so every per-chunk event from
+                    # the fan-out would otherwise lose its trace id.
+                    submit_with_trace(
+                        pool, _situate, doc_context_for(child), child.content
+                    ): idx
+                    for idx, (_, _, child) in enumerate(flat)
+                    if idx > 0
+                }
+                for future, idx in futures.items():
+                    results[idx] = future.result()
 
     contexts: List[List[Optional[str]]] = [
         [None] * len(children) for children in children_per_parent
@@ -226,6 +336,18 @@ def contextualize_with_stats(
             len(flat) - succeeded, len(flat),
         )
     logger.info("contextualize: done tier=%s ok=%d/%d", tier, succeeded, len(flat))
+    emit(
+        "ctx.summary",
+        tier=tier,
+        ok=succeeded,
+        failed=len(flat) - succeeded,
+        total=len(flat),
+        fanout_ms=fanout_ms(),
+        # cache_read_input_tokens should dominate cache_creation_input_tokens by
+        # roughly the chunk count. If creation scales with the number of calls,
+        # the prompt cache is not being hit and this document cost ~10x.
+        usage=_USAGE.snapshot() or None,
+    )
 
     return contexts, {
         "tier": tier,

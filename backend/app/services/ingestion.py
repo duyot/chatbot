@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..config import settings
 from ..models import DocumentChunk, DocumentParentChunk
+from ..observability import emit, timed, trunc
 from .ocr_client import ocr_image_lines, parse_document_remote, OCRError
 
 logger = logging.getLogger(__name__)
@@ -324,6 +325,49 @@ def parse_document(file_path: str, file_name: str) -> ParsedDocument:
     rollback; see the design spec.
     """
     ext = os.path.splitext(file_name)[1].lower()
+    with timed() as elapsed:
+        parsed = _parse_dispatch(file_path, file_name, ext)
+    parsed.metadata["mime_type"] = _MIME_BY_EXT.get(ext)
+    total_len = sum(len(p.text) for p in parsed.pages)
+    logger.info(
+        "parse_document: file=%s type=%s pages=%d elements=%d ocr_pages=%s text_len=%d",
+        file_name, ext or "?", len(parsed.pages), len(parsed.elements),
+        parsed.metadata.get("ocr_pages"), total_len,
+    )
+    element_types: dict = {}
+    for el in parsed.elements:
+        element_types[el.type] = element_types.get(el.type, 0) + 1
+    emit(
+        "parse.result",
+        file=file_name,
+        ext=ext or None,
+        engine=parsed.metadata.get("engine", "legacy"),
+        ms=elapsed(),
+        pages=len(parsed.pages),
+        elements=len(parsed.elements),
+        text_len=total_len,
+        # A histogram makes "the parser stopped emitting tables" a one-line
+        # diff between two ingests rather than a manual read of the elements.
+        element_types=element_types,
+        metadata=parsed.metadata,
+        page_detail=[
+            {
+                "page": p.page,
+                "source": p.source,
+                "chars": len(p.text),
+                "ocr_confidence": p.ocr_confidence,
+                "width": p.width,
+                "height": p.height,
+            }
+            for p in parsed.pages
+        ],
+    )
+    return parsed
+
+
+def _parse_dispatch(file_path: str, file_name: str, ext: str) -> ParsedDocument:
+    """Format/flag routing for parse_document, split out so the tracing wrapper
+    has a single call to time."""
     if settings.docling_enabled:
         parsed = _parse_remote(file_path, file_name)
     elif ext == ".pdf":
@@ -334,13 +378,6 @@ def parse_document(file_path: str, file_name: str) -> ParsedDocument:
         parsed = _parse_image(file_path, file_name)
     else:
         parsed = ParsedDocument(pages=[], metadata={"page_count": 0})
-    parsed.metadata["mime_type"] = _MIME_BY_EXT.get(ext)
-    total_len = sum(len(p.text) for p in parsed.pages)
-    logger.info(
-        "parse_document: file=%s type=%s pages=%d elements=%d ocr_pages=%s text_len=%d",
-        file_name, ext or "?", len(parsed.pages), len(parsed.elements),
-        parsed.metadata.get("ocr_pages"), total_len,
-    )
     return parsed
 
 
@@ -513,13 +550,37 @@ def embed_chunks(chunks: List[str]) -> List[List[float]]:
         batch = chunks[i:i + batch_size]
         batch_num = i // batch_size + 1
         logger.debug("embed_chunks: batch=%d/%d size=%d", batch_num, total_batches, len(batch))
-        response = client.embeddings.create(
-            model=settings.openai_embedding_model,
-            input=batch,
-            dimensions=settings.embedding_dim,
-        )
+        with timed() as elapsed:
+            response = client.embeddings.create(
+                model=settings.openai_embedding_model,
+                input=batch,
+                dimensions=settings.embedding_dim,
+            )
         embeddings.extend(item.embedding for item in response.data)
+        emit(
+            "embed.batch",
+            batch=batch_num,
+            total_batches=total_batches,
+            size=len(batch),
+            model=settings.openai_embedding_model,
+            dims=settings.embedding_dim,
+            ms=elapsed(),
+            chars=sum(len(t) for t in batch),
+            usage=getattr(getattr(response, "usage", None), "total_tokens", None),
+            # The embedding input is context + content (build_embedding_input);
+            # seeing it is how you confirm contextualization actually landed.
+            inputs=[trunc(t) for t in batch],
+            only_full=True,
+        )
     logger.info("embed_chunks: done embeddings=%d", len(embeddings))
+    emit(
+        "embed.done",
+        model=settings.openai_embedding_model,
+        dims=settings.embedding_dim,
+        n_inputs=len(chunks),
+        n_embeddings=len(embeddings),
+        total_chars=sum(len(c) for c in chunks),
+    )
     return embeddings
 
 
@@ -572,4 +633,28 @@ def store_chunks(
     logger.info(
         "store_chunks: parents=%d children=%d document_id=%s",
         len(parent_rows), len(child_rows), document_id,
+    )
+    emit(
+        "store.chunks",
+        document_id=str(document_id),
+        n_parents=len(parent_rows),
+        n_children=len(child_rows),
+        n_contextualized=sum(1 for c in child_rows if c.context),
+        # Keyed by chunk_index, not chunk_id: bulk_save_objects() does not
+        # populate primary keys back onto the instances, and (document_id,
+        # chunk_index) identifies a chunk just as well for joining a later
+        # retrieval trace back to this ingest.
+        children=[
+            {
+                "chunk_index": c.chunk_index,
+                "parent_id": str(c.parent_id),
+                "page": c.page,
+                "source": c.source,
+                "element_type": c.element_type,
+                "chars": len(c.content or ""),
+                "has_context": bool(c.context),
+            }
+            for c in child_rows
+        ],
+        only_full=True,
     )

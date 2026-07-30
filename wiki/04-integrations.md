@@ -39,4 +39,5 @@ All external calls in this system funnel through **OpenRouter** (chat, embedding
 
 ## Not integrated (for context)
 - `OPENAI_API_KEY` (`.env.example`) is present for forward-compatibility only — no code path currently calls OpenAI directly; all chat/embedding/rerank traffic goes through OpenRouter.
-- No external logging/monitoring/APM service is integrated — logs go to rotating local files (`/app/logs/backend.log`, `/app/logs/worker.log`) and stdout only.
+- No external logging/monitoring/APM service is integrated — logs go to rotating local files (`/app/logs/backend.log`, `/app/logs/worker.log`, `/app/logs/ai_trace.jsonl`) and stdout only.
+- **AI trace log** (`backend/app/observability.py`): a third sink, `/app/logs/ai_trace.jsonl`, holds one JSON object per event for the ingestion + retrieval + LLM path — retrieved chunk ids/scores, reranker request and response, prompts sent to OpenRouter, token usage, per-stage latency. Every line carries a `trace_id` that also prefixes the corresponding `backend.log` / `worker.log` lines, so one chat request or ingest task can be reconstructed across all three files. Verbosity is `settings.ai_trace_level` (`off` / `summary` / `full`); at `full` the file contains complete document text, so treat it as sensitive. Rotating, 10 MB × 5, same `logs/` bind mount as the others.

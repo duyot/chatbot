@@ -218,6 +218,6 @@ sequenceDiagram
 
 1. `docker-compose.yml` defines explicit `depends_on: condition: service_healthy` ordering: `db`/`redis`/`ocr` must pass their healthchecks before `backend`/`worker` start; `backend` must be healthy before `frontend` starts.
 2. `backend/Dockerfile:10` — container command is `alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000`, i.e. migrations run on every backend container start, before the API accepts traffic.
-3. `backend/app/main.py:13-21` configures logging (console + rotating file handler at `/app/logs/backend.log`) at import time, before routers are registered.
-4. `backend/app/workers/celery_app.py:22-27` registers an `after_setup_logger` signal handler (rotating file handler at `/app/logs/worker.log`) and a `worker_ready` signal that logs registered task names (`:30-35`).
+3. `backend/app/main.py:14-30` configures logging at import time, before routers are registered: `install_record_factory()` first (so every record carries `trace_id`, which the format string requires), then console + rotating file handler at `/app/logs/backend.log`, then `configure_ai_trace()` for the JSONL sink at `/app/logs/ai_trace.jsonl`.
+4. `backend/app/workers/celery_app.py` does the same for the worker: `install_record_factory()` at import, an `after_setup_logger` handler (rotating file at `/app/logs/worker.log`, plus `configure_ai_trace()`), an `after_setup_task_logger` handler (the task logger does not inherit the worker logger's handlers), and a `worker_ready` signal that logs registered task names.
 5. No explicit application-level startup/shutdown event handlers (no `@app.on_event`) exist in `main.py` — engine/session setup in `database.py` happens at import time via module-level `create_engine`/`sessionmaker`.

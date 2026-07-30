@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from ..config import settings
+from ..observability import emit, trunc
 from .ingestion import Element, ChildChunk, ParentChunk, _child_splitter, _find_from
 
 logger = logging.getLogger(__name__)
@@ -336,5 +337,36 @@ def chunk_elements(elements: List[Element]) -> tuple:
     logger.info(
         "chunk_elements: elements=%d parents=%d children=%d",
         len(elements), len(parents), n_children,
+    )
+    emit(
+        "chunk.result",
+        elements=len(elements),
+        parents=len(parents),
+        children=n_children,
+        parent_max_tokens=settings.parent_max_tokens,
+        table_max_tokens=settings.table_max_tokens,
+        n_table_parents=sum(
+            1 for cs in children_per_parent
+            if cs and cs[0].element_type == "table"
+        ),
+        # heading_path is prefixed into content rather than stored in its own
+        # column (see CLAUDE.md), so this trace is the only place the chunker's
+        # section structure is visible without re-reading the chunk text.
+        parent_detail=[
+            {
+                "parent_index": i,
+                "page_start": p.page_start,
+                "page_end": p.page_end,
+                "source": p.source,
+                "chars": len(p.content or ""),
+                "n_children": len(children_per_parent[i]),
+                "element_type": (
+                    children_per_parent[i][0].element_type
+                    if children_per_parent[i] else None
+                ),
+                "head": trunc(p.content, 120),
+            }
+            for i, p in enumerate(parents)
+        ],
     )
     return parents, children_per_parent

@@ -11,6 +11,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 
 from ...config import settings
+from ...observability import emit, timed, trunc
 from . import prompts
 from .state import AgentState
 
@@ -23,7 +24,92 @@ def _chat_llm(temperature: float = 0.0) -> ChatOpenAI:
         base_url=settings.openrouter_base_url,
         api_key=settings.openrouter_api_key,
         temperature=temperature,
+        # Without this, a streamed call reports no usage_metadata — and
+        # generate_answer, the most expensive call in the pipeline, is the one
+        # that streams. Its token cost would be permanently invisible.
+        stream_usage=True,
     )
+
+
+def _message_rows(messages: list) -> list[dict]:
+    """Trace shape for the messages actually sent to the model."""
+    rows = []
+    for m in messages:
+        content = getattr(m, "content", m)
+        text = content if isinstance(content, str) else str(content)
+        rows.append({
+            # LangChain message .type is "system" / "human" / "ai".
+            "role": getattr(m, "type", type(m).__name__),
+            "chars": len(text),
+            "text": trunc(text),
+        })
+    return rows
+
+
+def _usage_of(response) -> dict | None:
+    """Token usage from an AIMessage, when the provider reported any.
+
+    Structured-output calls return a Pydantic model rather than a message and
+    carry no usage — a real gap in coverage, not a bug here.
+    """
+    usage = getattr(response, "usage_metadata", None)
+    if usage is None:
+        return None
+    if isinstance(usage, dict):
+        return usage
+    return {"raw": str(usage)}
+
+
+def _response_text(response) -> str:
+    if isinstance(response, BaseModel):
+        return response.model_dump_json()
+    content = getattr(response, "content", response)
+    return content if isinstance(content, str) else str(content)
+
+
+def _finish_reason(response) -> str | None:
+    if isinstance(response, BaseModel):
+        return None
+    metadata = getattr(response, "response_metadata", None)
+    return metadata.get("finish_reason") if isinstance(metadata, dict) else None
+
+
+async def _invoke_logged(runnable, messages: list, stage: str, **extra):
+    """Invoke an LLM (or a structured-output wrapper) with request/response
+    tracing. Exceptions are traced and re-raised — logging must not change
+    control flow."""
+    emit(
+        "llm.request",
+        stage=stage,
+        model=settings.openrouter_chat_model,
+        messages=_message_rows(messages),
+        **extra,
+    )
+    with timed() as elapsed:
+        try:
+            response = await runnable.ainvoke(messages)
+        except Exception as exc:
+            emit(
+                "llm.error",
+                stage=stage,
+                model=settings.openrouter_chat_model,
+                error=str(exc),
+                error_type=type(exc).__name__,
+                ms=elapsed(),
+            )
+            raise
+    text = _response_text(response)
+    emit(
+        "llm.response",
+        stage=stage,
+        model=settings.openrouter_chat_model,
+        ms=elapsed(),
+        chars=len(text),
+        text=trunc(text),
+        usage=_usage_of(response),
+        finish_reason=_finish_reason(response),
+    )
+    return response
 
 
 class QueryRewrite(BaseModel):
@@ -34,10 +120,15 @@ class QueryRewrite(BaseModel):
 async def rewrite_query(state: AgentState) -> dict:
     llm = _chat_llm()
     structured = llm.with_structured_output(QueryRewrite)
-    response: QueryRewrite = await structured.ainvoke([
-        SystemMessage(prompts.REWRITE_QUERY_SYSTEM),
-        HumanMessage(state["question"]),
-    ])
+    response: QueryRewrite = await _invoke_logged(
+        structured,
+        [
+            SystemMessage(prompts.REWRITE_QUERY_SYSTEM),
+            HumanMessage(state["question"]),
+        ],
+        stage="rewrite_query",
+        schema=QueryRewrite.__name__,
+    )
     logger.info(
         "rewrite_query: q=%.80s -> rewritten=%.80s intent=%s",
         state["question"], response.rewritten_query, response.intent,
@@ -107,6 +198,15 @@ async def grade_chunks(state: AgentState) -> dict:
             "grade(fast): useful=%s n_chunks=%d top_score=%.3f floor=%.3f",
             useful, len(children), top_score, settings.rerank_score_floor,
         )
+        emit(
+            "grade",
+            mode="fast",
+            useful=useful,
+            n_chunks=len(children),
+            top_score=round(top_score, 6),
+            score_floor=settings.rerank_score_floor,
+            scores=[round(float(s), 6) for s in scores],
+        )
         return {"graded_useful": useful,
                 "notes": state.get("notes", []) + [
                     f"grade(fast): useful={useful} top_score={top_score:.3f}",
@@ -115,12 +215,17 @@ async def grade_chunks(state: AgentState) -> dict:
     # Strict path: LLM judge
     passages = "\n\n---\n\n".join(c.content for c in children[:5])
     llm = _chat_llm()
-    response = await llm.ainvoke([
-        SystemMessage("You judge whether retrieved passages contain the answer."),
-        HumanMessage(prompts.GRADE_CHUNKS_PROMPT.format(
-            question=state["question"], passages=passages,
-        )),
-    ])
+    response = await _invoke_logged(
+        llm,
+        [
+            SystemMessage("You judge whether retrieved passages contain the answer."),
+            HumanMessage(prompts.GRADE_CHUNKS_PROMPT.format(
+                question=state["question"], passages=passages,
+            )),
+        ],
+        stage="grade_chunks",
+        n_passages=len(children[:5]),
+    )
     verdict = (response.content or "").strip().upper().startswith("YES")
     return {"graded_useful": verdict,
             "notes": state.get("notes", []) + [f"grade(strict): {verdict}"]}
@@ -129,9 +234,14 @@ async def grade_chunks(state: AgentState) -> dict:
 async def rewrite_and_retry(state: AgentState) -> dict:
     attempted = state.get("attempted_queries", [])
     llm = _chat_llm(temperature=0.3)  # a little creativity for alt phrasing
-    response = await llm.ainvoke([
-        HumanMessage(prompts.RETRY_QUERY_PROMPT.format(attempted=attempted)),
-    ])
+    response = await _invoke_logged(
+        llm,
+        [HumanMessage(prompts.RETRY_QUERY_PROMPT.format(attempted=attempted))],
+        stage="rewrite_and_retry",
+        temperature=0.3,
+        attempt=state.get("retry_count", 0) + 1,
+        attempted_queries=[trunc(q) for q in attempted],
+    )
     new_query = (response.content or "").strip().strip('"').strip("'")
     return {
         "rewritten_query": new_query,
@@ -156,17 +266,36 @@ async def generate_answer(state: AgentState) -> dict:
     This node still calls the LLM and the streamed tokens are picked up
     by the graph layer. We accumulate the full answer here for the
     faithfulness_check node."""
+    grounded = bool(state.get("graded_useful"))
     system_prompt = (
         prompts.ANSWER_SYSTEM_GROUNDED
-        if state.get("graded_useful")
+        if grounded
         else prompts.ANSWER_SYSTEM_NOT_FOUND
     )
-    context = _format_context(state.get("parents", []))
+    parents = state.get("parents", [])
+    context = _format_context(parents)
+    # The single most useful event for "why did it answer that": the exact
+    # context block and which system-prompt variant framed it.
+    emit(
+        "answer.context",
+        prompt_variant="grounded" if grounded else "not_found",
+        n_parents=len(parents),
+        pages=[getattr(p, "page_start", None) for p in parents],
+        context_chars=len(context),
+        context=trunc(context),
+    )
     llm = _chat_llm()
-    response = await llm.ainvoke([
-        SystemMessage(system_prompt),
-        HumanMessage(f"Document context:\n{context}\n\nQuestion: {state['question']}"),
-    ])
+    response = await _invoke_logged(
+        llm,
+        [
+            SystemMessage(system_prompt),
+            HumanMessage(
+                f"Document context:\n{context}\n\nQuestion: {state['question']}"
+            ),
+        ],
+        stage="generate_answer",
+        prompt_variant="grounded" if grounded else "not_found",
+    )
     answer = response.content or ""
     return {"answer": answer,
             "notes": state.get("notes", []) + [f"answer: len={len(answer)}"]}
@@ -177,13 +306,16 @@ async def faithfulness_check(state: AgentState) -> dict:
         return {}
     context = _format_context(state.get("parents", []))
     llm = _chat_llm()
-    response = await llm.ainvoke([
-        HumanMessage(prompts.FAITHFULNESS_PROMPT.format(
+    response = await _invoke_logged(
+        llm,
+        [HumanMessage(prompts.FAITHFULNESS_PROMPT.format(
             question=state["question"],
             context=context,
             answer=state["answer"],
-        )),
-    ])
+        ))],
+        stage="faithfulness_check",
+        answer_chars=len(state.get("answer") or ""),
+    )
     verdict = (response.content or "").strip().upper().startswith("YES")
     warnings = list(state.get("warnings", []))
     if not verdict:

@@ -22,6 +22,20 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
 
+    # --- AI trace logging (see app/observability.py).
+    # A JSONL event stream for the ingestion + retrieval + LLM path, written to
+    # its own rotating file so 20 KB prompts stay out of backend.log.
+    #   off     - emit nothing.
+    #   summary - ids, ranks, scores, token counts, latency; text truncated.
+    #   full    - complete prompts, rerank candidates and responses. This
+    #             writes document content to disk; opt-in deliberately.
+    ai_trace_level: str = "summary"
+    # Truncation cap for free text at "summary". Ignored at "full".
+    ai_trace_text_chars: int = 200
+    ai_trace_file: str = "/app/logs/ai_trace.jsonl"
+    ai_trace_max_bytes: int = 10_485_760
+    ai_trace_backups: int = 5
+
     # Auth / JWT. jwt_secret_key MUST be set in .env for production; an empty
     # value is only tolerable for local dev/tests.
     jwt_secret_key: str = ""

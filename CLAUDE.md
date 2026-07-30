@@ -87,6 +87,54 @@ See `features/chat_with_doc/rag_enhancement.md` for the flow diagram and `docs/s
 
 The Document model uses `status="done"` for fully-ingested documents (used by `/api/documents` filter at `backend/app/routers/documents.py`). Do not write `status="ready"` — that's a spec inconsistency, "done" is the production value.
 
+### AI trace logging
+
+`app/observability.py` adds a JSONL event stream for the whole AI path —
+ingestion (`parse.result`, `chunk.result`, `ctx.*`, `embed.*`, `store.chunks`)
+and chat (`chat.request`, `graph.*`, `retrieval.*`, `rerank.*`, `llm.*`,
+`answer.context`, `grade`) — written to `/app/logs/ai_trace.jsonl`, **not** into
+`backend.log`. A single `generate_answer` prompt is 10-20 KB; mixing those into
+the operational log would make both useless and burn through the 10 MB rotation
+in minutes.
+
+One `trace_id` per run ties it together: bound in `routers/chat.py` per request
+and in `workers/tasks.py` from the Celery task id, carried by a `ContextVar` and
+stamped onto **every** log record by `install_record_factory()`. Both log
+formats read `%(trace_id)s`, so that factory is load-bearing — remove it and
+records raise on formatting. `ContextVar`s do not propagate into threads: the
+contextualizer's fan-out must keep submitting via `submit_with_trace`, or its
+per-chunk events silently lose the id.
+
+`ai_trace_level` controls verbosity:
+
+- `off` — emit nothing.
+- `summary` (default) — ids, ranks, scores, token usage, latency; free text cut
+  to `ai_trace_text_chars` (200).
+- `full` — complete prompts, complete rerank candidates, complete responses,
+  plus the `only_full=True` events (per-chunk contextualizer calls, embedding
+  inputs, the ingest chunk-index map). **This writes document content to disk**
+  — opt-in per debugging session, not a production default.
+
+`emit()` never raises: a logging failure must not break a chat response. Any
+credential-shaped dict goes through `redact()` first — the reranker's `headers`
+carries the OpenRouter bearer token.
+
+Reading it:
+
+```bash
+jq -c 'select(.trace_id=="<id>") | {event, ms}' logs/ai_trace.jsonl
+jq 'select(.event=="retrieval.result") | .children[] | {page, score}' logs/ai_trace.jsonl
+jq 'select(.event=="llm.response") | {stage, usage}' logs/ai_trace.jsonl
+# Cache regression canary: cache_read should dominate cache_creation.
+jq 'select(.event=="ctx.summary") | .usage' logs/ai_trace.jsonl
+```
+
+Two things to preserve when editing the instrumentation: **every pre-existing
+`logger.info` line was left byte-identical** (existing log greps and the `notes`
+entries in `AgentState` still work), and `_chat_llm()` sets `stream_usage=True`
+— without it the streamed `generate_answer` call reports no `usage_metadata`,
+leaving the most expensive call in the pipeline cost-invisible.
+
 ### Evaluation
 
 Before changing retrieval or agent code, run the eval harness:

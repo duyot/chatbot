@@ -98,6 +98,7 @@ messages). See `wiki/03-data-model.md`.
 Used exclusively as the Celery broker + result backend (`backend/app/workers/celery_app.py`) — not used for caching or pub/sub elsewhere in the app.
 
 ## Cross-cutting notes
+- **One trace id per AI run** — `backend/app/observability.py` binds a `trace_id` in `routers/chat.py` (per chat request) and in `workers/tasks.py` (the Celery task id, per ingest). It rides a `ContextVar` plus a global log-record factory, so every `backend.log` / `worker.log` line and every event in `/app/logs/ai_trace.jsonl` carries it without any function in the retrieval/rerank/LLM path taking a `trace_id` argument. `ContextVar`s do not cross into `ThreadPoolExecutor` workers, which is why the contextualizer's fan-out submits via `submit_with_trace`.
 - **No API gateway/service mesh** — nginx is the only entry point; internal services (`backend`, `worker`, `ocr`, `redis`, `db`) are reachable only on the docker-compose network.
 - **No message queue beyond Celery/Redis** — a single task type (`ingest_document`) is the only asynchronous work in the system; chat is synchronous-but-streamed (SSE) inside a single request/response cycle.
 - **Two independent long-lived DB sessions per chat request**: the router's request-scoped session is discarded once the endpoint returns the `StreamingResponse`; a fresh `SessionLocal()` is opened inside the SSE generator (`backend/app/routers/chat.py:53`) because the request-scoped session would be closed by the time streaming actually happens.

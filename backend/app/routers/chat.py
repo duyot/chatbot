@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db, SessionLocal
 from ..models import Conversation, Document, Message, User
+from ..observability import bind_trace, emit
 from ..schemas import ChatRequest
 from ..security import get_current_user
 from ..services.rag import agentic_rag_stream
@@ -45,11 +46,25 @@ async def chat_stream(
     message = request.message
     requested_conversation_id = request.conversation_id
 
+    # One trace id per chat request, carried by every log record and trace event
+    # produced downstream (rewrite -> retrieve -> rerank -> generate). Bound here
+    # rather than in a middleware because only the AI path needs correlating.
+    trace_id = bind_trace()
     logger.info(
         "chat_stream: start document_id=%s query=%.120s", request.document_id, message
     )
+    emit(
+        "chat.request",
+        document_id=request.document_id,
+        conversation_id=requested_conversation_id,
+        user_id=str(user_id),
+        question_chars=len(message),
+    )
 
     async def event_stream():
+        # The generator body runs after the request handler returns, in a fresh
+        # context that did not inherit the binding above.
+        bind_trace(trace_id)
         stream_db = SessionLocal()
         try:
             # Resolve an existing conversation (must belong to this user) or

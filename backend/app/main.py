@@ -5,20 +5,29 @@ from logging.handlers import RotatingFileHandler
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
+from .observability import configure_ai_trace, install_record_factory
 from .routers import documents
 from .routers import chat
 from .routers import auth
 from .routers import conversations
 
+# Must precede basicConfig: the format below reads %(trace_id)s off every
+# record, and the factory is what guarantees the attribute exists.
+install_record_factory()
+
+_LOG_FORMAT = "%(asctime)s %(levelname)-8s [%(trace_id)s] %(name)s %(message)s"
+
 logging.basicConfig(
     level=settings.log_level.upper(),
-    format="%(asctime)s %(levelname)-8s %(name)s %(message)s",
+    format=_LOG_FORMAT,
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
 os.makedirs("/app/logs", exist_ok=True)
 _fh = RotatingFileHandler("/app/logs/backend.log", maxBytes=10_485_760, backupCount=5)
-_fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s %(name)s %(message)s"))
+_fh.setFormatter(logging.Formatter(_LOG_FORMAT))
 logging.getLogger().addHandler(_fh)
+# Separate JSONL sink for AI payloads; see app/observability.py.
+configure_ai_trace()
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Chatbot API")

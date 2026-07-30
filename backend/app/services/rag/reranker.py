@@ -22,6 +22,7 @@ from typing import Any
 import httpx
 
 from ...config import settings
+from ...observability import chunk_summary, emit, full_payloads, redact, timed, trunc
 
 logger = logging.getLogger(__name__)
 
@@ -85,31 +86,80 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
         "rerank: request query=%.80s n_docs=%d model=%s",
         query, len(chunks), settings.reranker_model,
     )
+    emit(
+        "rerank.request",
+        url=url,
+        model=settings.reranker_model,
+        query=trunc(query),
+        n_docs=len(chunks),
+        top_n=payload["top_n"],
+        # redact() is not optional here: `headers` carries the OpenRouter bearer
+        # token, and this dict is one careless edit away from being logged whole.
+        headers=redact(headers),
+        # `text` is what the cross-encoder actually scores — context + content,
+        # not raw content. Only at ai_trace_level=full: this is the single
+        # largest payload in the retrieval path.
+        documents=[
+            {
+                **chunk_summary(c, rank=i),
+                "rerank_chars": len(documents[i]["text"]),
+                **({"text": documents[i]["text"]} if full_payloads() else {}),
+            }
+            for i, c in enumerate(chunks)
+        ],
+    )
 
-    try:
-        with httpx.Client(timeout=60.0) as client:
-            response = client.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            body = response.json()
-    except Exception as exc:
-        logger.error(
-            "rerank: API call failed (%s); falling back to input order", exc,
-        )
-        return [(c, RERANK_FAILED_SCORE) for c in chunks[:top_n]]
+    with timed() as elapsed:
+        try:
+            with httpx.Client(timeout=60.0) as client:
+                response = client.post(url, json=payload, headers=headers)
+                response.raise_for_status()
+                body = response.json()
+        except Exception as exc:
+            logger.error(
+                "rerank: API call failed (%s); falling back to input order", exc,
+            )
+            emit(
+                "rerank.degraded",
+                reason="api_error",
+                model=settings.reranker_model,
+                error=str(exc),
+                error_type=type(exc).__name__,
+                ms=elapsed(),
+                fallback_score=RERANK_FAILED_SCORE,
+                n_returned=len(chunks[:top_n]),
+            )
+            return [(c, RERANK_FAILED_SCORE) for c in chunks[:top_n]]
 
     results = body.get("results") if isinstance(body, dict) else body
     if not isinstance(results, list):
         logger.error("rerank: unexpected response shape: %r", body)
+        emit(
+            "rerank.degraded",
+            reason="bad_response_shape",
+            model=settings.reranker_model,
+            ms=elapsed(),
+            body=trunc(repr(body)),
+            fallback_score=RERANK_FAILED_SCORE,
+            n_returned=len(chunks[:top_n]),
+        )
         return [(c, RERANK_FAILED_SCORE) for c in chunks[:top_n]]
 
     scored: list[tuple[Any, float]] = []
+    raw: list[dict] = []
     for item in results:
         idx = item.get("index")
         if idx is None or idx < 0 or idx >= len(chunks):
             logger.warning("rerank: skipping result with invalid index=%r", idx)
+            raw.append({"index": idx, "skipped": "invalid_index"})
             continue
         score = item.get("relevance_score", item.get("score", 0.0))
         scored.append((chunks[idx], float(score)))
+        raw.append({
+            "index": idx,
+            "chunk_id": str(getattr(chunks[idx], "id", "")) or None,
+            "score": float(score),
+        })
 
     # API returns sorted; defensive sort in case a future model variant doesn't.
     scored.sort(key=lambda x: -x[1])
@@ -118,5 +168,21 @@ def rerank(query: str, chunks: list, top_n: int) -> list[tuple[Any, float]]:
         settings.reranker_model, len(scored),
         scored[0][1] if scored else 0.0,
         scored[-1][1] if scored else 0.0,
+    )
+    emit(
+        "rerank.response",
+        model=settings.reranker_model,
+        http_status=response.status_code,
+        ms=elapsed(),
+        n_results=len(results),
+        n_scored=len(scored),
+        top_n=top_n,
+        # As returned by the API (pre-sort, pre-truncation), so a model that
+        # returns an unsorted or short list is visible rather than inferred.
+        results=raw,
+        returned=[
+            chunk_summary(c, score=s, rank=i)
+            for i, (c, s) in enumerate(scored[:top_n])
+        ],
     )
     return scored[:top_n]

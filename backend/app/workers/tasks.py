@@ -1,4 +1,5 @@
 import logging
+import time
 
 from celery.exceptions import MaxRetriesExceededError, Retry
 
@@ -6,6 +7,7 @@ from .celery_app import celery_app
 from ..config import settings
 from ..database import SessionLocal
 from ..models import Document
+from ..observability import bind_trace, emit, timed
 from ..services.contextualizer import contextualize_with_stats
 from ..services.page_images import render_document_pages
 from ..services.ingestion import (
@@ -22,7 +24,17 @@ logger = logging.getLogger(__name__)
 
 @celery_app.task(bind=True, max_retries=1, default_retry_delay=10)
 def ingest_document(self, document_id: str):
+    # Reuse the Celery task id as the trace id: the two already appear together
+    # in worker.log, and a retry gets the same id, which is what you want when
+    # correlating a second attempt against the first.
+    bind_trace(self.request.id)
     logger.info("[task:%s] ingest_document started document_id=%s", self.request.id, document_id)
+    emit("ingest.start", document_id=document_id, task_id=str(self.request.id))
+    started = time.perf_counter()
+
+    def elapsed_ms() -> float:
+        return round((time.perf_counter() - started) * 1000, 1)
+
     db = SessionLocal()
     try:
         doc = db.query(Document).filter(Document.id == document_id).first()
@@ -93,6 +105,17 @@ def ingest_document(self, document_id: str):
         doc.doc_metadata = metadata
         db.commit()
         logger.info("[task:%s] ingest_document completed document_id=%s", self.request.id, document_id)
+        emit(
+            "ingest.done",
+            document_id=document_id,
+            ms=elapsed_ms(),
+            pages=parsed.metadata.get("page_count"),
+            parents=len(parents),
+            children=len(flat_children),
+            embeddings=len(embeddings),
+            contextualization=ctx_stats,
+            engine=parsed.metadata.get("engine", "legacy"),
+        )
     except Retry:
         raise
     except ParseTimeout as exc:
@@ -103,6 +126,14 @@ def ingest_document(self, document_id: str):
             "[task:%s] parse timed out, not retrying document_id=%s",
             self.request.id, document_id,
         )
+        emit(
+            "ingest.failed",
+            document_id=document_id,
+            reason="parse_timeout",
+            retried=False,
+            ms=elapsed_ms(),
+            error=str(exc),
+        )
         doc = db.query(Document).filter(Document.id == document_id).first()
         if doc:
             doc.status = "failed"
@@ -110,6 +141,15 @@ def ingest_document(self, document_id: str):
             db.commit()
     except Exception as exc:
         logger.exception("[task:%s] ingest_document failed document_id=%s", self.request.id, document_id)
+        emit(
+            "ingest.failed",
+            document_id=document_id,
+            reason="exception",
+            retried=True,
+            ms=elapsed_ms(),
+            error=str(exc),
+            error_type=type(exc).__name__,
+        )
         doc = db.query(Document).filter(Document.id == document_id).first()
         if doc:
             doc.status = "failed"

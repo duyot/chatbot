@@ -73,7 +73,8 @@
       "Bash(docker run *)",
       "PowerShell(docker run *)",
       "PowerShell(git *)",
-      "WebFetch(domain:pypi.org)"
+      "WebFetch(domain:pypi.org)",
+      "Bash(python -c \"import app.observability\")"
     ]
   }
 }
